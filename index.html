@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Univers de Sarah</title>
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<svg class="visually-hidden" aria-hidden="true">
+  <symbol id="icon-spark" viewBox="0 0 24 24">
+    <path d="M12 0c0 6.6 1.8 9.4 8 12-6.2 2.6-8 5.4-8 12 0-6.6-1.8-9.4-8-12 6.2-2.6 8-5.4 8-12z"/>
+  </symbol>
+  <symbol id="icon-lock" viewBox="0 0 24 24">
+    <path d="M6 10V8a6 6 0 0 1 12 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z"/>
+  </symbol>
+  <symbol id="icon-camera" viewBox="0 0 24 24">
+    <path d="M9 3l-1.5 2H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3.5L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+  </symbol>
+</svg>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <canvas id="stars-canvas"></canvas>
+</div>
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<div class="nav-orbit" id="nav-orbit">
+  <div class="orbit-backdrop" aria-hidden="true"></div>
+  <svg class="orbit-lines" viewBox="0 0 160 440" aria-hidden="true">
+    <line x1="27" y1="27" x2="138" y2="26"></line>
+    <line x1="27" y1="27" x2="120" y2="84"></line>
+    <line x1="27" y1="27" x2="96" y2="140"></line>
+    <line x1="27" y1="27" x2="66" y2="192"></line>
+    <line x1="27" y1="27" x2="30" y2="238"></line>
+    <line x1="27" y1="27" x2="30" y2="298"></line>
+    <line x1="27" y1="27" x2="30" y2="356"></line>
+    <line x1="27" y1="27" x2="30" y2="414"></line>
+  </svg>
+  <button class="orbit-hub" id="orbit-hub" type="button" aria-expanded="false" aria-controls="orbit-menu" aria-label="Ouvrir la navigation">
+    <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+  </button>
+  <nav class="orbit-menu" id="orbit-menu" aria-label="Navigation principale">
+    <button class="orbit-node nav-link" type="button" data-nav="home" style="--nx:118px; --ny:6px; --nd:0.05s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Accueil</span>
+    </button>
+    <button class="orbit-node nav-link" type="button" data-nav="calendar" style="--nx:100px; --ny:64px; --nd:0.1s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Calendrier</span>
+    </button>
+    <button class="orbit-node nav-link" type="button" data-nav="letters" style="--nx:76px; --ny:120px; --nd:0.15s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Lettres</span>
+    </button>
+    <button class="orbit-node nav-link" type="button" data-nav="window" style="--nx:46px; --ny:172px; --nd:0.2s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Ciel</span>
+    </button>
+    <button class="orbit-node nav-link" type="button" data-nav="secret" style="--nx:10px; --ny:218px; --nd:0.25s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Secret</span>
+    </button>
+    <!-- lien externe : ouvre la page Playlist Spotify dans le même onglet
+         (elle a son propre bouton "Quitter" pour revenir ici), volontairement
+         en dehors du routage par hash (pas de data-nav) -->
+    <a class="orbit-node orbit-node-external" href="spotify-playlist.html" style="--nx:10px; --ny:278px; --nd:0.3s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Playlist</span>
+    </a>
+    <!-- lien externe : ouvre le sanctuaire "L'Échappée" dans le même onglet
+         (elle a son propre bouton "Quitter" pour revenir ici), volontairement
+         en dehors du routage par hash (pas de data-nav) -->
+    <a class="orbit-node orbit-node-sanctuary" href="sanctuary.html" style="--nx:10px; --ny:336px; --nd:0.35s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <span class="node-label">Échappée</span>
+    </a>
+    <!-- lien externe : ouvre la salle de ciné dans le même onglet
+         (elle a son propre lien de retour pour revenir ici), volontairement
+         en dehors du routage par hash (pas de data-nav) -->
+    <a class="orbit-node orbit-node-cinema" href="cinema.html" style="--nx:10px; --ny:394px; --nd:0.4s" tabindex="-1">
+      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-camera"/></svg></span>
+      <span class="node-label">Ciné</span>
+    </a>
+  </nav>
+</div>
+<p class="wordmark" aria-hidden="true">✦ Univers de Sarah</p>
+
+<!-- ================= ÉCRAN 1 : ACCUEIL ================= -->
+<div class="screen" id="screen-home">
+  <main>
+    <section class="hero">
+      <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Une page rien que pour toi</p>
+      <h1 class="hero-title" aria-label="Sarah">
+        <span class="letter" style="animation-delay:.05s">S</span><span class="letter" style="animation-delay:.14s">a</span><span class="letter" style="animation-delay:.23s">r</span><span class="letter" style="animation-delay:.32s">a</span><span class="letter" style="animation-delay:.41s">h</span>
+      </h1>
+      <p class="hero-subtitle">l'étoile la plus brillante que je connaisse</p>
+      <p class="hero-text">Ici, pas de filtre, pas de mise en scène — juste tout ce qu'on pense de toi, réuni dans un petit coin d'univers. Descends, prends ton temps.</p>
+      <div class="hero-actions">
+        <a class="btn-wish" id="wish-btn" href="soleil-lune.html">
+          <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+          Soleil / Lune
+        </a>
+        <span class="scroll-cue">continue de scroller
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        </span>
+      </div>
+    </section>
+
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker">
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>MEILLEURE AMIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>HUMAINE EXCEPTIONNELLE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>LUMIÈRE DE LA GALAXIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>COSMIC QUEEN</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>IRREMPLAÇABLE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>MEILLEURE AMIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>HUMAINE EXCEPTIONNELLE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>LUMIÈRE DE LA GALAXIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>COSMIC QUEEN</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>IRREMPLAÇABLE</span>
+      </div>
+    </div>
+
+    <section class="block" id="messages">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Message depuis ma galaxie</p>
+          <h2>Ce que je pense de toi</h2>
+          <span class="lede">Quatre vérités, écrites depuis mon cœur :</span>
+        </div>
+
+        <!-- ÉDITABLE : remplace les 4 textes ci-dessous par tes vrais messages -->
+        <div class="message-grid">
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°01</span>
+            <p>Tu as ce don unique de transformer un mardi soir banal en souvenir qu'on raconte encore un an après. Personne ne sait s'amuser comme toi.</p>
+          </article>
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°02</span>
+            <p>Tu es la première personne à qui je pense quand quelque chose de bien — ou de nul — m'arrive. Ça ne s'explique pas, ça se vit.</p>
+          </article>
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°03</span>
+            <p>Ton rire est probablement audible depuis l'espace, et c'est très bien comme ça.</p>
+          </article>
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°04</span>
+            <p>Tu écoutes vraiment, tu te souviens de tout, et tu es là sans même qu'on ait à demander. Je ne prends jamais ça pour acquis.</p>
+          </article>
+        </div>
+
+        <p class="signoff">— toujours dans ton équipe.</p>
+      </div>
+    </section>
+
+    <section class="block" id="family">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Depuis leur galaxie à eux</p>
+          <h2>Ta fratrie a aussi des choses à dire</h2>
+          <span class="lede">ils n'ont pas pu s'empêcher de participer.</span>
+        </div>
+      </div>
+
+      <!-- ÉDITABLE : remplace les 3 messages de la fratrie ci-dessous -->
+      <div class="family-track-wrap">
+        <div class="family-track">
+          <article class="fam-card">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
+            <p class="who">Ton frère (l'aîné)</p>
+            <p>On s'est jamais dit les choses facilement dans cette famille, mais tu es celle qui nous a toujours tenus ensemble. Je suis fier de toi, même si je ne le dis jamais.</p>
+          </article>
+          <article class="fam-card">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
+            <p class="who">Ton frère (le cadet)</p>
+            <p>Tu m'as toujours protégé sans jamais me le faire sentir. T'es la grande sœur que tout le monde devrait avoir.</p>
+          </article>
+          <article class="fam-card">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Sœur</span>
+            <p class="who">Ta sœur</p>
+            <p>On se ressemble tellement que ça me fait peur, parfois. Merci d'être mon modèle, même si je ne l'admettrais jamais devant toi.</p>
+          </article>
+          <article class="fam-card" aria-hidden="true">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
+            <p class="who">Ton frère (l'aîné)</p>
+            <p>On s'est jamais dit les choses facilement dans cette famille, mais tu es celle qui nous a toujours tenus ensemble. Je suis fier de toi, même si je ne le dis jamais.</p>
+          </article>
+          <article class="fam-card" aria-hidden="true">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
+            <p class="who">Ton frère (le cadet)</p>
+            <p>Tu m'as toujours protégé sans jamais me le faire sentir. T'es la grande sœur que tout le monde devrait avoir.</p>
+          </article>
+          <article class="fam-card" aria-hidden="true">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Sœur</span>
+            <p class="who">Ta sœur</p>
+            <p>On se ressemble tellement que ça me fait peur, parfois. Merci d'être mon modèle, même si je ne l'admettrais jamais devant toi.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="container">
+        <div class="teaser-grid">
+          <div class="cal-teaser" data-reveal>
+            <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Et ce n'est pas fini</p>
+            <h2>Un mois entier de toi</h2>
+            <p class="sub">une case par jour, tout septembre</p>
+            <button class="btn-cal" type="button" data-nav="calendar">
+              <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+              Ouvrir le calendrier
+            </button>
+          </div>
+          <div class="cal-teaser letters-teaser" data-reveal>
+            <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
+            <h2>Des lettres pour toi</h2>
+            <p class="sub">à ouvrir seulement quand le moment est venu</p>
+            <button class="btn-cal" type="button" data-nav="letters">
+              <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+              Voir les lettres
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sign-off">
+    <svg class="icon-spark big" aria-hidden="true"><use href="#icon-spark"/></svg>
+    <p class="made">faite avec tout mon cœur, pour toi.</p>
+    <p class="date" id="footer-date">—</p>
+    <button class="btn-replay" id="replay-btn" type="button">revoir la surprise ✦</button>
+  </footer>
+</div>
+
+<!-- ================= ÉCRAN 2 : CALENDRIER ================= -->
+<div class="screen" id="screen-calendar">
+  <div class="cal-screen container">
+    <div class="cal-header">
+      <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Calendrier secret</p>
+      <h2 tabindex="-1" id="cal-heading">Un mois de toi</h2>
+      <span class="lede">une case par jour, un peu d'amour à chaque fois</span>
+      <p class="cal-status" id="cal-status">Chargement…</p>
+    </div>
+
+    <div class="cal-grid-wrap">
+      <div class="cal-weekdays">
+        <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+      </div>
+      <div class="cal-grid" id="cal-grid" aria-label="Cases du calendrier de septembre"></div>
+    </div>
+
+    <div class="cal-legend">
+      <span><span class="legend-dot today"></span>aujourd'hui</span>
+      <span><span class="legend-dot"></span>ouvrable</span>
+      <span><span class="legend-dot locked"></span>verrouillée</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 3 : CASE OUVERTE ================= -->
+<div class="screen" id="screen-day">
+  <div class="day-screen">
+    <p class="day-label" id="day-label">JOUR —</p>
+    <h2 class="day-text" id="day-text" tabindex="-1"></h2>
+    <div class="day-nav">
+      <button class="btn-ghost" type="button" id="day-prev">← jour précédent</button>
+      <button class="btn-ghost" type="button" data-nav="calendar">retour au calendrier</button>
+      <button class="btn-ghost" type="button" id="day-next">jour suivant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 4 : LETTRES ================= -->
+<div class="screen" id="screen-letters">
+  <div class="cal-screen container">
+    <div class="cal-header">
+      <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
+      <h2 tabindex="-1" id="letters-heading">Des lettres pour toi</h2>
+      <span class="lede">à ouvrir seulement quand le moment est venu</span>
+    </div>
+
+    <!-- ÉDITABLE : les lettres viennent du tableau LETTERS dans le script ci-dessous -->
+    <div class="letters-grid" id="letters-grid"></div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 5 : LETTRE OUVERTE ================= -->
+<div class="screen" id="screen-letter">
+  <div class="day-screen">
+    <p class="day-label" id="letter-trigger">—</p>
+    <h2 class="day-text" id="letter-word" tabindex="-1"></h2>
+    <p class="letter-sub" id="letter-sub"></p>
+    <div class="day-nav">
+      <button class="btn-ghost" type="button" id="letter-prev">← lettre précédente</button>
+      <button class="btn-ghost" type="button" data-nav="letters">retour aux lettres</button>
+      <button class="btn-ghost" type="button" id="letter-next">lettre suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 6 : FENÊTRE ================= -->
+<div class="screen" id="screen-window">
+  <div class="window-screen" id="room-scene">
+    <!-- ÉDITABLE (décor) : petite chambre autour de la fenêtre, purement décorative -->
+    <div class="room-floor" aria-hidden="true"></div>
+    <div class="room-rug" aria-hidden="true"></div>
+    <div class="room-plant" aria-hidden="true">
+      <span class="plant-pot"></span>
+      <span class="plant-leaf leaf-1"></span>
+      <span class="plant-leaf leaf-2"></span>
+      <span class="plant-leaf leaf-3"></span>
+    </div>
+    <div class="room-shelf" aria-hidden="true">
+      <span class="shelf-book book-1"></span>
+      <span class="shelf-book book-2"></span>
+      <span class="shelf-book book-3"></span>
+      <span class="shelf-frame"></span>
+    </div>
+    <div class="room-lamp-glow" aria-hidden="true"></div>
+    <div class="fairy-lights" id="fairy-lights" aria-hidden="true">
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+    </div>
+    <div class="curtain curtain-left" aria-hidden="true"></div>
+    <div class="curtain curtain-right" aria-hidden="true"></div>
+
+    <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Depuis l'intérieur</p>
+    <h2 tabindex="-1" id="window-heading">Regarde par la fenêtre</h2>
+    <p class="lede">le ciel est calme, ce soir. clique sur la vitre pour aller le voir de plus près.</p>
+
+    <div class="window-frame" id="window-frame">
+      <div class="curtain-rod" aria-hidden="true"></div>
+      <button class="window-glass" id="window-glass" type="button" aria-label="Sortir regarder le ciel">
+        <canvas id="window-stars-canvas"></canvas>
+        <span class="window-hint" aria-hidden="true"><svg class="icon-spark"><use href="#icon-spark"/></svg></span>
+      </button>
+      <div class="window-mullions" aria-hidden="true"></div>
+    </div>
+    <div class="window-sill" aria-hidden="true"></div>
+  </div>
+</div>
+
+<!-- overlay de "traversée" de la fenêtre : effet de vitesse-étoiles plein écran -->
+<div class="warp-overlay" id="warp-overlay" aria-hidden="true">
+  <canvas id="warp-canvas"></canvas>
+</div>
+
+<!-- ================= ÉCRAN 7 : CIEL ================= -->
+<div class="screen" id="screen-sky">
+  <div class="sky-screen">
+    <canvas id="sky-canvas" tabindex="-1"></canvas>
+    <p class="sky-hint" id="sky-hint">bouge la souris pour explorer · clique sur une étoile brillante</p>
+    <button class="sky-back" type="button" data-nav="window">← retour à l'intérieur</button>
+    <div class="sky-dim" id="sky-dim" aria-hidden="true"></div>
+
+    <!-- ÉDITABLE : les 5 constellations viennent du tableau CONSTELLATIONS dans le script -->
+    <div class="constellation-card" id="constellation-card" role="dialog" aria-modal="false" aria-labelledby="card-title">
+      <button class="card-close" id="card-close" type="button" aria-label="Fermer">×</button>
+      <span class="card-date" id="card-date">—</span>
+      <h3 id="card-title" tabindex="-1">—</h3>
+      <p id="card-text"></p>
+      <div class="card-photo">
+        <svg aria-hidden="true"><use href="#icon-camera"/></svg>
+        <span>photo à ajouter ici</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-secret">
+  <div class="secret-screen" id="secret-screen">
+    <!-- décor ambiant "sécurité / hacker", purement visuel -->
+    <canvas class="secret-rain" id="secret-rain-canvas" aria-hidden="true"></canvas>
+    <div class="hud-corner hud-tl" aria-hidden="true"></div>
+    <div class="hud-corner hud-tr" aria-hidden="true"></div>
+    <div class="hud-corner hud-bl" aria-hidden="true"></div>
+    <div class="hud-corner hud-br" aria-hidden="true"></div>
+    <div class="secret-progress" id="secret-progress" aria-hidden="true">
+      <span class="prog-step" data-step="1"><span class="prog-dot"></span>Code</span>
+      <span class="prog-step" data-step="2"><span class="prog-dot"></span>Énigme</span>
+      <span class="prog-step" data-step="3"><span class="prog-dot"></span>Terminal</span>
+      <span class="prog-step" data-step="final"><span class="prog-dot"></span>Accès</span>
+    </div>
+    <p class="secret-console-log" id="secret-console-log" aria-hidden="true"></p>
+
+    <div class="secret-stage" id="secret-stage">
+
+      <!-- NIVEAU 1 : digicode. Le code par défaut ("1855") est ÉDITABLE
+           dans la constante SECRET_CODE tout en haut du script secret. -->
+      <section class="secret-level" data-level="1" id="level-1">
+        <div class="glass-card" id="digicode-card">
+          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Accès sécurisé · Niveau 1 / 3</p>
+          <h2>Code d'accès</h2>
+          <svg class="lock-icon" id="lock-icon" aria-hidden="true"><use href="#icon-lock"/></svg>
+          <p class="level-hint">Entre les 4 chiffres du code.</p>
+          <div class="digicode-dots" id="digicode-dots" aria-hidden="true">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+          <div class="digicode-pad" id="digicode-pad" role="group" aria-label="Clavier numérique">
+            <button type="button" data-key="1">1</button>
+            <button type="button" data-key="2">2</button>
+            <button type="button" data-key="3">3</button>
+            <button type="button" data-key="4">4</button>
+            <button type="button" data-key="5">5</button>
+            <button type="button" data-key="6">6</button>
+            <button type="button" data-key="7">7</button>
+            <button type="button" data-key="8">8</button>
+            <button type="button" data-key="9">9</button>
+            <button type="button" data-key="clear">Effacer</button>
+            <button type="button" data-key="0">0</button>
+            <button type="button" data-key="submit">Valider</button>
+          </div>
+          <p class="digicode-error" id="digicode-error" role="alert"></p>
+        </div>
+      </section>
+
+      <!-- NIVEAU 2 : énigme. Question et réponse ÉDITABLES via RIDDLE_QUESTION
+           et RIDDLE_ANSWER tout en haut du script secret. -->
+      <section class="secret-level" data-level="2" id="level-2">
+        <div class="glass-card" id="riddle-card">
+          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Accès sécurisé · Niveau 2 / 3</p>
+          <h2>Énigme</h2>
+          <p class="riddle-question" id="riddle-question"></p>
+          <form id="riddle-form" autocomplete="off">
+            <input type="text" id="riddle-input" placeholder="Ta réponse…" aria-label="Réponse à l'énigme">
+            <button type="submit">Valider</button>
+          </form>
+          <div class="spark-burst" id="riddle-spark-burst" aria-hidden="true"></div>
+          <p class="riddle-error" id="riddle-error" role="alert"></p>
+        </div>
+      </section>
+
+      <!-- NIVEAU 3 : terminal façon pendu. Phrase mystère ÉDITABLE via
+           SECRET_PHRASE tout en haut du script secret. -->
+      <section class="secret-level" data-level="3" id="level-3">
+        <div class="glass-card terminal-card" id="terminal-card">
+          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Accès sécurisé · Niveau 3 / 3</p>
+          <div class="terminal">
+            <div class="terminal-topbar" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="terminal-body">
+              <p class="terminal-line">&gt; déchiffrement de la phrase finale requis_</p>
+              <p class="terminal-phrase" id="terminal-phrase" aria-live="polite"></p>
+              <p class="terminal-scan" id="terminal-scan" aria-hidden="true"></p>
+              <div class="terminal-input-row">
+                <span class="terminal-caret" aria-hidden="true">&gt;</span>
+                <input type="text" id="terminal-input" aria-label="Propose une lettre ou la phrase entière, puis Entrée" autocomplete="off" autocapitalize="characters">
+              </div>
+              <p class="terminal-hint">tape une lettre — ou tente la phrase entière — puis <kbd>Entrée</kbd></p>
+              <p class="terminal-msg" id="terminal-msg" role="alert"></p>
+            </div>
+          </div>
+          <div class="virtual-keyboard" id="virtual-keyboard" role="group" aria-label="Clavier de lettres"></div>
+        </div>
+      </section>
+
+      <!-- ÉCRAN FINAL : le coffre secret. Une fois ouvert, il révèle le
+           "Bestie Wrapped" (façon Spotify Wrapped) avec un bouton bascule
+           vers un "Mode Hacker" (panneau de contrôle). Tout le contenu
+           (stats, highlight, répliques, badge, commandes) est ÉDITABLE
+           via les constantes WRAPPED_... tout en haut du script secret. -->
+      <section class="secret-level" data-level="final" id="level-final">
+        <div class="vault-scene" id="vault-scene">
+          <div class="vault-door vault-door-left" aria-hidden="true"></div>
+          <div class="vault-door vault-door-right" aria-hidden="true"></div>
+          <div class="vault-glow" aria-hidden="true"></div>
+
+          <div class="wrapped-app" id="wrapped-app" data-mode="wrapped" tabindex="-1">
+
+            <!-- bouton bascule, toujours visible -->
+            <button class="mode-toggle" id="mode-toggle" type="button">
+              <span id="mode-toggle-label">💻 Mode Hacker</span>
+            </button>
+
+            <!-- barre lumineuse qui balaie l'écran en diagonale au moment de la bascule
+                 (bas-gauche → haut-droite pour aller vers le Mode Hacker, l'inverse
+                 pour revenir au Wrapped) : purement décoratif, synchronisé en JS avec
+                 le "wipe" en diagonale du clip-path ci-dessous -->
+            <div class="wipe-beam" id="wipe-beam" aria-hidden="true"></div>
+
+            <!-- ============ MODE 1 : BESTIE WRAPPED ============ -->
+            <div class="wrapped-view" id="wrapped-view">
+              <!-- décor ambiant : confettis/étincelles qui flottent doucement + petits
+                   emoji qui dérivent en fond, pour une ambiance festive, pas vide -->
+              <canvas class="wrapped-ambient-canvas" id="wrapped-ambient-canvas" aria-hidden="true"></canvas>
+              <div class="wrapped-decor" aria-hidden="true">
+                <span class="wdecor wdecor-1">✨</span>
+                <span class="wdecor wdecor-2">🎉</span>
+                <span class="wdecor wdecor-3">💫</span>
+                <span class="wdecor wdecor-4">✨</span>
+                <span class="wdecor wdecor-5">🎊</span>
+                <span class="wdecor wdecor-6">⭐</span>
+              </div>
+
+              <div class="wrapped-progress" id="wrapped-progress" aria-hidden="true">
+                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
+                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
+                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
+                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
+              </div>
+
+              <button class="wrapped-tapzone tapzone-left" id="tapzone-left" type="button" aria-label="Slide précédente" tabindex="-1"></button>
+              <button class="wrapped-tapzone tapzone-right" id="tapzone-right" type="button" aria-label="Slide suivante" tabindex="-1"></button>
+
+              <div class="wrapped-slides" id="wrapped-slides">
+                <!-- Slide 1 : les stats, compteurs animés -->
+                <section class="wrapped-slide" data-slide="1" id="wrapped-slide-1">
+                  <p class="wrapped-eyebrow">✦ Bestie Wrapped</p>
+                  <h2 class="wrapped-h">Votre année, en chiffres</h2>
+                  <div class="wrapped-stats" id="wrapped-stats"></div>
+                </section>
+
+                <!-- Slide 2 : le highlight -->
+                <section class="wrapped-slide" data-slide="2" id="wrapped-slide-2">
+                  <p class="wrapped-eyebrow">✦ Le highlight</p>
+                  <h2 class="wrapped-h" id="wrapped-highlight-title">—</h2>
+                  <p class="wrapped-highlight-text" id="wrapped-highlight-text"></p>
+                  <div class="wrapped-photo">
+                    <svg aria-hidden="true"><use href="#icon-camera"/></svg>
+                    <span>photo à ajouter ici</span>
+                  </div>
+                </section>
+
+                <!-- Slide 3 : hall of fame -->
+                <section class="wrapped-slide" data-slide="3" id="wrapped-slide-3">
+                  <p class="wrapped-eyebrow">✦ Hall of Fame</p>
+                  <h2 class="wrapped-h">Les répliques cultes</h2>
+                  <div class="wrapped-quotes" id="wrapped-quotes"></div>
+                </section>
+
+                <!-- Slide 4 : badge final -->
+                <section class="wrapped-slide" data-slide="4" id="wrapped-slide-4">
+                  <p class="wrapped-eyebrow">✦ Conclusion</p>
+                  <div class="wrapped-badge" id="wrapped-badge">
+                    <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+                    <span class="badge-text" id="wrapped-badge-text">DUO LÉGENDAIRE</span>
+                  </div>
+                  <p class="wrapped-badge-sub" id="wrapped-badge-sub"></p>
+                </section>
+              </div>
+
+              <div class="wrapped-nav-row">
+                <button class="wrapped-nav" id="wrapped-prev" type="button" aria-label="Slide précédente">‹</button>
+                <button class="wrapped-nav" id="wrapped-next" type="button" aria-label="Slide suivante">›</button>
+              </div>
+            </div>
+
+            <!-- ============ MODE 2 : HACKER (GOD MODE) — vrai look de terminal ============ -->
+            <div class="hacker-view" id="hacker-view">
+              <canvas class="hacker-rain" id="hacker-rain-canvas" aria-hidden="true"></canvas>
+              <div class="hacker-scanlines" aria-hidden="true"></div>
+
+              <div class="hacker-terminal-window">
+                <div class="hacker-titlebar">
+                  <span class="tl-dot tl-red" aria-hidden="true"></span>
+                  <span class="tl-dot tl-yellow" aria-hidden="true"></span>
+                  <span class="tl-dot tl-green" aria-hidden="true"></span>
+                  <span class="hacker-titlebar-text">sarah@bestie-os: ~</span>
+                </div>
+
+                <div class="hacker-body">
+                  <p class="hacker-title">&gt; panneau de contrôle — GOD MODE_</p>
+
+                  <div class="hacker-buttons">
+                    <button type="button" id="btn-matrix-rain" class="hacker-btn">🌧 Matrix Rain</button>
+                    <button type="button" id="btn-system-glitch" class="hacker-btn">⚡ System Glitch</button>
+                    <button type="button" id="btn-overclock" class="hacker-btn">🚀 Overclock</button>
+                  </div>
+
+                  <div class="hacker-output-wrap" id="hacker-output-wrap">
+                    <p class="hacker-output" id="hacker-output" aria-live="polite"></p>
+                  </div>
+
+                  <div class="hacker-terminal-row">
+                    <span class="hacker-caret" aria-hidden="true">&gt;</span>
+                    <input type="text" id="hacker-command-input" class="hacker-command-input" placeholder="tape une commande… (essaie « aide »)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Ligne de commande">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- overlay de transition rejoué entre chaque niveau -->
+    <div class="scan-overlay" id="scan-overlay" aria-hidden="true">
+      <div class="scan-overlay-inner">
+        <div class="scan-ring"></div>
+        <p id="scan-overlay-text">Analyse en cours…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

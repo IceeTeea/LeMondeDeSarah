@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Salle de Ciné · Sarah</title>
+<style>
+  /* ============================================================
+     SALLE DE CINÉ — cartes 3D glassmorphic / néon cosmique.
+     Vanilla HTML / CSS / JS, aucune dépendance externe, aucun asset
+     copié de nulle part : les "affiches" sont entièrement dessinées
+     en CSS/SVG, pour rester 100% originales.
+     ============================================================ */
+
+  :root{
+    --bg-1: #06040c;
+    --bg-2: #0f0a1c;
+    --bg-3: #1a0f2c;
+    --paper: #f6ede0;
+    --paper-dim: rgba(246, 237, 224, 0.68);
+    --paper-faint: rgba(246, 237, 224, 0.42);
+    --gold: #e8b96a;
+    --cyan: #5be9ff;
+    --pink: #ff5ca8;
+
+    --ease: cubic-bezier(.4, 0, .2, 1);
+    --ease-soft: cubic-bezier(.33, 1, .68, 1);
+
+    --f-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --f-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --f-mono: "SF Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  *, *::before, *::after{ box-sizing: border-box; }
+  html, body{ margin: 0; padding: 0; min-height: 100%; }
+  body{
+    min-height: 100dvh;
+    background:
+      radial-gradient(50% 38% at 18% 0%, rgba(91,233,255,0.09), transparent 60%),
+      radial-gradient(50% 38% at 85% 8%, rgba(255,92,168,0.10), transparent 60%),
+      radial-gradient(120% 90% at 50% -10%, var(--bg-3), var(--bg-2) 55%, var(--bg-1) 100%);
+    color: var(--paper);
+    font-family: var(--f-sans);
+    overflow-x: hidden;
+    position: relative;
+  }
+  a, button{ color: inherit; font-family: inherit; }
+
+  /* ---------- étoiles discrètes en fond ---------- */
+  .starfield{ position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
+  .starfield span{
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: #fff; opacity: var(--o, 0.5);
+    animation: twinkle var(--dur, 4s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes twinkle{ 0%,100%{ opacity: var(--o,0.5); } 50%{ opacity: 0.08; } }
+
+  /* ---------- rideau discret en haut / bas ---------- */
+  .curtain{
+    position: fixed; left: 0; right: 0; height: 46px; z-index: 5;
+    pointer-events: none;
+    background: repeating-linear-gradient(90deg, rgba(106,21,48,0.55) 0 26px, rgba(80,14,36,0.55) 26px 52px);
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent);
+    mask-image: linear-gradient(180deg, #000, transparent);
+  }
+  .curtain.top{ top: 0; }
+  .curtain.bottom{ bottom: 0; transform: scaleY(-1); }
+
+  /* ---------- lien de retour ---------- */
+  .back-link{
+    position: fixed; top: 1.2rem; left: 1.2rem; z-index: 40;
+    display: inline-flex; align-items: center; gap: 0.4em;
+    font-family: var(--f-sans); font-size: 0.78rem; letter-spacing: 0.03em;
+    text-decoration: none; color: var(--paper-faint);
+    padding: 0.5em 0.9em; border-radius: 999px;
+    border: 1px solid rgba(246, 237, 224, 0.16);
+    background: rgba(246, 237, 224, 0.04);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: color 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
+  }
+  .back-link:hover, .back-link:focus-visible{
+    color: var(--paper);
+    border-color: rgba(246, 237, 224, 0.35);
+    background: rgba(246, 237, 224, 0.09);
+  }
+
+  main{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 6.5rem 1.4rem 5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero{ text-align: center; max-width: 640px; margin: 0 auto 3.6rem; }
+  .eyebrow{
+    font-family: var(--f-sans); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 0.9rem;
+    display: inline-flex; align-items: center; gap: 0.5em;
+  }
+  .eyebrow::before, .eyebrow::after{ content: ""; width: 22px; height: 1px; background: currentColor; opacity: 0.6; }
+  .hero h1{
+    font-family: var(--f-serif); font-weight: 400; font-style: italic;
+    font-size: clamp(2rem, 5.2vw, 3.1rem); margin: 0 0 1rem; color: var(--paper);
+  }
+  .hero p{
+    font-size: 0.98rem; line-height: 1.7; color: var(--paper-dim); margin: 0;
+  }
+
+  /* ================= GRILLE DE CARTES 3D ================= */
+  .reel{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 2.1rem 1.5rem;
+  }
+
+  .film-card{
+    position: relative;
+    opacity: 0; transform: translateY(18px);
+    animation: filmIn 0.7s var(--ease-soft) forwards;
+  }
+  .film-card:nth-child(1){ animation-delay: 0.05s; }
+  .film-card:nth-child(2){ animation-delay: 0.11s; }
+  .film-card:nth-child(3){ animation-delay: 0.17s; }
+  .film-card:nth-child(4){ animation-delay: 0.23s; }
+  .film-card:nth-child(5){ animation-delay: 0.29s; }
+  .film-card:nth-child(6){ animation-delay: 0.35s; }
+  .film-card:nth-child(7){ animation-delay: 0.41s; }
+  @keyframes filmIn{ to{ opacity: 1; transform: translateY(0); } }
+
+  /* conteneur de perspective */
+  .flip-scene{
+    position: relative;
+    aspect-ratio: 3 / 4.35;
+    perspective: 1200px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .flip-card{
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.75s cubic-bezier(.4,.15,.2,1);
+    border-radius: 16px;
+  }
+  /* survol souris (desktop) + focus clavier + tap (classe posée en JS) */
+  .film-card:hover .flip-card,
+  .flip-scene:focus-visible .flip-card,
+  .flip-scene.is-flipped .flip-card{
+    transform: rotateY(180deg);
+  }
+
+  .card-face{
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.07);
+    transition: box-shadow 0.4s var(--ease-soft);
+  }
+  .film-card:hover .card-face, .flip-scene.is-flipped .card-face{
+    box-shadow: 0 22px 44px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12), 0 0 30px var(--glow), 0 0 64px var(--glow);
+  }
+
+  /* ---------- face avant ---------- */
+  .card-front{
+    background: linear-gradient(165deg, var(--p1) 0%, var(--p2) 55%, var(--p3) 100%);
+  }
+  .card-front svg.poster-art{ position: absolute; inset: 0; width: 100%; height: 100%; }
+  .card-front::after{
+    /* grain / vignette léger, façon vieille pellicule */
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 50% 100%, rgba(0,0,0,0.62), transparent 60%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .card-badge{
+    position: absolute; top: 10px; right: 10px; z-index: 2;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  }
+  .card-badge span{
+    font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.9);
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.2em 0.55em; border-radius: 999px; backdrop-filter: blur(3px);
+    white-space: nowrap;
+  }
+  .front-info{
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    padding: 0.9rem 0.9rem 0.8rem;
+  }
+  .front-title{
+    font-family: var(--f-serif); font-size: 1.28rem; margin: 0 0 0.3rem;
+    color: #fff;
+    text-shadow: 0 0 10px var(--glow), 0 0 26px var(--glow), 0 2px 6px rgba(0,0,0,0.6);
+  }
+  .front-hint{
+    font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.62);
+    display: flex; align-items: center; gap: 0.4em;
+    opacity: 0.85;
+  }
+  .front-hint svg{ width: 11px; height: 11px; flex: none; }
+
+  /* ---------- face arrière : glassmorphic néon ---------- */
+  .card-back{
+    transform: rotateY(180deg);
+    background: linear-gradient(160deg, rgba(28,16,44,0.86) 0%, rgba(14,9,24,0.9) 100%);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--glow);
+    padding: 1.05rem 1.05rem 0.9rem;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--glow) transparent;
+  }
+  .card-back::-webkit-scrollbar{ width: 5px; }
+  .card-back::-webkit-scrollbar-track{ background: transparent; }
+  .card-back::-webkit-scrollbar-thumb{ background: var(--glow); border-radius: 999px; opacity: 0.6; }
+  .back-head{ flex: none; }
+  .back-item{ flex: none; }
+  .back-head{
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 0.5em;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .back-title{
+    font-family: var(--f-serif); font-size: 1rem; margin: 0;
+    color: var(--paper);
+  }
+  .back-badge{
+    font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.05em;
+    color: var(--glow); white-space: nowrap;
+  }
+  .back-item{ display: flex; flex-direction: column; gap: 0.18rem; }
+  .back-item .label{
+    font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.03em;
+    color: var(--paper);
+    display: flex; align-items: center; gap: 0.45em;
+  }
+  .back-item .label .emoji{ font-size: 0.85rem; filter: drop-shadow(0 0 6px var(--glow)); }
+  .back-item p{
+    margin: 0; font-size: 0.74rem; line-height: 1.5; color: var(--paper-dim);
+  }
+
+  @media (max-width: 560px){
+    .back-link{ font-size: 0.72rem; padding: 0.45em 0.8em; }
+    main{ padding-top: 5.5rem; }
+    .reel{ grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 1.6rem 0.9rem; }
+    .flip-scene{ aspect-ratio: 3 / 5.4; }
+    .card-back{ padding: 0.75rem 0.75rem 0.6rem; gap: 0.4rem; }
+    .back-head{ padding-bottom: 0.4rem; }
+    .back-title{ font-size: 0.86rem; }
+    .back-badge{ font-size: 0.56rem; }
+    .back-item{ gap: 0.1rem; }
+    .back-item .label{ font-size: 0.6rem; }
+    .back-item p{ font-size: 0.66rem; line-height: 1.4; }
+    .front-title{ font-size: 1.08rem; }
+  }
+
+  @media (max-width: 380px){
+    .reel{ grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ================= PROCHAINE SÉANCE IRL ================= */
+  .irl{
+    margin-top: 5rem;
+    position: relative;
+    text-align: center;
+    padding: 2.6rem 1.6rem 2.8rem;
+    border-radius: 22px;
+    background: linear-gradient(160deg, rgba(91,233,255,0.07) 0%, rgba(255,92,168,0.07) 100%), rgba(20,12,32,0.55);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+  }
+  .irl::before{
+    content: "";
+    position: absolute; inset: -40% -10% auto -10%; height: 160%;
+    background: radial-gradient(closest-side, rgba(168,107,255,0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .irl-eyebrow{
+    font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--cyan); margin: 0 0 0.7rem; position: relative; z-index: 1;
+  }
+  .irl h2{
+    font-family: var(--f-serif); font-style: italic; font-weight: 400;
+    font-size: clamp(1.5rem, 3.6vw, 2.1rem); margin: 0 0 0.8rem; color: var(--paper);
+    position: relative; z-index: 1;
+  }
+  .irl p{
+    max-width: 46ch; margin: 0 auto 1.6rem; color: var(--paper-dim);
+    font-size: 0.92rem; line-height: 1.7; position: relative; z-index: 1;
+  }
+  .irl-btn{
+    position: relative; z-index: 1;
+    font-family: var(--f-sans); font-weight: 700; font-size: 0.92rem;
+    color: #0d0716;
+    background: linear-gradient(120deg, var(--cyan), var(--pink));
+    border: none; border-radius: 999px;
+    padding: 0.85em 1.9em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 0.55em;
+    box-shadow: 0 8px 24px rgba(91,233,255,0.25), 0 8px 24px rgba(255,92,168,0.2);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .irl-btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(91,233,255,0.35), 0 12px 30px rgba(255,92,168,0.3); }
+  .irl-btn:active{ transform: translateY(0); }
+  .irl-note{
+    position: relative; z-index: 1;
+    margin: 0.9rem 0 0; min-height: 1.4em;
+    font-size: 0.8rem; font-style: italic; color: var(--gold);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .irl-note.is-visible{ opacity: 1; transform: translateY(0); }
+
+  .irl-particles{
+    position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .irl-particle{
+    position: absolute; left: 50%; top: 68%;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c, var(--cyan));
+    opacity: 0.95;
+    animation: particleBurst 0.95s var(--ease-soft) forwards;
+  }
+  @keyframes particleBurst{
+    to{
+      transform: translate(var(--dx), var(--dy)) scale(0.3);
+      opacity: 0;
+    }
+  }
+
+  footer.note{
+    text-align: center; max-width: 520px; margin: 3.4rem auto 0;
+    font-size: 0.86rem; line-height: 1.7; color: var(--paper-faint);
+    position: relative; z-index: 2;
+  }
+  footer.note .signature{
+    display: block; margin-top: 0.8rem; font-family: var(--f-serif); font-style: italic; color: var(--gold); font-size: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .film-card{ animation-duration: 0.01s !important; }
+    .flip-card{ transition-duration: 0.01s !important; }
+    .starfield span{ animation: none !important; }
+    .irl-particle{ animation-duration: 0.01s !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="starfield" aria-hidden="true"></div>
+<div class="curtain top" aria-hidden="true"></div>
+<div class="curtain bottom" aria-hidden="true"></div>
+
+<a class="back-link" href="index.html">
+  ← Retour à l'univers
+</a>
+
+<main>
+  <header class="hero">
+    <p class="eyebrow">séance privée</p>
+    <h1>Ta salle de ciné</h1>
+    <p>Les films que tu m'as cités quand on parlait de ce que tu aimes — à revoir en boucle, ou à redécouvrir, les soirs où t'as juste envie de rien faire à part regarder un bon film. Survole (ou touche) une carte pour découvrir ses secrets.</p>
+  </header>
+
+  <section class="reel" aria-label="Ses films préférés">
+
+    <!-- Oblivion -->
+    <article class="film-card" style="--p1:#0d1b2a; --p2:#2c4a63; --p3:#dce9f0; --glow:#5be9ff;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Oblivion — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>2013</span><span>Science-fiction</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="obSky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#e8f2f8"/>
+                  <stop offset="55%" stop-color="#8fb6cf"/>
+                  <stop offset="100%" stop-color="#1b3446"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="0" width="200" height="300" fill="url(#obSky)"/>
+              <circle cx="140" cy="60" r="26" fill="#fdf7e6" opacity="0.9"/>
+              <ellipse cx="100" cy="230" rx="140" ry="30" fill="#213a4c"/>
+              <path d="M0 230 Q60 190 100 210 Q150 235 200 200 L200 300 L0 300 Z" fill="#152838"/>
+              <circle cx="100" cy="150" r="3" fill="#fff"/>
+              <line x1="100" y1="150" x2="100" y2="110" stroke="#fff" stroke-width="2" opacity="0.85"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Oblivion</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Oblivion</h3><span class="back-badge">2013</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>Tom Cruise a tenu à piloter lui-même le "Bubble Ship" dans un simulateur de vol construit spécialement pour le tournage.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>La tour futuriste de Jack emprunte ses lignes épurées à l'architecture organique de Frank Lloyd Wright.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>La bande originale signée M83 transforme chaque vol au-dessus des nuages en générique de fin avant l'heure.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Divergente -->
+    <article class="film-card" style="--p1:#241127; --p2:#5a1e3d; --p3:#0f0a17; --glow:#ff5ca8;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Divergente — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>2014</span><span>Dystopie</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="dvBg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#3a1830"/>
+                  <stop offset="100%" stop-color="#120a16"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="0" width="200" height="300" fill="url(#dvBg)"/>
+              <g transform="translate(100,140)" stroke="#f2c9d6" stroke-width="2.4" fill="none" opacity="0.92">
+                <circle r="46"/>
+                <path d="M0 -46 L0 46 M-40 -23 L40 23 M-40 23 L40 -23"/>
+              </g>
+              <rect x="0" y="240" width="200" height="60" fill="#0c0710"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Divergente</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Divergente</h3><span class="back-badge">2014</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>Le film adapte le premier tome d'une trilogie écrite par Veronica Roth, publiée alors qu'elle était encore étudiante.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>Chaque faction (Altruistes, Érudits, Fraternité, Sincérité, Audacieux) a sa propre palette et son symbole minimaliste, visibles dès les premiers costumes.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>Le test d'aptitude de Tris, filmé comme une plongée en apesanteur, pose toute l'ambiguïté du personnage en quelques minutes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Ready Player One -->
+    <article class="film-card" style="--p1:#0a0f2e; --p2:#241a5e; --p3:#ff2fb0; --glow:#a86bff;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Ready Player One — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>2018</span><span>Aventure SF</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="rpoBg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#160b3d"/>
+                  <stop offset="100%" stop-color="#050311"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="0" width="200" height="300" fill="url(#rpoBg)"/>
+              <g stroke="#7c5cff" stroke-width="1" opacity="0.55">
+                <line x1="0" y1="220" x2="200" y2="220"/>
+                <line x1="0" y1="240" x2="200" y2="240"/>
+                <line x1="0" y1="262" x2="200" y2="262"/>
+                <line x1="0" y1="286" x2="200" y2="286"/>
+                <line x1="20" y1="200" x2="-30" y2="300"/>
+                <line x1="70" y1="200" x2="55" y2="300"/>
+                <line x1="130" y1="200" x2="145" y2="300"/>
+                <line x1="180" y1="200" x2="230" y2="300"/>
+              </g>
+              <circle cx="100" cy="120" r="24" fill="none" stroke="#ff2fb0" stroke-width="3"/>
+              <circle cx="100" cy="120" r="9" fill="#ff2fb0" opacity="0.85"/>
+              <circle cx="60" cy="150" r="42" fill="none" stroke="#37f0d8" stroke-width="1.6" opacity="0.6"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Ready Player One</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Ready Player One</h3><span class="back-badge">2018</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>Spielberg a renoncé à certaines références du roman, trop compliquées côté droits d'auteur, pour rester fidèle sans s'y perdre.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>La course d'ouverture regorge de clins d'œil (Akira, Batmobile, DeLorean...) — un jeu des sept familles pour cinéphiles.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>Le niveau "Shining" reconstitue l'Overlook Hotel plan par plan, en plein hommage jubilatoire à Kubrick.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Alien -->
+    <article class="film-card" style="--p1:#05070a; --p2:#111a1a; --p3:#0a0c0a; --glow:#6fffb0;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Alien — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>1979</span><span>Horreur SF</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect x="0" y="0" width="200" height="300" fill="#06080a"/>
+              <circle cx="150" cy="45" r="1.2" fill="#dfe" opacity="0.8"/>
+              <circle cx="40" cy="70" r="1" fill="#dfe" opacity="0.6"/>
+              <circle cx="170" cy="120" r="1.4" fill="#dfe" opacity="0.7"/>
+              <circle cx="25" cy="160" r="1" fill="#dfe" opacity="0.5"/>
+              <circle cx="110" cy="30" r="1" fill="#dfe" opacity="0.6"/>
+              <ellipse cx="100" cy="190" rx="46" ry="62" fill="#151d1c" stroke="#3a4a45" stroke-width="1.5"/>
+              <ellipse cx="100" cy="150" rx="16" ry="20" fill="#0c0f0d"/>
+              <path d="M100 130 Q60 200 90 280" stroke="#3a4a45" stroke-width="1.2" fill="none" opacity="0.7"/>
+              <path d="M100 130 Q140 200 110 280" stroke="#3a4a45" stroke-width="1.2" fill="none" opacity="0.7"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Alien</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Alien</h3><span class="back-badge">1979</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>Les acteurs savaient qu'une créature allait surgir à table, mais pas à quel point la scène serait spectaculaire — leur stupeur à l'écran est en grande partie réelle.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>Le design du xénomorphe est signé H.R. Giger, qui mêlait déjà formes organiques et mécaniques dans son travail bien avant le film.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>Le silence quasi total avant chaque attaque, sans musique, juste la respiration — ce qui rend le film aussi oppressant aujourd'hui qu'en 1979.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Predator -->
+    <article class="film-card" style="--p1:#0a1a0a; --p2:#1e3a1a; --p3:#08120a; --glow:#ff9a3d;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Predator — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>1987</span><span>Action SF</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="prBg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#132213"/>
+                  <stop offset="100%" stop-color="#050a05"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="0" width="200" height="300" fill="url(#prBg)"/>
+              <g stroke="#2f4a2a" stroke-width="3" opacity="0.6">
+                <line x1="10" y1="300" x2="30" y2="120"/>
+                <line x1="185" y1="300" x2="165" y2="140"/>
+                <line x1="60" y1="300" x2="45" y2="60"/>
+              </g>
+              <circle cx="105" cy="150" r="2.6" fill="#e23b2b"/>
+              <line x1="0" y1="150" x2="200" y2="150" stroke="#e23b2b" stroke-width="0.6" opacity="0.55"/>
+              <line x1="105" y1="0" x2="105" y2="300" stroke="#e23b2b" stroke-width="0.6" opacity="0.4"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Predator</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Predator</h3><span class="back-badge">1987</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>Jean-Claude Van Damme devait à l'origine incarner le Predator, avant que le costume ne soit entièrement repensé.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>La vision thermique du Predator a nécessité une technique de post-production inventée pour l'occasion, très en avance sur son époque.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>La poignée de main musclée entre Dutch et Dillon reste l'une des scènes les plus citées (et imitées) du cinéma d'action.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Terminator -->
+    <article class="film-card" style="--p1:#120404; --p2:#2a0a0a; --p3:#050202; --glow:#ff3b3b;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Terminator — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>1984</span><span>Action SF</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect x="0" y="0" width="200" height="300" fill="#0a0505"/>
+              <ellipse cx="100" cy="170" rx="52" ry="66" fill="#161010" stroke="#3a2828" stroke-width="1.5"/>
+              <circle cx="82" cy="160" r="9" fill="#e21b1b"/>
+              <circle cx="118" cy="160" r="9" fill="#e21b1b"/>
+              <circle cx="82" cy="160" r="9" fill="none" stroke="#ff5a4a" stroke-width="1" opacity="0.7">
+                <animate attributeName="r" values="9;12;9" dur="2.4s" repeatCount="indefinite"/>
+              </circle>
+              <path d="M70 200 Q100 214 130 200" stroke="#3a2828" stroke-width="2" fill="none"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Terminator</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Terminator</h3><span class="back-badge">1984</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>James Cameron aurait écrit le scénario après un rêve fiévreux d'un robot métallique émergeant des flammes.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>Le petit budget a forcé la plupart des effets à rester pratiques plutôt que numériques — ce qui donne au film sa texture si particulière encore aujourd'hui.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>« I'll be back » — trois mots devenus culte, lâchés presque sans emphase par Schwarzenegger.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Godzilla 1998 -->
+    <article class="film-card" style="--p1:#071018; --p2:#0d2a2a; --p3:#04080c; --glow:#2dd4bf;">
+      <div class="flip-scene" tabindex="0" role="button" aria-label="Godzilla — appuie pour voir les secrets">
+        <div class="flip-card">
+          <div class="card-face card-front">
+            <div class="card-badge"><span>1998</span><span>Kaiju</span></div>
+            <svg class="poster-art" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="gzBg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#0c1c22"/>
+                  <stop offset="100%" stop-color="#02080a"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="0" width="200" height="300" fill="url(#gzBg)"/>
+              <g fill="#0a1a1e">
+                <rect x="10" y="190" width="18" height="90"/>
+                <rect x="34" y="160" width="22" height="120"/>
+                <rect x="62" y="200" width="16" height="80"/>
+                <rect x="150" y="170" width="20" height="110"/>
+                <rect x="176" y="205" width="16" height="75"/>
+              </g>
+              <g fill="#e8c96a" opacity="0.55">
+                <rect x="38" y="175" width="3" height="4"/>
+                <rect x="45" y="190" width="3" height="4"/>
+                <rect x="154" y="185" width="3" height="4"/>
+                <rect x="180" y="220" width="3" height="4"/>
+              </g>
+              <path d="M60 190 Q95 60 100 30 Q108 70 140 130 Q120 170 100 200 Q78 175 60 190 Z" fill="#173a34" opacity="0.92"/>
+              <circle cx="98" cy="70" r="2.4" fill="#ffe27a"/>
+            </svg>
+            <div class="front-info">
+              <h2 class="front-title">Godzilla</h2>
+              <p class="front-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>Survole pour découvrir les secrets ✦</p>
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-head"><h3 class="back-title">Godzilla</h3><span class="back-badge">1998</span></div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">💡</span>Le saviez-vous ?</p>
+              <p>Cette version imagine un Godzilla plus animal et furtif que le monstre japonais original — un pari qui a partagé les fans.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🔍</span>Le détail caché</p>
+              <p>Jean Reno joue un agent secret français dont la mission fait écho aux essais nucléaires — un clin d'œil direct à l'origine du Godzilla original.</p>
+            </div>
+            <div class="back-item">
+              <p class="label"><span class="emoji">🎧</span>La scène culte</p>
+              <p>La traque dans les rues de Manhattan sous la pluie reste le grand morceau de bravoure du film, entre Jurassic Park et bataille de kaiju.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ================= PROCHAINE SÉANCE IRL ================= -->
+  <section class="irl">
+    <div class="irl-particles" id="irlParticles" aria-hidden="true"></div>
+    <p class="irl-eyebrow">à venir</p>
+    <h2>La prochaine séance, en vrai</h2>
+    <p>Un jour, un canap', un plaid, et un de ces films — pas à travers un écran chacune de son côté, mais assises l'une à côté de l'autre, pour de vrai.</p>
+    <button class="irl-btn" id="irlBtn" type="button">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 4h16v13H7l-3 3V4z"/></svg>
+      Proposer une soirée film
+    </button>
+    <p class="irl-note" id="irlNote">C'est noté — reste plus qu'à choisir le film 🍿</p>
+  </section>
+
+  <footer class="note">
+    Popcorn pas obligatoire, mais fortement conseillé.
+    <span class="signature">— pour toi</span>
+  </footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- champ d'étoiles discret ---------- */
+  var field = document.getElementById('starfield');
+  if (field){
+    var n = 60;
+    var frag = document.createDocumentFragment();
+    for (var i=0;i<n;i++){
+      var s = document.createElement('span');
+      s.style.left = (Math.random()*100) + '%';
+      s.style.top = (Math.random()*100) + '%';
+      s.style.setProperty('--o', (0.25 + Math.random()*0.55).toFixed(2));
+      s.style.setProperty('--dur', (2.5 + Math.random()*4).toFixed(2) + 's');
+      s.style.setProperty('--delay', (Math.random()*4).toFixed(2) + 's');
+      frag.appendChild(s);
+    }
+    field.appendChild(frag);
+  }
+
+  /* ---------- flip au tap/clic (en plus du survol souris / focus clavier) ---------- */
+  var scenes = document.querySelectorAll('.flip-scene');
+  scenes.forEach(function(scene){
+    scene.addEventListener('click', function(){
+      scene.classList.toggle('is-flipped');
+    });
+    scene.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        scene.classList.toggle('is-flipped');
+      }
+    });
+  });
+
+  /* ---------- bouton "Proposer une soirée film" : petite pluie de particules ---------- */
+  var irlBtn = document.getElementById('irlBtn');
+  var irlParticles = document.getElementById('irlParticles');
+  var irlNote = document.getElementById('irlNote');
+  var noteTimer = null;
+  var colors = ['#5be9ff', '#ff5ca8', '#a86bff', '#e8b96a', '#6fffb0'];
+
+  if (irlBtn){
+    irlBtn.addEventListener('click', function(){
+      var count = 22;
+      for (var i=0;i<count;i++){
+        var p = document.createElement('span');
+        p.className = 'irl-particle';
+        var angle = Math.random() * Math.PI * 2;
+        var dist = 60 + Math.random() * 110;
+        var dx = Math.cos(angle) * dist;
+        var dy = Math.sin(angle) * dist - 40;
+        p.style.setProperty('--dx', dx.toFixed(1) + 'px');
+        p.style.setProperty('--dy', dy.toFixed(1) + 'px');
+        p.style.setProperty('--c', colors[i % colors.length]);
+        p.style.animationDelay = (Math.random()*0.15).toFixed(2) + 's';
+        irlParticles.appendChild(p);
+        (function(el){
+          setTimeout(function(){ el.remove(); }, 1300);
+        })(p);
+      }
+      irlNote.classList.add('is-visible');
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(function(){ irlNote.classList.remove('is-visible'); }, 4200);
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
