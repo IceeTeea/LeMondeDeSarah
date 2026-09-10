@@ -5,11 +5,9 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* =========================================================
-     DATES DU CALENDRIER — septembre 2026 (du 1er à la fin du mois)
+     DATES DU CALENDRIER — 30 jours à partir du 10 septembre 2026
      ========================================================= */
-  var CAL_YEAR = 2026;
-  var CAL_MONTH = 8; /* 0-indexé : 8 = septembre */
-  var DAYS_IN_MONTH = new Date(CAL_YEAR, CAL_MONTH + 1, 0).getDate();
+  var CAL_START = new Date(2026, 8, 10); /* 10 septembre 2026 : jour 1 du calendrier = aujourd'hui (peut déborder sur le mois suivant) */
 
   /* ÉDITABLE : remplace ces 30 phrases par tes propres textes.
      Le tableau est indexé à partir de 0 (index 0 = jour 1). */
@@ -46,6 +44,8 @@
     "Ces 30 mots touchent à leur fin, mais pas une seule seconde ce que je pense de toi ne s'arrête ici. Tu es ma meilleure amie, un pilier irremplaçable et une personne profondément gravée dans mon cœur. Merci d'être toi, aujourd'hui et pour toujours."
   ];
 
+  var DAYS_IN_CAL = DAY_TEXTS.length; /* 30 jours, à partir de CAL_START ci-dessus */
+
   /* ÉDITABLE : les lettres. Change trigger / word / sub comme tu veux,
      ou ajoute/retire des objets dans ce tableau — tout s'adapte automatiquement. */
   var LETTERS = [
@@ -63,7 +63,7 @@
   var todayReal = new Date();
   var todayMid = new Date(todayReal.getFullYear(), todayReal.getMonth(), todayReal.getDate());
 
-  function dateForDay(d){ return new Date(CAL_YEAR, CAL_MONTH, d); }
+  function dateForDay(d){ return new Date(CAL_START.getFullYear(), CAL_START.getMonth(), CAL_START.getDate() + (d - 1)); }
   function isUnlocked(d){ return dateForDay(d).getTime() <= todayMid.getTime(); }
   function isToday(d){ return dateForDay(d).getTime() === todayMid.getTime(); }
   function frDate(d){
@@ -125,7 +125,7 @@
     var hash = window.location.hash.replace('#','');
     if(hash.indexOf('jour-') === 0){
       var d = parseInt(hash.replace('jour-',''), 10);
-      if(d >= 1 && d <= DAYS_IN_MONTH && isUnlocked(d)){
+      if(d >= 1 && d <= DAYS_IN_CAL && isUnlocked(d)){
         openDay(d, false);
         return;
       }
@@ -219,13 +219,13 @@
 
   function renderCalendar(){
     var firstWeekday = (dateForDay(1).getDay() + 6) % 7; /* 0 = lundi */
-    var totalCells = Math.ceil((firstWeekday + DAYS_IN_MONTH) / 7) * 7;
+    var totalCells = Math.ceil((firstWeekday + DAYS_IN_CAL) / 7) * 7;
     var opened = getOpened();
     calGrid.innerHTML = '';
 
     for(var i = 0; i < totalCells; i++){
       var dayNum = i - firstWeekday + 1;
-      if(dayNum < 1 || dayNum > DAYS_IN_MONTH){
+      if(dayNum < 1 || dayNum > DAYS_IN_CAL){
         var empty = document.createElement('div');
         empty.className = 'day-box is-empty';
         empty.setAttribute('aria-hidden','true');
@@ -276,9 +276,9 @@
     }
 
     if(todayMid.getTime() < dateForDay(1).getTime()){
-      calStatus.textContent = 'Le calendrier s\'ouvre le 1er septembre 2026 — reviens à ce moment-là !';
-    } else if(todayMid.getTime() > dateForDay(DAYS_IN_MONTH).getTime()){
-      calStatus.textContent = 'Le mois est terminé : tu peux tout rouvrir autant que tu veux.';
+      calStatus.textContent = 'Le calendrier s\'ouvre le ' + dateForDay(1).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) + ' — reviens à ce moment-là !';
+    } else if(todayMid.getTime() > dateForDay(DAYS_IN_CAL).getTime()){
+      calStatus.textContent = 'Les 30 jours sont terminés : tu peux tout rouvrir autant que tu veux.';
     } else {
       calStatus.textContent = 'On est le ' + todayMid.toLocaleDateString('fr-FR', { day:'numeric', month:'long' }) + ' : les cases jusqu\'à aujourd\'hui sont ouvertes.';
     }
@@ -304,13 +304,13 @@
   function openDay(d, animate){
     currentDay = d;
     var text = DAY_TEXTS[d - 1] || 'Encore une pensée pour toi.';
-    dayLabel.textContent = 'JOUR ' + String(d).padStart(2,'0') + ' · SEPTEMBRE';
+    dayLabel.textContent = 'JOUR ' + String(d).padStart(2,'0') + ' · ' + dateForDay(d).toLocaleDateString('fr-FR', { month: 'long' }).toUpperCase();
     dayTextEl.className = 'day-text ' + (text.length <= 25 ? 'len-s' : text.length <= 42 ? 'len-m' : 'len-l');
     dayTextEl.innerHTML = buildWords(text);
     markOpened(d);
 
     dayPrev.disabled = !(d > 1 && isUnlocked(d - 1));
-    dayNext.disabled = !(d < DAYS_IN_MONTH && isUnlocked(d + 1));
+    dayNext.disabled = !(d < DAYS_IN_CAL && isUnlocked(d + 1));
 
     showScreen('day');
     window.setTimeout(function(){ dayTextEl.focus(); }, 50);
@@ -324,7 +324,7 @@
     if(currentDay > 1 && isUnlocked(currentDay - 1)){ window.location.hash = 'jour-' + (currentDay - 1); }
   });
   dayNext.addEventListener('click', function(){
-    if(currentDay < DAYS_IN_MONTH && isUnlocked(currentDay + 1)){ window.location.hash = 'jour-' + (currentDay + 1); }
+    if(currentDay < DAYS_IN_CAL && isUnlocked(currentDay + 1)){ window.location.hash = 'jour-' + (currentDay + 1); }
   });
 
   /* =========================================================
