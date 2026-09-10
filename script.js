@@ -542,29 +542,29 @@
   var CONSTELLATIONS = [
     {
       name: "Le jour où on s'est rencontrées",
-      date: "Été 2015",
-      text: "Je me souviens exactement d'où on était. Je ne savais pas encore que tu allais devenir aussi importante.",
+      date: "XXX",
+      text: "Plus Tard",
       x: 320, y: 260,
       path: [ {dx:0,dy:0}, {dx:-70,dy:-55}, {dx:30,dy:-95}, {dx:95,dy:-60} ]
     },
     {
-      name: "Le road trip improvisé",
-      date: "Juillet 2019",
-      text: "On avait dit « juste pour la journée ». On est rentrées trois jours plus tard, sans regret.",
+      name: "XXX",
+      date: "XXX",
+      text: "Plus Tard",
       x: 980, y: 210,
       path: [ {dx:0,dy:0}, {dx:60,dy:-50}, {dx:130,dy:-30}, {dx:170,dy:30} ]
     },
     {
-      name: "La nuit avant le grand jour",
-      date: "Juin 2020",
-      text: "Tu doutais de toi jusqu'à 2h du matin. Je savais que tu allais y arriver.",
+      name: "XXX",
+      date: "XXX",
+      text: "Plus Tard",
       x: 1560, y: 430,
       path: [ {dx:0,dy:0}, {dx:-55,dy:60}, {dx:-40,dy:140}, {dx:30,dy:180} ]
     },
     {
-      name: "Le déménagement",
-      date: "Mars 2022",
-      text: "On a porté ce canapé à deux dans quatre étages. On en rit encore.",
+      name: "XXX",
+      date: "XXX",
+      text: "Plus Tard",
       x: 760, y: 880,
       path: [ {dx:0,dy:0}, {dx:80,dy:-40}, {dx:160,dy:-55}, {dx:210,dy:-10} ]
     },
@@ -1016,7 +1016,7 @@
      ========================================================= */
 
   /* ————— ÉDITABLE : modifie ces constantes pour personnaliser le jeu ————— */
-  var SECRET_CODE = "1855";        /* ÉDITABLE : code du digicode, 4 chiffres */
+  var SECRET_CODE = "9204";        /* ÉDITABLE : code du digicode, 4 chiffres */
   var RIDDLE_QUESTION = "Je grandis chaque année sans jamais vieillir vraiment, et on me fête à chaque automne. Qui suis-je ?"; /* ÉDITABLE */
   var RIDDLE_ANSWER = "anniversaire"; /* ÉDITABLE — comparaison insensible à la casse et aux espaces */
   var SECRET_PHRASE = "MEILLEURE AMIE POUR LA VIE"; /* ÉDITABLE — lettres A-Z et espaces uniquement, devinable lettre par lettre OU d'un coup en tapant la phrase entière */
@@ -1034,9 +1034,9 @@
   var WRAPPED_HIGHLIGHT_TEXT = "Ce jour où tout a basculé et où on a su qu'on se garderait pour la vie — celui-là, je le garde précieusement."; /* ÉDITABLE */
   /* ÉDITABLE : les répliques et expressions cultes du duo — ajoute, retire ou modifie librement */
   var WRAPPED_QUOTES = [
-    "« On n'est pas perdues, on explore. »",
-    "« Je te jure c'est la dernière fois que je fais confiance à ton GPS. »",
-    "« Attends, raconte encore une fois, j'ai trop ri la première fois. »"
+    "« XXX »",
+    "« XXX »",
+    "« XXX »"
   ];
   var WRAPPED_BADGE_TEXT = "DUO LÉGENDAIRE"; /* ÉDITABLE */
   var WRAPPED_BADGE_SUB = "— et ce n'est que le début de l'histoire."; /* ÉDITABLE */
