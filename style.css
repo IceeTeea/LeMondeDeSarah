@@ -1374,7 +1374,7 @@
       radial-gradient(ellipse 70% 55% at 50% 32%, rgba(199,241,59,0.1), transparent 60%),
       radial-gradient(ellipse 90% 70% at 50% 40%, var(--night-1) 0%, var(--night-2) 55%, var(--night-3) 100%);
   }
-  /* une fois le coffre ouvert, .wrapped-app doit couvrir TOUTE la page (vraie
+  /* une fois le coffre ouvert, .reward-app doit couvrir TOUTE la page (vraie
      prise de contrôle de l'écran) — on retire donc le padding qui servait
      juste à cadrer joliment les portes du coffre avant ouverture. Le padding
      de .secret-screen (l'écran englobant) doit aussi sauter, sinon il laisse
@@ -1384,9 +1384,9 @@
   /* .secret-progress / .secret-console-log vivent dans une pile d'empilement
      séparée de .vault-scene (elles sont soeurs de .secret-stage) : leur
      z-index se compare donc à celui de .secret-stage dans son ensemble, pas
-     à celui (pourtant plus élevé) de .wrapped-app à l'intérieur. Résultat :
+     à celui (pourtant plus élevé) de .reward-app à l'intérieur. Résultat :
      une fois le coffre ouvert en plein écran, ce fil d'ariane ("Terminal —
-     Accès") restait visible par-dessus le bouton mode-toggle. On le masque
+     Accès") restait visible par-dessus le contenu du coffre. On le masque
      donc dès que la prise de contrôle plein écran est active. */
   .secret-screen.vault-fullscreen .secret-progress,
   .secret-screen.vault-fullscreen .secret-console-log{ display: none; }
@@ -1413,15 +1413,13 @@
   #vault-scene.opened .vault-glow{ opacity: 1; }
 
   /* =========================================================
-     ÉCRAN FINAL — "Bestie Wrapped" + Mode Hacker (God Mode)
-     Un seul conteneur .wrapped-app avec deux thèmes pilotés par
-     l'attribut data-mode="wrapped" | "hacker". Toutes les couleurs
-     passent par des variables CSS locales (--w-*) : pour changer de
-     thème il suffit de retoucher UN SEUL bloc de variables — c'est
-     ce que demande le cahier des charges ("CSS avec variables pour
-     switcher facilement les thèmes").
+     ÉCRAN FINAL — "Le coffre de souvenirs"
+     Une enveloppe cachetée → une lettre qui s'écrit toute seule →
+     un mur de polaroïds à retourner → un mot de la fin.
+     Palette : nuit du site + or chaud (lampe de bureau), papier crème,
+     cachet de cire rose. Les couleurs locales sont dans .reward-app.
      ========================================================= */
-  .has-js #vault-scene.opened .wrapped-app{
+  .has-js #vault-scene.opened .reward-app{
     animation: finalContentIn 0.8s cubic-bezier(.2,.8,.3,1) both;
     animation-delay: 0.95s;
   }
@@ -1429,311 +1427,218 @@
     from{ opacity: 0; transform: scale(0.97); }
     to{ opacity: 1; transform: scale(1); }
   }
-  /* .wrapped-app prend maintenant TOUTE LA PAGE (position:fixed plein écran) —
-     ce n'est plus une petite carte flottante mais un vrai "prise de contrôle"
-     de l'écran, façon appli à part entière, une fois le coffre ouvert. */
-  .wrapped-app{
-    /* ---- thème "Bestie Wrapped" (par défaut) ---- */
-    --w-bg1: #2A1150;
-    --w-bg2: #4A1770;
-    --w-bg3: #7A1E5C;
-    --w-text: var(--paper);
-    --w-sub: rgba(251,243,231,0.72);
-    --w-accent: var(--tangerine);
-    --w-accent-2: var(--magenta);
-    --w-border: rgba(255,255,255,0.18);
-    --w-glass: rgba(255,255,255,0.08);
-    --w-font: var(--f-display);
-    --w-mono: var(--f-body);
-    /* fonds FIXES (jamais redéfinis par [data-mode="hacker"]) : chaque vue
-       (.wrapped-view / .hacker-view) porte son propre fond opaque avec sa
-       propre couleur, indépendamment du thème courant de .wrapped-app —
-       indispensable maintenant que les deux vues coexistent dans le DOM
-       (empilées en z-index + clip-path) plutôt que basculées en opacité :
-       sans fond opaque propre, la vue du dessus laisserait voir à travers. */
-    --wrapped-bg-fixed: linear-gradient(160deg, #2A1150, #4A1770 55%, #7A1E5C);
-    --hacker-bg-fixed: linear-gradient(160deg, #050807, #04120b 55%, #010402);
-
-    /* position:absolute (et non fixed) : vault-scene fait déjà toute la hauteur
-       de l'écran (min-height:100vh) et sert de repère de positionnement fiable
-       — "fixed" serait piégé par le perspective:1600px de vault-scene (qui crée
-       son propre repère pour les éléments fixed) et ne couvrirait plus tout
-       l'écran de façon prévisible. */
+  .reward-app{
+    --r-gold: #FFC857;
+    --r-gold-soft: #FFD27A;
+    --r-paper: #F7ECD6;
+    --r-paper-2: #EDDDBB;
+    --r-ink: #3A2447;
+    --r-wax: var(--magenta);
+    /* position:absolute (pas fixed) : .vault-scene a un perspective qui piégerait un fixed */
     position: absolute; inset: 0; z-index: 40;
-    overflow: hidden;
-    opacity: 0;
-    background: linear-gradient(160deg, var(--w-bg1), var(--w-bg2) 55%, var(--w-bg3));
-    color: var(--w-text);
-    transition: background 0.6s ease;
+    overflow: hidden; opacity: 0;
+    color: var(--paper);
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 36%, rgba(255,200,87,0.17), transparent 68%),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,60,142,0.1), transparent 70%),
+      linear-gradient(180deg, var(--night-1), var(--night-2) 60%, var(--night-3));
   }
-  .wrapped-app h2{ outline: none; }
-  /* ---- thème "Mode Hacker" : on ne redéfinit QUE les variables ---- */
-  .wrapped-app[data-mode="hacker"]{
-    --w-bg1: #050807;
-    --w-bg2: #04120b;
-    --w-bg3: #010402;
-    --w-text: var(--terminal-green);
-    --w-sub: rgba(76,255,160,0.65);
-    --w-accent: var(--terminal-green);
-    --w-accent-2: #00ffa2;
-    --w-border: rgba(76,255,160,0.35);
-    --w-glass: rgba(76,255,160,0.06);
-    --w-font: var(--f-mono);
-  }
-  /* petit glitch RVB façon "piratage" joué au moment où on bascule de thème */
-  .has-js .wrapped-app.mode-switching{ animation: modeSwitchGlitch 0.5s steps(2, end); }
-  @keyframes modeSwitchGlitch{
-    0%{ filter: hue-rotate(0deg) brightness(1); transform: translate(0,0); }
-    20%{ filter: hue-rotate(40deg) brightness(1.4); transform: translate(-3px,2px); }
-    40%{ filter: hue-rotate(-30deg) brightness(0.7); transform: translate(3px,-2px); }
-    60%{ filter: hue-rotate(20deg) brightness(1.3); transform: translate(-2px,0); }
-    80%{ filter: hue-rotate(-15deg) brightness(0.9); transform: translate(2px,1px); }
-    100%{ filter: hue-rotate(0deg) brightness(1); transform: translate(0,0); }
-  }
+  .reward-app:focus{ outline: none; }
+  .reward-app h2{ outline: none; }
+  .reward-dust{ position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-  /* ---- bouton bascule, toujours visible en haut du panneau ---- */
-  .mode-toggle{
-    position: absolute; top: var(--space-3); right: var(--space-3); z-index: 30;
-    padding: 0.6em 1.2em;
-    border-radius: 999px;
-    border: 1px solid var(--w-border);
-    background: var(--w-glass);
-    backdrop-filter: blur(10px) saturate(140%);
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
-    color: var(--w-text);
-    font-family: var(--w-mono); font-size: 0.85rem; font-weight: 700;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-    transition: transform 0.2s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  /* ---- barre des 3 étapes ---- */
+  .reward-steps{
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 6;
+    display: flex; gap: 8px; max-width: calc(100% - 24px);
   }
-  .mode-toggle:hover{ transform: translateY(-2px) scale(1.03); border-color: var(--w-accent); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
-  .mode-toggle:active{ transform: translateY(0) scale(0.97); }
-  .mode-toggle:focus-visible{ outline: 2px solid var(--w-accent); outline-offset: 3px; }
+  .reward-step{
+    display: inline-flex; align-items: center; gap: 0.55em;
+    padding: 0.5em 0.95em; border-radius: 999px; cursor: pointer; white-space: nowrap;
+    font-family: var(--f-body); font-size: 0.8rem; font-weight: 600;
+    color: rgba(251,243,231,0.72);
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  }
+  .reward-step-dot{ width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); flex: none; transition: background 0.2s ease; }
+  .reward-step.done .reward-step-dot{ background: var(--r-gold); }
+  .reward-step.current{ color: var(--r-gold-soft); border-color: rgba(255,200,87,0.6); background: rgba(255,200,87,0.1); }
+  .reward-step.current .reward-step-dot{ background: var(--r-gold); box-shadow: 0 0 10px 2px rgba(255,200,87,0.6); }
+  .reward-step:not(:disabled):hover{ border-color: rgba(255,200,87,0.55); color: var(--paper); }
+  .reward-step:disabled{ opacity: 0.35; cursor: default; }
+  .reward-step:focus-visible, .envelope:focus-visible, .polaroid:focus-visible, .reward-next:focus-visible{ outline: 2px solid var(--r-gold); outline-offset: 4px; }
 
-  /* ---- barre lumineuse diagonale (balayage) jouée à chaque bascule de mode ---- */
-  .wipe-beam{ position: absolute; inset: 0; z-index: 22; pointer-events: none; overflow: hidden; }
-  .wipe-beam::before{
-    content: "";
-    position: absolute;
-    width: 12px; height: 75vmax;
-    left: -8%; top: 108%;
-    background: linear-gradient(180deg, transparent, var(--w-accent) 35%, #ffffff 50%, var(--w-accent) 65%, transparent);
-    box-shadow: 0 0 34px 10px var(--w-accent), 0 0 90px 30px var(--w-accent);
-    transform: translate(-50%, -50%) rotate(-42deg);
-    opacity: 0;
+  /* ---- les 3 étapes empilées, une seule visible ---- */
+  .reward-stage{
+    position: absolute; inset: 56px 0 0 0; z-index: 2;
+    display: flex; overflow-y: auto; overflow-x: hidden;
+    padding: var(--space-3) var(--space-4) var(--space-5);
+    opacity: 0; visibility: hidden; transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
   }
-  .has-js .wipe-beam.sweeping::before{ animation: wipeBeamSweep 0.9s cubic-bezier(.3,.6,.25,1) both; }
-  .has-js .wipe-beam.sweeping.reverse::before{ animation-direction: reverse; }
-  @keyframes wipeBeamSweep{
-    0%{ left: -8%; top: 108%; opacity: 0; }
-    10%{ opacity: 1; }
-    85%{ opacity: 1; }
-    100%{ left: 108%; top: -8%; opacity: 0; }
-  }
+  .reward-stage.active{ opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  /* margin:auto centre quand il y a de la place ET laisse défiler quand il n'y en a pas */
+  .reward-inner{ margin: auto; width: 100%; max-width: 940px; text-align: center; display: flex; flex-direction: column; align-items: center; }
 
-  /* ---- bascule entre les deux vues : un "wipe" diagonal en clip-path plutôt
-         qu'un simple fondu — un losange (bien plus grand que l'écran, donc
-         invisible en tant que tel) glisse en diagonale bas-gauche → haut-droite ;
-         comme les 4 points bougent tous du même delta, c'est une pure translation
-         que le navigateur anime nativement entre les deux polygones ---- */
-  .wrapped-view{
-    position: absolute; inset: 0; z-index: 3;
-    display: flex; flex-direction: column;
-    background: var(--wrapped-bg-fixed);
-    clip-path: polygon(50% -100%, 200% 50%, 50% 200%, -100% 50%); /* losange géant centré = couvre tout, "rien de clippé" à l'oeil */
-    transition: clip-path 0.9s cubic-bezier(.3,.6,.25,1);
-  }
-  .hacker-view{
-    position: absolute; inset: 0; z-index: 2;
-    display: flex; flex-direction: column;
-    background: var(--hacker-bg-fixed);
-  }
-  .wrapped-app[data-mode="hacker"] .wrapped-view{
-    clip-path: polygon(300% -350%, 450% -200%, 300% -50%, 150% -200%); /* même losange, translaté loin hors-écran */
-    pointer-events: none;
-  }
+  .reward-title{ font-family: var(--f-display); font-weight: 700; font-size: clamp(1.6rem, 4.4vw, 2.5rem); line-height: 1.15; color: var(--paper); }
+  .reward-sub{ margin-top: var(--space-2); font-family: var(--f-script); font-size: 1.5rem; color: var(--r-gold-soft); }
 
-  /* ============ MODE 1 : BESTIE WRAPPED ============ */
-  /* ---- décor ambiant : canevas d'étincelles/confettis qui flottent doucement ---- */
-  .wrapped-ambient-canvas{ position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; opacity: 0.9; }
-  .wrapped-decor{ position: absolute; inset: 0; z-index: 1; overflow: hidden; }
-  .wdecor{
-    position: absolute;
-    font-size: clamp(1.6rem, 3.2vw, 2.6rem);
-    opacity: 0.32;
-    filter: drop-shadow(0 0 14px rgba(255,255,255,0.3));
+  /* ---- boutons d'action ---- */
+  .reward-next{
+    margin-top: var(--space-4); padding: 0.9em 1.7em; border-radius: 999px; cursor: pointer;
+    font-family: var(--f-body); font-weight: 700; font-size: 0.98rem; color: #2A1450;
+    background: linear-gradient(180deg, #FFD97F, var(--r-gold) 60%, #F0A93A);
+    border: none; box-shadow: 0 10px 26px rgba(255,200,87,0.28), inset 0 1px 0 rgba(255,255,255,0.5);
+    opacity: 0; transform: translateY(8px); pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .has-js .wdecor{ animation: wdecorFloat 7s ease-in-out infinite; }
-  .wdecor-1{ top: 10%;  left: 8%;  animation-delay: 0s; }
-  .wdecor-2{ top: 68%;  left: 12%; animation-delay: 1.1s; }
-  .wdecor-3{ top: 20%;  right: 10%; animation-delay: 2.2s; }
-  .wdecor-4{ top: 78%;  right: 14%; animation-delay: 0.6s; }
-  .wdecor-5{ top: 45%;  left: 4%;  animation-delay: 1.8s; }
-  .wdecor-6{ top: 40%;  right: 5%; animation-delay: 3s; }
-  @keyframes wdecorFloat{
-    0%,100%{ transform: translateY(0) rotate(-4deg); }
-    50%{ transform: translateY(-22px) rotate(6deg); }
+  .reward-next.show{ opacity: 1; transform: none; pointer-events: auto; }
+  .reward-next.show:hover{ transform: translateY(-2px); box-shadow: 0 14px 32px rgba(255,200,87,0.4), inset 0 1px 0 rgba(255,255,255,0.5); }
+  .reward-next.show:active{ transform: translateY(1px) scale(0.98); }
+  .has-js .reward-next.ready{ animation: rewardPulse 2.2s ease-in-out infinite; }
+  @keyframes rewardPulse{
+    0%,100%{ box-shadow: 0 10px 26px rgba(255,200,87,0.28), 0 0 0 0 rgba(255,200,87,0.45), inset 0 1px 0 rgba(255,255,255,0.5); }
+    50%{ box-shadow: 0 10px 26px rgba(255,200,87,0.28), 0 0 0 14px rgba(255,200,87,0), inset 0 1px 0 rgba(255,255,255,0.5); }
   }
+  .reward-next.ghost{ background: transparent; color: var(--paper); border: 1px solid rgba(255,255,255,0.3); box-shadow: none; margin: var(--space-2); }
+  .reward-next.ghost.show:hover{ border-color: var(--r-gold); color: var(--r-gold-soft); box-shadow: none; }
 
-  .wrapped-progress{
-    position: relative; z-index: 5;
-    display: flex; gap: 6px;
-    padding: var(--space-3) var(--space-3) 0;
-    max-width: 640px; margin: 0 auto; width: 100%;
+  /* ---- ÉTAPE 1 : l'enveloppe ---- */
+  .envelope{
+    position: relative; display: block; width: min(360px, 82vw); aspect-ratio: 1.5 / 1;
+    padding: 0; border: 0; background: none; cursor: pointer; perspective: 900px;
+    filter: drop-shadow(0 26px 36px rgba(0,0,0,0.55));
+    transition: transform 0.3s ease, opacity 0.45s ease;
   }
-  .wrapped-bar{ flex: 1; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.22); overflow: hidden; }
-  .wrapped-bar-fill{ display: block; height: 100%; width: 0%; background: var(--w-text); border-radius: 3px; }
-  .wrapped-bar.done .wrapped-bar-fill{ width: 100%; transition: none; }
-  .wrapped-bar.filling .wrapped-bar-fill{ width: 100%; transition: width 6s linear; }
+  .has-js .envelope:not(.open){ animation: envFloat 3.6s ease-in-out infinite; }
+  @keyframes envFloat{ 0%,100%{ transform: translateY(0) rotate(-0.6deg); } 50%{ transform: translateY(-8px) rotate(0.6deg); } }
+  .envelope:not(.open):hover{ transform: translateY(-6px) rotate(-1.2deg) scale(1.02); }
+  .envelope > span{ position: absolute; display: block; }
+  .env-back{ inset: 0; background: #D6BC92; border-radius: 6px; }
+  .env-front{
+    inset: 0; border-radius: 6px; z-index: 2;
+    background: linear-gradient(180deg, #F2E2C0, #E4CEA4);
+    clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+  }
+  .env-flap{
+    left: 0; right: 0; top: 0; height: 58%; z-index: 3;
+    background: linear-gradient(180deg, #EBD8AF, #DCC597);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform 0.7s cubic-bezier(.4,.1,.2,1), z-index 0s linear 0.3s;
+  }
+  .envelope.open .env-flap{ transform: rotateX(180deg); z-index: 0; }
+  .env-seal{
+    left: 50%; top: 58%; width: 56px; height: 56px; margin: -28px 0 0 -28px; z-index: 4;
+    display: flex !important; align-items: center; justify-content: center; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #FF86B8, var(--r-wax) 45%, #A8165C);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.45), inset 0 -3px 7px rgba(0,0,0,0.28);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+  }
+  .env-seal .icon-spark{ width: 22px; height: 22px; fill: var(--paper); }
+  .envelope.open .env-seal{ opacity: 0; transform: scale(0.6); }
+  .env-to{
+    left: 0; right: 0; bottom: 8%; z-index: 3; text-align: center;
+    font-family: var(--f-script); font-size: 1.7rem; color: #5A3A4A;
+  }
+  .envelope.gone{ opacity: 0; transform: translateY(30px) scale(0.92); pointer-events: none; }
+  .envelope.is-hidden{ display: none; }
+  .env-hint{ margin-top: var(--space-4); font-family: var(--f-script); font-size: 1.5rem; color: var(--r-gold-soft); }
+  .env-hint.is-hidden{ display: none; }
 
-  .wrapped-tapzone{
-    position: absolute; top: 60px; bottom: 90px; z-index: 8;
-    width: 32%; border: none; background: transparent; cursor: pointer; padding: 0;
+  /* ---- ÉTAPE 1 : la lettre ---- */
+  .letter-paper{
+    display: none; position: relative; width: min(660px, 92vw); text-align: left;
+    padding: clamp(20px, 4vw, 34px) clamp(20px, 5vw, 44px) clamp(18px, 3vw, 26px);
+    background: var(--r-paper); color: var(--r-ink); border-radius: 4px;
+    box-shadow: 0 32px 70px rgba(0,0,0,0.55), 0 0 60px rgba(255,200,87,0.12);
+    transform: rotate(-0.6deg);
   }
-  .tapzone-left{ left: 0; } .tapzone-right{ right: 0; }
+  .letter-paper.show{ display: block; animation: paperIn 0.7s cubic-bezier(.2,.8,.3,1) both; }
+  @keyframes paperIn{
+    from{ opacity: 0; transform: translateY(26px) rotate(-3deg) scale(0.96); }
+    to{ opacity: 1; transform: translateY(0) rotate(-0.6deg) scale(1); }
+  }
+  .letter-greeting{ font-family: var(--f-script); font-weight: 700; font-size: clamp(1.8rem, 5vw, 2.2rem); line-height: 1.1; color: #8A1F55; margin-bottom: 6px; }
+  .letter-body{
+    font-family: var(--f-script); font-size: clamp(1.08rem, 2.9vw, 1.3rem);
+    line-height: 30px; color: var(--r-ink);
+    background: repeating-linear-gradient(180deg, transparent 0 29px, rgba(120,80,60,0.16) 29px 30px);
+  }
+  .letter-body p{ margin: 0 0 30px; min-height: 30px; }
+  .letter-body p.is-typing::after{
+    content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px;
+    background: currentColor; vertical-align: -0.12em; animation: caretBlink 0.9s steps(1) infinite;
+  }
+  @keyframes caretBlink{ 50%{ opacity: 0; } }
+  .letter-sign{
+    margin-top: 2px; text-align: right; font-family: var(--f-script); font-weight: 700; font-size: 1.6rem; color: #8A1F55;
+    opacity: 0; transform: translateY(6px); transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .letter-sign.show{ opacity: 1; transform: none; }
 
-  .wrapped-slides{ position: relative; z-index: 2; flex: 1; overflow: hidden; }
-  .wrapped-slide{
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center;
-    padding: var(--space-4) var(--space-4);
-    max-width: 640px; margin: 0 auto;
-    opacity: 0; transform: translateX(24px) scale(0.98);
-    pointer-events: none;
-    transition: opacity 0.45s ease, transform 0.45s ease;
+  /* ---- ÉTAPE 2 : le mur de polaroïds ---- */
+  .polaroid-wall{
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: clamp(14px, 3vw, 24px); max-width: 640px; margin: var(--space-3) auto 0;
   }
-  .wrapped-slide.active{ opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
-  .wrapped-slide.leaving-back{ transform: translateX(-24px) scale(0.98); }
+  .polaroid{
+    --tilt: 0deg; --deal: 0s;
+    position: relative; width: clamp(130px, 28vw, 188px); aspect-ratio: 0.82 / 1;
+    padding: 0; border: 0; background: none; cursor: pointer; perspective: 900px;
+    opacity: 0; transform: rotate(var(--tilt)); transition: transform 0.3s ease;
+  }
+  .polaroid-wall.dealt .polaroid{ opacity: 1; animation: dealIn 0.6s cubic-bezier(.2,.8,.3,1) backwards; animation-delay: var(--deal); }
+  @keyframes dealIn{
+    from{ opacity: 0; transform: translateY(-46px) rotate(calc(var(--tilt) * 3)) scale(0.9); }
+    to{ opacity: 1; transform: translateY(0) rotate(var(--tilt)) scale(1); }
+  }
+  .polaroid:hover{ transform: rotate(0deg) translateY(-6px) scale(1.03); z-index: 2; }
+  .polaroid-inner{
+    position: absolute; inset: 0; display: block; transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(.3,.7,.2,1);
+  }
+  .polaroid.flipped .polaroid-inner{ transform: rotateY(180deg); }
+  .polaroid-face{
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 3px; box-shadow: 0 16px 32px rgba(0,0,0,0.5);
+  }
+  .polaroid-front{ background: #FBF7EE; padding: 10px 10px 0; }
+  .polaroid-photo{
+    flex: 1; min-height: 0; position: relative; overflow: hidden; display: flex;
+    align-items: center; justify-content: center; background: #2A1D3A;
+  }
+  .polaroid-photo img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+  .polaroid-photo.is-empty{
+    flex-direction: column; gap: 6px; font-family: var(--f-body); font-size: 0.72rem; color: rgba(255,255,255,0.68);
+    background: linear-gradient(145deg, #3A2457, #5B2A6E);
+  }
+  .polaroid-photo.is-empty svg{ width: 28px; height: 28px; fill: currentColor; opacity: 0.8; }
+  .polaroid-cap{
+    flex: none; padding: 8px 4px 10px; text-align: center;
+    font-family: var(--f-script); font-weight: 700; font-size: 1.2rem; line-height: 1.1; color: var(--r-ink);
+  }
+  .polaroid-back{
+    transform: rotateY(180deg); background: var(--r-paper); padding: 14px;
+    align-items: center; justify-content: center; text-align: center; overflow: auto;
+    font-family: var(--f-script); font-size: clamp(1.02rem, 2.8vw, 1.2rem); line-height: 1.25; color: var(--r-ink);
+  }
+  .polaroid-back > span{ display: block; }
+  .gallery-count{ margin-top: var(--space-3); font-family: var(--f-body); font-size: 0.9rem; color: rgba(251,243,231,0.72); }
 
-  .wrapped-eyebrow{
-    font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--w-accent); margin-bottom: var(--space-2); opacity: 0.9;
-  }
-  .wrapped-h{ font-family: var(--w-font); font-weight: 800; font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.2; color: var(--w-text); }
-
-  /* ---- Slide 1 : stats géantes, compteurs animés ---- */
-  .wrapped-stats{ display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-5); width: 100%; }
-  .wstat-num{
-    font-family: var(--w-font); font-weight: 800;
-    font-size: clamp(2.6rem, 9vw, 4.6rem); line-height: 1;
-    background: linear-gradient(90deg, var(--w-accent), var(--w-accent-2));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .wstat-label{ margin-top: 0.35em; font-size: 1rem; color: var(--w-sub); }
-
-  /* ---- Slide 2 : le highlight ---- */
-  .wrapped-highlight-text{ margin-top: var(--space-2); font-size: 1.1rem; line-height: 1.6; color: var(--w-sub); max-width: 36ch; }
-  .wrapped-photo{
-    margin-top: var(--space-4);
-    width: min(240px, 60vw); aspect-ratio: 1;
-    border-radius: 20px; border: 2px dashed var(--w-border);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5em;
-    color: var(--w-sub); font-size: 0.8rem;
-  }
-  .wrapped-photo svg{ width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; opacity: 0.7; }
-
-  /* ---- Slide 3 : hall of fame (répliques cultes) ---- */
-  .wrapped-quotes{ display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-4); width: 100%; max-height: 58vh; overflow-y: auto; }
-  .wquote{
-    background: var(--w-glass); border: 1px solid var(--w-border); border-radius: 14px;
-    padding: var(--space-3); font-family: var(--f-script); font-size: 1.3rem; color: var(--w-text);
-  }
-
-  /* ---- Slide 4 : badge final "Duo Légendaire" avec effet de brillance ---- */
-  .wrapped-badge{
-    position: relative; overflow: hidden;
-    display: flex; align-items: center; gap: 0.5em;
-    padding: 1em 1.8em; border-radius: 999px;
-    background: linear-gradient(120deg, var(--w-accent), var(--w-accent-2));
-    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-  }
-  .wrapped-badge::after{
-    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
-    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.65), transparent);
-    transform: skewX(-20deg);
-  }
-  .has-js .wrapped-slide[data-slide="4"].active .wrapped-badge::after{ animation: badgeShine 2.2s ease-in-out 0.4s infinite; }
-  @keyframes badgeShine{ 0%{ left: -60%; } 45%{ left: 130%; } 100%{ left: 130%; } }
-  .wrapped-badge .icon-spark{ width: 22px; height: 22px; fill: var(--night-3); }
-  .badge-text{ font-family: var(--w-font); font-weight: 800; font-size: 1.2rem; letter-spacing: 0.04em; color: var(--night-3); }
-  .wrapped-badge-sub{ margin-top: var(--space-3); color: var(--w-sub); font-size: 1rem; max-width: 32ch; }
-
-  .wrapped-nav-row{ position: relative; z-index: 5; display: flex; justify-content: space-between; max-width: 640px; margin: 0 auto; width: 100%; padding: 0 var(--space-3) var(--space-3); }
-  .wrapped-nav{
-    width: 44px; height: 44px; border-radius: 50%;
-    border: 1px solid var(--w-border); background: var(--w-glass); color: var(--w-text);
-    font-size: 1.4rem; line-height: 1; cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .wrapped-nav:hover{ transform: scale(1.08); border-color: var(--w-accent); }
-  .wrapped-nav:disabled{ opacity: 0.3; cursor: default; }
-
-  /* ============ MODE 2 : HACKER (GOD MODE) — vrai look de terminal ============ */
-  .hacker-rain{ position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.4s ease; }
-  .hacker-rain.active{ opacity: 0.5; }
-  /* fines lignes de scan façon vieil écran cathodique, pur habillage */
-  .hacker-scanlines{
-    position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(76,255,160,0.05) 0px, rgba(76,255,160,0.05) 1px, transparent 1px, transparent 3px);
-    mix-blend-mode: overlay;
-  }
-  .hacker-terminal-window{
-    position: relative; z-index: 2;
-    margin: auto; width: min(94%, 720px); height: min(84%, 620px);
-    display: flex; flex-direction: column;
-    background: rgba(4,10,7,0.82);
-    border: 1px solid var(--w-border);
-    border-radius: 12px;
-    box-shadow: 0 30px 90px rgba(0,0,0,0.7), 0 0 60px rgba(76,255,160,0.12);
-    overflow: hidden;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-  }
-  .hacker-titlebar{
-    display: flex; align-items: center; gap: 0.5em;
-    padding: 0.7em 0.9em;
-    background: rgba(255,255,255,0.04);
-    border-bottom: 1px solid var(--w-border);
-    flex: none;
-  }
-  .tl-dot{ width: 11px; height: 11px; border-radius: 50%; flex: none; }
-  .tl-red{ background: #ff5f57; } .tl-yellow{ background: #febc2e; } .tl-green{ background: #28c840; }
-  .hacker-titlebar-text{ margin-left: 0.4em; font-family: var(--w-mono); font-size: 0.75rem; color: var(--w-sub); }
-  .hacker-body{ flex: 1; min-height: 0; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); }
-  .hacker-title{ font-family: var(--w-mono); color: var(--w-text); font-size: 0.9rem; letter-spacing: 0.06em; text-shadow: 0 0 8px rgba(76,255,160,0.6); flex: none; }
-  .hacker-buttons{ display: flex; flex-wrap: wrap; gap: 0.6em; flex: none; }
-  .hacker-btn{
-    flex: 1 1 auto; padding: 0.6em 0.9em; border-radius: 10px;
-    border: 1px solid var(--w-border); background: var(--w-glass); color: var(--w-text);
-    font-family: var(--w-mono); font-size: 0.78rem; cursor: pointer;
-    transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
-  }
-  .hacker-btn:hover{ background: rgba(76,255,160,0.15); box-shadow: 0 0 16px rgba(76,255,160,0.35); }
-  .hacker-btn:active{ transform: scale(0.96); }
-  .hacker-btn.is-on{ background: var(--w-accent); color: var(--night-3); }
-  .hacker-output-wrap{
-    flex: 1; min-height: 0; overflow-y: auto;
-    border: 1px solid var(--w-border); border-radius: 8px;
-    background: rgba(0,0,0,0.35);
-    padding: 0.7em 0.9em;
-  }
-  .hacker-terminal-row{ display: flex; align-items: center; gap: 0.5em; border: 1px solid var(--w-border); border-radius: 8px; padding: 0.5em 0.7em; background: rgba(0,0,0,0.35); flex: none; }
-  .hacker-caret{ color: var(--w-text); font-family: var(--w-mono); }
-  .hacker-command-input{ flex: 1; background: none; border: none; outline: none; font-family: var(--w-mono); font-size: 0.9rem; color: var(--w-text); caret-color: var(--w-text); }
-  .hacker-command-input::placeholder{ color: var(--w-sub); }
-  .hacker-output{ font-family: var(--w-mono); font-size: 0.82rem; color: var(--w-sub); white-space: pre-wrap; line-height: 1.6; }
-  .has-js .hacker-view.glitching{ animation: modeSwitchGlitch 0.4s steps(2,end) 2; }
-
-  /* "Overclock" : accélère toutes les animations/transitions du panneau hacker à ~300% */
-  .hacker-view.overclocked *{ animation-duration: 0.33s !important; transition-duration: 0.1s !important; }
+  /* ---- ÉTAPE 3 : le mot de la fin ---- */
+  .reward-outro-inner{ max-width: 620px; }
+  .outro-spark{ width: 40px; height: 40px; fill: var(--r-gold); filter: drop-shadow(0 0 14px rgba(255,200,87,0.7)); }
+  .outro-title{ margin-top: var(--space-3); font-family: var(--f-display); font-weight: 800; font-size: clamp(1.9rem, 6vw, 3.1rem); line-height: 1.12; color: var(--paper); }
+  .outro-text{ margin-top: var(--space-3); max-width: 34ch; font-family: var(--f-script); font-size: clamp(1.5rem, 4vw, 1.9rem); line-height: 1.3; color: var(--r-gold-soft); }
+  .outro-actions{ margin-top: var(--space-4); display: flex; flex-wrap: wrap; justify-content: center; }
 
   @media (max-width: 560px){
-    .wrapped-badge{ padding: 0.75em 1.2em; }
-    .badge-text{ font-size: 0.95rem; }
-    .hacker-terminal-window{ width: 96%; height: 88%; }
-    .wdecor{ font-size: 1.4rem; }
+    .reward-step{ padding: 0.45em 0.7em; font-size: 0.74rem; }
+    .reward-steps{ left: auto; right: 12px; transform: none; }
+    .reward-stage{ top: 52px; }
+    .env-seal{ width: 48px; height: 48px; margin: -24px 0 0 -24px; }
   }
 
   /* ---- overlay de transition "Analyse en cours..." entre chaque niveau ---- */
@@ -1801,16 +1706,9 @@
     .has-js .scan-overlay.active .scan-ring{ animation: none !important; }
     .vault-door{ transition: none !important; }
     .vault-glow{ transition: none !important; }
-    .has-js #vault-scene.opened .wrapped-app{ animation: none !important; opacity: 1 !important; transform: none !important; }
-    .has-js .wrapped-app.mode-switching,
-    .has-js .hacker-view.glitching{ animation: none !important; }
-    .has-js .wrapped-slide[data-slide="4"].active .wrapped-badge::after{ animation: none !important; }
-    .wrapped-slide{ transition: none !important; }
-    .wrapped-bar-fill{ transition: none !important; }
-    .wrapped-app, .mode-toggle, .wrapped-view, .hacker-view{ transition: none !important; }
-    .hacker-view.overclocked *{ animation-duration: unset !important; transition-duration: unset !important; }
-    .has-js .wdecor{ animation: none !important; }
-    .has-js .wipe-beam.sweeping::before{ animation: none !important; }
+    .has-js #vault-scene.opened .reward-app{ animation: none !important; opacity: 1 !important; transform: none !important; }
+    .reward-stage, .reward-step, .reward-next, .letter-sign, .envelope, .env-flap, .env-seal, .polaroid, .polaroid-inner{ transition: none !important; }
+    .has-js .envelope:not(.open), .has-js .reward-next.ready, .has-js .polaroid-wall.dealt .polaroid, .letter-paper.show, .letter-body p.is-typing::after{ animation: none !important; }
     .has-js .fairy-lights .bulb{ animation: none !important; opacity: 0.75 !important; }
     .window-frame{ transition: none !important; }
     .warp-overlay{ transition: none !important; }

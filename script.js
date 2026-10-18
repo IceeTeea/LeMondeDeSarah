@@ -118,6 +118,7 @@
 
     if(name === 'sky'){ startSkyLoop(); } else { stopSkyLoop(); }
     if(name === 'secret' && secretResumeFinal){ secretResumeFinal = false; window.setTimeout(openFinalVault, reduceMotion ? 50 : 400); }
+    else if(name === 'secret' && secretEls.secretScreen && secretEls.secretScreen.classList.contains('vault-fullscreen')){ window.setTimeout(startRewardDust, 100); }
 
     window.scrollTo(0,0);
   }
@@ -1041,56 +1042,31 @@
   var RIDDLE_QUESTION = "Je grandis chaque année sans jamais vieillir vraiment, et on me fête à chaque automne. Qui suis-je ?"; /* ÉDITABLE */
   var RIDDLE_ANSWER = "anniversaire"; /* ÉDITABLE — comparaison insensible à la casse et aux espaces */
   var SECRET_PHRASE = "MEILLEURE AMIE POUR LA VIE"; /* ÉDITABLE — lettres A-Z et espaces uniquement, devinable lettre par lettre OU d'un coup en tapant la phrase entière */
-  /* ———————————————————————————————————————————————————————————————————
-     ÉDITABLE : contenu de l'écran final "Bestie Wrapped" + Mode Hacker.
-     Change librement les valeurs ci-dessous pour personnaliser le rendu. */
-  var WRAPPED_FRIENDSHIP_START = "2018-06-01"; /* ÉDITABLE — date de départ du compteur "jours de complicité" (AAAA-MM-JJ) */
-  var WRAPPED_STATS = [
-    /* type "days" : compteur calculé automatiquement depuis WRAPPED_FRIENDSHIP_START ci-dessus */
-    { type: "days", label: "jours de complicité" },
-    { type: "number", value: 47, label: "nombre de fois où t'as eu raison (Top 1 officiel)" }, /* ÉDITABLE */
-    { type: "number", value: 100, suffix: "%", label: "taux de second degré entre nous" } /* ÉDITABLE */
+  /* —————————————————————————————————————————————————————————————————
+     ÉDITABLE : la récompense finale ("Le coffre de souvenirs").
+     Tout ce qui s'affiche vient d'ici : change les textes quand tu veux. */
+  var REWARD_TO = "Sarah"; /* ÉDITABLE — prénom écrit sur l'enveloppe */
+  var REWARD_GREETING = "Chère Sarah,"; /* ÉDITABLE — première ligne de la lettre */
+  /* ÉDITABLE : la lettre, un élément du tableau = un paragraphe. Elle s'écrit lettre par lettre. */
+  var REWARD_LETTER = [
+    "Si tu lis ça, c'est que tu as réussi les trois épreuves. Bien sûr que tu as réussi, je n'en attendais pas moins de toi.",
+    "Je voulais te dire quelque chose que je ne dis pas assez : tu comptes énormément pour moi. Tu es de ces personnes qui rendent les bons jours meilleurs et les mauvais jours supportables.",
+    "Merci d'être là, de me comprendre sans que j'aie besoin d'expliquer, et de rire aux mêmes bêtises que moi. Je ne l'ai jamais dit comme ça, alors voilà : tu es ma meilleure amie, pour de vrai.",
+    "Ce coffre n'était qu'un prétexte pour te le dire. Prends ton temps, regarde nos souvenirs, et sache que ce n'est que le début."
   ];
-  var WRAPPED_HIGHLIGHT_TITLE = "Le vrai déclic"; /* ÉDITABLE */
-  var WRAPPED_HIGHLIGHT_TEXT = "Ce jour où tout a basculé et où on a su qu'on se garderait pour la vie — celui-là, je le garde précieusement."; /* ÉDITABLE */
-  /* ÉDITABLE : les répliques et expressions cultes du duo — ajoute, retire ou modifie librement */
-  var WRAPPED_QUOTES = [
-    "« XXX »",
-    "« XXX »",
-    "« XXX »"
+  var REWARD_SIGNATURE = "Avec tout mon cœur,"; /* ÉDITABLE — ajoute ton prénom derrière si tu veux */
+  /* ÉDITABLE : les polaroïds. title = légende sous la photo, text = le mot au dos.
+     photo = chemin de ton image (ex. "souvenirs/1.jpg") ; laisse "" pour garder l'emplacement vide. */
+  var REWARD_SOUVENIRS = [
+    { title: "Le début de tout", text: "Le jour où on s'est rencontrées, je ne savais pas encore que tu deviendrais ma personne préférée.", photo: "" },
+    { title: "Notre premier fou rire", text: "Celui qu'on n'arrivait plus à arrêter. Je souris encore rien qu'en y repensant.", photo: "" },
+    { title: "Les soirées sans raison", text: "Celles où il ne se passe rien d'extraordinaire, et qui sont pourtant mes préférées.", photo: "" },
+    { title: "Quand ça n'allait pas", text: "Tu étais là, sans poser de questions. C'est ça, une vraie meilleure amie.", photo: "" },
+    { title: "Nos délires", text: "Personne d'autre ne comprendrait. C'est exactement ce qui les rend parfaits.", photo: "" },
+    { title: "La suite", text: "Il y en aura plein d'autres. Je compte bien tous les collectionner avec toi.", photo: "" }
   ];
-  var WRAPPED_BADGE_TEXT = "DUO LÉGENDAIRE"; /* ÉDITABLE */
-  var WRAPPED_BADGE_SUB = "— et ce n'est que le début de l'histoire."; /* ÉDITABLE */
-  /* ÉDITABLE : dictionnaire de commandes du terminal en Mode Hacker (clé en minuscules).
-     "hack"/"hacker" sont spéciales : elles ne renvoient pas une ligne fixe mais
-     déclenchent une vraie petite séquence de piratage animée (voir playHackSequence). */
-  var HACKER_COMMANDS = {
-    "aide": "Commandes disponibles : aide, hack, secret, sarah, love, matrix, clear",
-    "help": "Commandes disponibles : aide, hack, secret, sarah, love, matrix, clear",
-    "secret": "Message caché déverrouillé : tu es la meilleure amie qu'on puisse espérer avoir. 💛",
-    "sarah": "Chargement du profil… accès autorisé : légende vivante, confirmée.",
-    "love": "Niveau d'affection détecté : illimité. Aucune erreur système possible ici.",
-    "matrix": "Tu veux voir jusqu'où va le terrier du lapin ? Essaie plutôt le bouton « Matrix Rain » juste au-dessus.",
-    "clear": "__CLEAR__"
-  };
-  /* ÉDITABLE : banque de fausses lignes de code/logs piochées au hasard pour la
-     séquence "hack" — volontairement n'importe quoi et un peu absurde/drôle */
-  var HACK_SEQUENCE_LINES = [
-    "sudo rm -rf /doutes_sur_notre_amitié",
-    "injection de paillettes.dll ... OK",
-    "contournement du pare-feu émotionnel ... OK",
-    "décryptage de souvenirs_2019.zip [██████████] 100%",
-    "compilation de blagues_nulles.exe ... 4028 erreurs (aucune importance)",
-    "0x1F4A9 0xC0FFEE 0xDEAD 0xBEEF 0xB00B5",
-    "brute-force mot de passe : '1234' … 'sarah123' … 'motdepasse' … ÉCHEC",
-    "scan réseau voisin : 3 routeurs nommés « FBI Surveillance Van » détectés",
-    "chargement du module ami.exe [██████████] 100%",
-    "récupération des fous rires archivés ... 9 842 trouvés",
-    "calibration du niveau de second degré ... 100% (déjà au max)",
-    "connexion au satellite Cosmic Queen ... établie",
-    "génération d'un alibi random ... « j'étais avec Sarah »",
-    "vérification : est-elle irremplaçable ? ... TRUE (aucun doute possible)"
-  ];
+  var REWARD_OUTRO_TITLE = "Merci d'être toi."; /* ÉDITABLE */
+  var REWARD_OUTRO_TEXT = "Ce coffre n'a pas de fond : il y aura toujours de nouveaux souvenirs à y ranger."; /* ÉDITABLE */
   /* ——————————————————————————————————————————————————————————————————— */
   /* ÉDITABLE : lignes défilant discrètement en bas de l'écran, pur habillage */
   var SECRET_LOG_LINES = [
@@ -1126,33 +1102,27 @@
     virtualKeyboard: document.getElementById('virtual-keyboard'),
     vaultScene: document.getElementById('vault-scene'),
     secretScreen: document.getElementById('secret-screen'),
-    /* ---- écran final : Bestie Wrapped + Mode Hacker ---- */
-    wrappedApp: document.getElementById('wrapped-app'),
-    modeToggle: document.getElementById('mode-toggle'),
-    modeToggleLabel: document.getElementById('mode-toggle-label'),
-    wipeBeam: document.getElementById('wipe-beam'),
-    wrappedAmbientCanvas: document.getElementById('wrapped-ambient-canvas'),
-    wrappedView: document.getElementById('wrapped-view'),
-    hackerView: document.getElementById('hacker-view'),
-    wrappedProgress: document.querySelectorAll('#wrapped-progress .wrapped-bar'),
-    tapzoneLeft: document.getElementById('tapzone-left'),
-    tapzoneRight: document.getElementById('tapzone-right'),
-    wrappedSlides: document.querySelectorAll('.wrapped-slide'),
-    wrappedStats: document.getElementById('wrapped-stats'),
-    wrappedHighlightTitle: document.getElementById('wrapped-highlight-title'),
-    wrappedHighlightText: document.getElementById('wrapped-highlight-text'),
-    wrappedQuotes: document.getElementById('wrapped-quotes'),
-    wrappedBadgeText: document.getElementById('wrapped-badge-text'),
-    wrappedBadgeSub: document.getElementById('wrapped-badge-sub'),
-    wrappedPrev: document.getElementById('wrapped-prev'),
-    wrappedNext: document.getElementById('wrapped-next'),
-    hackerRainCanvas: document.getElementById('hacker-rain-canvas'),
-    btnMatrixRain: document.getElementById('btn-matrix-rain'),
-    btnSystemGlitch: document.getElementById('btn-system-glitch'),
-    btnOverclock: document.getElementById('btn-overclock'),
-    hackerCommandInput: document.getElementById('hacker-command-input'),
-    hackerOutput: document.getElementById('hacker-output'),
-    hackerOutputWrap: document.getElementById('hacker-output-wrap'),
+    /* ---- écran final : le coffre de souvenirs ---- */
+    rewardApp: document.getElementById('reward-app'),
+    rewardDust: document.getElementById('reward-dust'),
+    rewardStages: document.querySelectorAll('.reward-stage'),
+    rewardSteps: document.querySelectorAll('.reward-step'),
+    envelope: document.getElementById('envelope'),
+    envelopeTo: document.getElementById('env-to'),
+    envelopeHint: document.getElementById('env-hint'),
+    letterPaper: document.getElementById('letter-paper'),
+    letterGreeting: document.getElementById('letter-greeting'),
+    letterBody: document.getElementById('letter-body'),
+    letterSign: document.getElementById('letter-sign'),
+    letterNext: document.getElementById('reward-letter-next'),
+    galleryTitle: document.getElementById('gallery-title'),
+    polaroidWall: document.getElementById('polaroid-wall'),
+    galleryCount: document.getElementById('gallery-count'),
+    galleryNext: document.getElementById('gallery-next'),
+    outroTitle: document.getElementById('outro-title'),
+    outroText: document.getElementById('outro-text'),
+    outroLetter: document.getElementById('outro-letter'),
+    outroGallery: document.getElementById('outro-gallery'),
     scanOverlay: document.getElementById('scan-overlay'),
     scanOverlayText: document.getElementById('scan-overlay-text'),
     lockIcon: document.getElementById('lock-icon'),
@@ -1199,70 +1169,6 @@
       requestAnimationFrame(drawRain);
     }
     requestAnimationFrame(drawRain);
-  })();
-
-  /* ---- décor ambiant du "Bestie Wrapped" : étincelles/confettis qui flottent
-     doucement vers le haut, pour une ambiance festive, jamais vide. Ne tourne
-     que pendant que le Mode Wrapped est affiché (coupé en Mode Hacker pour
-     économiser des cycles derrière le "wipe" de bascule). ---- */
-  (function(){
-    var canvas = secretEls.wrappedAmbientCanvas;
-    if(!canvas || reduceMotion) return;
-    var ctx = canvas.getContext('2d');
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var particles = [];
-    var palette = ['rgba(255,138,61,0.8)', 'rgba(255,60,142,0.8)', 'rgba(199,241,59,0.85)', 'rgba(255,255,255,0.9)'];
-
-    function sizeCanvas(){
-      var w = canvas.clientWidth, h = canvas.clientHeight;
-      if(!w || !h) return;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var count = Math.max(18, Math.round((w * h) / 26000));
-      particles = [];
-      for(var i=0; i<count; i++){ particles.push(makeParticle(w, h, true)); }
-    }
-    function makeParticle(w, h, anywhere){
-      return {
-        x: Math.random() * w,
-        y: anywhere ? Math.random() * h : h + 20,
-        r: 1.5 + Math.random() * 2.6,
-        speed: 0.25 + Math.random() * 0.55,
-        drift: (Math.random() - 0.5) * 0.4,
-        color: palette[Math.floor(Math.random() * palette.length)],
-        twinkle: Math.random() * Math.PI * 2
-      };
-    }
-    window.addEventListener('resize', sizeCanvas);
-    sizeCanvas();
-
-    function isWrappedVisible(){
-      /* on économise le CPU : pas la peine de dessiner derrière le losange
-         de "wipe" quand on est en Mode Hacker */
-      return secretEls.wrappedApp && secretEls.wrappedApp.getAttribute('data-mode') !== 'hacker';
-    }
-
-    function draw(){
-      requestAnimationFrame(draw);
-      if(!isWrappedVisible()) return;
-      var w = canvas.clientWidth, h = canvas.clientHeight;
-      ctx.clearRect(0, 0, w, h);
-      for(var i=0; i<particles.length; i++){
-        var p = particles[i];
-        p.y -= p.speed;
-        p.x += p.drift;
-        p.twinkle += 0.05;
-        if(p.y < -10){ particles[i] = makeParticle(w, h, false); continue; }
-        var alpha = 0.5 + Math.sin(p.twinkle) * 0.4;
-        ctx.beginPath();
-        ctx.globalAlpha = Math.max(0.1, alpha);
-        ctx.fillStyle = p.color;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-    }
-    requestAnimationFrame(draw);
   })();
 
   /* ---- décor ambiant : petit journal système qui défile en bas de l'écran ---- */
@@ -1324,8 +1230,7 @@
   function openFinalVault(){
     secretEls.vaultScene.classList.add('opened');
     if(secretEls.secretScreen){ secretEls.secretScreen.classList.add('vault-fullscreen'); }
-    startWrapped();
-    if(secretEls.wrappedApp){ secretEls.wrappedApp.focus(); }
+    startReward();
   }
 
   /* ---- overlay "Analyse en cours..." rejoué entre chaque niveau ---- */
@@ -1340,7 +1245,7 @@
       if(nextLevel === 3){ secretEls.terminalInput.focus(); }
       if(nextLevel === 'final'){
         /* la porte du coffre s'ouvre juste après l'arrivée sur l'écran final,
-           puis le Bestie Wrapped démarre depuis la première slide */
+           puis la récompense (enveloppe + lettre) démarre depuis le début */
         window.setTimeout(openFinalVault, reduceMotion ? 50 : 300);
       }
     }, delay);
@@ -1579,333 +1484,301 @@
   });
 
   /* =========================================================
-     ÉCRAN FINAL : "Bestie Wrapped" (façon Spotify Wrapped)
-     + "Mode Hacker" (panneau de contrôle God Mode), reliés par
-     un unique bouton bascule. Tout le contenu texte vient des
-     constantes WRAPPED_… / HACKER_COMMANDS éditables tout en haut
+     ÉCRAN FINAL : "Le coffre de souvenirs"
+     1) une enveloppe qui s'ouvre sur une lettre qui s'écrit toute seule,
+     2) un mur de polaroïds à retourner, 3) un mot de la fin.
+     Tous les textes viennent des constantes REWARD_… tout en haut
      du script secret.
      ========================================================= */
+  var REWARD_STAGES = ['letter', 'gallery', 'outro'];
+  var rewardStage = 'letter';
+  var rewardMaxStage = 0;       /* étape la plus loin atteinte : les suivantes restent verrouillées */
+  var rewardTypingToken = 0;    /* change à chaque (re)lancement ou saut : coupe l'ancienne frappe */
+  var rewardLetterDone = false;
+  var rewardLetterParas = [];
+  var rewardFlipped = {};
+  var rewardDustOn = false;
 
-  /* ---- calcule le nombre de jours écoulés depuis WRAPPED_FRIENDSHIP_START ---- */
-  function computeFriendshipDays(){
-    var start = new Date(WRAPPED_FRIENDSHIP_START + "T00:00:00");
-    if(isNaN(start.getTime())) return 0;
-    var diffMs = Date.now() - start.getTime();
-    return Math.max(0, Math.round(diffMs / 86400000));
-  }
+  function rewardSetText(el, text){ if(el){ el.textContent = text; } }
 
-  /* ---- compteur animé façon "odomètre" : compte de 0 jusqu'à la valeur cible ---- */
-  function animateCounter(numEl, target, suffix){
-    suffix = suffix || '';
-    if(reduceMotion){ numEl.textContent = target.toLocaleString('fr-FR') + suffix; return; }
-    var duration = 1100;
-    var start = null;
-    function tick(ts){
-      if(start === null){ start = ts; }
-      var progress = Math.min(1, (ts - start) / duration);
-      /* easing "ease-out" pour un compteur qui ralentit joliment en fin de course */
-      var eased = 1 - Math.pow(1 - progress, 3);
-      var current = Math.round(target * eased);
-      numEl.textContent = current.toLocaleString('fr-FR') + suffix;
-      if(progress < 1){ requestAnimationFrame(tick); }
-    }
-    requestAnimationFrame(tick);
-  }
-
-  /* ---- Slide 1 : construit les compteurs géants à partir de WRAPPED_STATS ---- */
-  function renderWrappedStats(){
-    if(!secretEls.wrappedStats) return;
-    secretEls.wrappedStats.innerHTML = '';
-    WRAPPED_STATS.forEach(function(stat){
-      var wrap = document.createElement('div');
-      wrap.className = 'wstat';
-      var num = document.createElement('p');
-      num.className = 'wstat-num';
-      num.textContent = '0';
-      var label = document.createElement('p');
-      label.className = 'wstat-label';
-      label.textContent = stat.label;
-      wrap.appendChild(num); wrap.appendChild(label);
-      secretEls.wrappedStats.appendChild(wrap);
-      var target = stat.type === 'days' ? computeFriendshipDays() : stat.value;
-      wrap.setAttribute('data-target', target);
-      wrap.setAttribute('data-suffix', stat.suffix || '');
-    });
-  }
-
-  /* (re)joue les compteurs de la slide 1 — appelé à chaque fois qu'on y revient */
-  function playWrappedCounters(){
-    if(!secretEls.wrappedStats) return;
-    secretEls.wrappedStats.querySelectorAll('.wstat').forEach(function(wrap){
-      var numEl = wrap.querySelector('.wstat-num');
-      var target = parseInt(wrap.getAttribute('data-target'), 10) || 0;
-      var suffix = wrap.getAttribute('data-suffix') || '';
-      animateCounter(numEl, target, suffix);
-    });
-  }
-
-  /* ---- rendu statique (une seule fois) du contenu des slides 2, 3 et 4 ---- */
-  function renderWrappedContent(){
-    renderWrappedStats();
-    if(secretEls.wrappedHighlightTitle){ secretEls.wrappedHighlightTitle.textContent = WRAPPED_HIGHLIGHT_TITLE; }
-    if(secretEls.wrappedHighlightText){ secretEls.wrappedHighlightText.textContent = WRAPPED_HIGHLIGHT_TEXT; }
-    if(secretEls.wrappedQuotes){
-      secretEls.wrappedQuotes.innerHTML = '';
-      WRAPPED_QUOTES.forEach(function(quote){
-        var p = document.createElement('p');
-        p.className = 'wquote';
-        p.textContent = quote;
-        secretEls.wrappedQuotes.appendChild(p);
-      });
-    }
-    if(secretEls.wrappedBadgeText){ secretEls.wrappedBadgeText.textContent = WRAPPED_BADGE_TEXT; }
-    if(secretEls.wrappedBadgeSub){ secretEls.wrappedBadgeSub.textContent = WRAPPED_BADGE_SUB; }
-  }
-
-  /* ---- navigation entre les 4 slides façon "Stories" ---- */
-  var wrappedIndex = 1;
-  var wrappedTotal = 4;
-  var wrappedAutoTimer = null;
-
-  function clearWrappedAutoAdvance(){
-    if(wrappedAutoTimer){ window.clearTimeout(wrappedAutoTimer); wrappedAutoTimer = null; }
-  }
-
-  function scheduleWrappedAutoAdvance(){
-    clearWrappedAutoAdvance();
-    /* pas d'avancée automatique en dernière slide, ni en mode hacker, ni si on réduit les animations */
-    if(reduceMotion || wrappedIndex >= wrappedTotal) return;
-    if(secretEls.wrappedApp && secretEls.wrappedApp.getAttribute('data-mode') === 'hacker') return;
-    wrappedAutoTimer = window.setTimeout(function(){ goToWrappedSlide(wrappedIndex + 1); }, 6000);
-  }
-
-  function goToWrappedSlide(n){
-    n = Math.max(1, Math.min(wrappedTotal, n));
-    var goingForward = n >= wrappedIndex;
-    wrappedIndex = n;
-
-    secretEls.wrappedSlides.forEach(function(slide){
-      var slideN = parseInt(slide.getAttribute('data-slide'), 10);
-      slide.classList.toggle('active', slideN === n);
-      slide.classList.toggle('leaving-back', !goingForward && slideN !== n);
-    });
-
-    secretEls.wrappedProgress.forEach(function(bar, i){
-      var stepN = i + 1;
-      bar.classList.toggle('done', stepN < n);
-      bar.classList.toggle('filling', stepN === n);
-      if(stepN > n){ bar.classList.remove('done', 'filling'); }
-    });
-
-    if(secretEls.wrappedPrev){ secretEls.wrappedPrev.disabled = (n === 1); }
-    if(secretEls.wrappedNext){ secretEls.wrappedNext.disabled = (n === wrappedTotal); }
-
-    if(n === 1){ playWrappedCounters(); }
-
-    scheduleWrappedAutoAdvance();
-  }
-
-  /* relance le Bestie Wrapped depuis le tout début (première ouverture du coffre,
-     ou retour depuis le Mode Hacker) */
-  function startWrapped(){
-    wrappedIndex = 1;
-    goToWrappedSlide(1);
-  }
-
-  if(secretEls.wrappedNext){ secretEls.wrappedNext.addEventListener('click', function(){ goToWrappedSlide(wrappedIndex + 1); }); }
-  if(secretEls.wrappedPrev){ secretEls.wrappedPrev.addEventListener('click', function(){ goToWrappedSlide(wrappedIndex - 1); }); }
-  if(secretEls.tapzoneRight){ secretEls.tapzoneRight.addEventListener('click', function(){ goToWrappedSlide(wrappedIndex + 1); }); }
-  if(secretEls.tapzoneLeft){ secretEls.tapzoneLeft.addEventListener('click', function(){ goToWrappedSlide(wrappedIndex - 1); }); }
-
-  /* flèches du clavier pour naviguer, uniquement quand on est en Mode Wrapped */
-  if(secretEls.wrappedApp){
-    secretEls.wrappedApp.addEventListener('keydown', function(e){
-      if(secretEls.wrappedApp.getAttribute('data-mode') !== 'wrapped') return;
-      if(e.key === 'ArrowRight'){ goToWrappedSlide(wrappedIndex + 1); }
-      else if(e.key === 'ArrowLeft'){ goToWrappedSlide(wrappedIndex - 1); }
-    });
-  }
-
-  /* =========================================================
-     MODE HACKER (God Mode) : pluie de code, glitch, overclock,
-     ligne de commande à secrets.
-     ========================================================= */
-
-  /* ---- pluie de code façon "Matrix", activable/désactivable via le bouton dédié ---- */
-  var hackerRainOn = false;
-  (function(){
-    var canvas = secretEls.hackerRainCanvas;
-    if(!canvas) return;
+  /* ---- étincelles dorées qui montent doucement derrière tout (arrêtées quand l'écran n'est plus visible) ---- */
+  function startRewardDust(tries){
+    var canvas = secretEls.rewardDust;
+    if(!canvas || reduceMotion || rewardDustOn) return;
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var glyphs = "01アイウエオカキク+×#$".split('');
-    var columns = [];
-
-    function sizeCanvas(){
+    var specks = [];
+    function size(){
       var w = canvas.clientWidth, h = canvas.clientHeight;
-      if(!w || !h) return;
+      if(!w || !h) return false;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var colCount = Math.max(6, Math.round(w / 22));
-      columns = [];
-      for(var i=0; i<colCount; i++){
-        columns.push({ x: i * (w / colCount) + 8, y: Math.random() * -h, speed: 1 + Math.random() * 1.6 });
-      }
+      var count = Math.max(24, Math.round((w * h) / 22000));
+      specks = [];
+      for(var i = 0; i < count; i++){ specks.push(make(w, h, true)); }
+      return true;
     }
-    window.addEventListener('resize', function(){ if(hackerRainOn){ sizeCanvas(); } });
-
-    function draw(){
-      if(!hackerRainOn) return; /* la boucle s'arrête d'elle-même dès que l'effet est coupé */
+    function make(w, h, anywhere){
+      return {
+        x: Math.random() * w,
+        y: anywhere ? Math.random() * h : h + 10,
+        r: 0.6 + Math.random() * 1.6,
+        v: 0.15 + Math.random() * 0.4,
+        d: (Math.random() - 0.5) * 0.25,
+        t: Math.random() * Math.PI * 2
+      };
+    }
+    if(!size()){ if((tries || 0) < 15){ window.setTimeout(function(){ startRewardDust((tries || 0) + 1); }, 200); } return; }
+    rewardDustOn = true;
+    window.addEventListener('resize', size);
+    function frame(){
+      if(!rewardDustOn || !secretEls.secretScreen || !secretEls.secretScreen.classList.contains('vault-fullscreen')){
+        rewardDustOn = false;
+        window.removeEventListener('resize', size);
+        return;
+      }
       var w = canvas.clientWidth, h = canvas.clientHeight;
+      if(!w || !h){ rewardDustOn = false; window.removeEventListener('resize', size); return; } /* écran masqué : on s'arrête */
       ctx.clearRect(0, 0, w, h);
-      ctx.font = '15px ' + "'JetBrains Mono', monospace";
-      for(var i=0; i<columns.length; i++){
-        var col = columns[i];
-        col.y += col.speed;
-        if(col.y > h + 20){ col.y = -20; }
-        var glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
-        ctx.fillStyle = 'rgba(76,255,160,0.75)';
-        ctx.fillText(glyph, col.x, col.y);
+      for(var i = 0; i < specks.length; i++){
+        var s = specks[i];
+        s.y -= s.v; s.x += s.d; s.t += 0.04;
+        if(s.y < -10){ specks[i] = make(w, h, false); continue; }
+        ctx.globalAlpha = 0.25 + (Math.sin(s.t) * 0.5 + 0.5) * 0.55;
+        ctx.fillStyle = '#FFD27A';
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
       }
-      requestAnimationFrame(draw);
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(frame);
     }
+    requestAnimationFrame(frame);
+  }
 
-    if(secretEls.btnMatrixRain){
-      secretEls.btnMatrixRain.addEventListener('click', function(){
-        hackerRainOn = !hackerRainOn;
-        secretEls.btnMatrixRain.classList.toggle('is-on', hackerRainOn);
-        canvas.classList.toggle('active', hackerRainOn);
-        if(hackerRainOn){ sizeCanvas(); requestAnimationFrame(draw); }
-      });
-    }
-  })();
-
-  /* ---- "System Glitch" : secousse RVB + freeze très bref de l'écran ---- */
-  if(secretEls.btnSystemGlitch){
-    secretEls.btnSystemGlitch.addEventListener('click', function(){
-      if(reduceMotion) return;
-      secretEls.hackerView.classList.remove('glitching');
-      void secretEls.hackerView.offsetWidth;
-      secretEls.hackerView.classList.add('glitching');
-      window.setTimeout(function(){ secretEls.hackerView.classList.remove('glitching'); }, 850);
+  /* ---- navigation entre les 3 étapes ---- */
+  function updateRewardSteps(){
+    secretEls.rewardSteps.forEach(function(btn){
+      var name = btn.getAttribute('data-stage');
+      var idx = REWARD_STAGES.indexOf(name);
+      btn.disabled = idx > rewardMaxStage;
+      btn.classList.toggle('current', name === rewardStage);
+      btn.classList.toggle('done', idx < REWARD_STAGES.indexOf(rewardStage));
+      if(name === rewardStage){ btn.setAttribute('aria-current', 'step'); } else { btn.removeAttribute('aria-current'); }
     });
   }
 
-  /* ---- "Overclock" : accélère toutes les animations du panneau à ~300% ---- */
-  if(secretEls.btnOverclock){
-    secretEls.btnOverclock.addEventListener('click', function(){
-      var on = secretEls.hackerView.classList.toggle('overclocked');
-      secretEls.btnOverclock.classList.toggle('is-on', on);
+  function unlockRewardStage(idx){
+    if(idx > rewardMaxStage){ rewardMaxStage = idx; }
+    updateRewardSteps();
+  }
+
+  function goRewardStage(name){
+    var idx = REWARD_STAGES.indexOf(name);
+    if(idx === -1 || idx > rewardMaxStage) return;
+    rewardStage = name;
+    secretEls.rewardStages.forEach(function(el){
+      el.classList.toggle('active', el.getAttribute('data-stage') === name);
+      el.scrollTop = 0;
     });
-  }
-
-  /* ---- ligne de commande à secrets ---- */
-
-  /* ajoute une ligne à la sortie du terminal et fait défiler vers le bas,
-     comme un vrai terminal dont le scrollback grandit */
-  function appendHackerLine(line){
-    if(!secretEls.hackerOutput) return;
-    secretEls.hackerOutput.textContent += (secretEls.hackerOutput.textContent ? '\n' : '') + line;
-    if(secretEls.hackerOutputWrap){ secretEls.hackerOutputWrap.scrollTop = secretEls.hackerOutputWrap.scrollHeight; }
-  }
-
-  var hackSequenceRunning = false;
-  /* la commande "hack"/"hacker" : une vraie petite mise en scène façon film de
-     piratage — plein de lignes de code/logs qui défilent vite, en piochant au
-     hasard dans HACK_SEQUENCE_LINES, puis un message final rigolo. */
-  function playHackSequence(){
-    if(hackSequenceRunning) return;
-    hackSequenceRunning = true;
-    appendHackerLine('> hack');
-    appendHackerLine('Lancement de la séquence de piratage...');
-
-    /* pioche ~14 lignes au hasard (avec répétitions possibles, comme un vrai
-       flot de logs) parmi la banque éditable */
-    var total = reduceMotion ? HACK_SEQUENCE_LINES.length : 22;
-    var lines = [];
-    for(var i=0; i<total; i++){
-      lines.push(HACK_SEQUENCE_LINES[Math.floor(Math.random() * HACK_SEQUENCE_LINES.length)]);
+    updateRewardSteps();
+    if(name === 'gallery'){
+      /* les polaroïds sont "distribués" à chaque arrivée sur le mur */
+      secretEls.polaroidWall.classList.remove('dealt');
+      void secretEls.polaroidWall.offsetWidth;
+      secretEls.polaroidWall.classList.add('dealt');
+      window.setTimeout(function(){ if(secretEls.galleryTitle){ secretEls.galleryTitle.focus({ preventScroll: true }); } }, 60);
+    } else if(name === 'outro'){
+      if(!reduceMotion){ window.setTimeout(burstFromCenterScreen, 350); }
+      window.setTimeout(function(){ if(secretEls.outroTitle){ secretEls.outroTitle.focus({ preventScroll: true }); } }, 60);
+    } else if(secretEls.rewardApp){
+      secretEls.rewardApp.focus({ preventScroll: true });
     }
-
-    if(reduceMotion){
-      lines.forEach(function(l){ appendHackerLine(l); });
-      appendHackerLine('');
-      appendHackerLine('ACCÈS ROOT OBTENU. Sarah is officially the best. 🏆😎');
-      hackSequenceRunning = false;
-      return;
-    }
-
-    var idx = 0;
-    var timer = window.setInterval(function(){
-      appendHackerLine(lines[idx]);
-      idx++;
-      if(idx >= lines.length){
-        window.clearInterval(timer);
-        window.setTimeout(function(){
-          appendHackerLine('');
-          appendHackerLine('ACCÈS ROOT OBTENU. Sarah is officially the best. 🏆😎');
-          hackSequenceRunning = false;
-        }, 200);
-      }
-    }, 90);
   }
 
-  if(secretEls.hackerCommandInput && secretEls.hackerOutput){
-    secretEls.hackerCommandInput.addEventListener('keydown', function(e){
-      if(e.key !== 'Enter') return;
-      var raw = secretEls.hackerCommandInput.value.trim();
-      if(!raw) return;
-      secretEls.hackerCommandInput.value = '';
-      var key = raw.toLowerCase();
+  /* ---- ÉTAPE 1 : la lettre qui s'écrit toute seule ---- */
+  function finishRewardLetter(){
+    rewardLetterDone = true;
+    saveSet('reward-letter-read', '1');
+    rewardLetterParas.forEach(function(p){ p.classList.remove('is-typing'); });
+    secretEls.letterSign.classList.add('show');
+    secretEls.letterNext.classList.add('show', 'ready');
+    unlockRewardStage(1);
+  }
 
-      if(key === 'hack' || key === 'hacker'){ playHackSequence(); return; }
+  function fillRewardLetter(){
+    rewardTypingToken++;
+    rewardLetterParas.forEach(function(p, i){ p.textContent = REWARD_LETTER[i]; });
+    finishRewardLetter();
+  }
 
-      var response = HACKER_COMMANDS[key];
-      if(response === '__CLEAR__'){ secretEls.hackerOutput.textContent = ''; return; }
-      appendHackerLine('> ' + raw);
-      appendHackerLine(response || ("Commande inconnue : « " + raw + " ». Tape « aide » pour la liste."));
+  function typeRewardLetter(){
+    var body = secretEls.letterBody;
+    body.innerHTML = '';
+    secretEls.letterSign.classList.remove('show');
+    secretEls.letterNext.classList.remove('show', 'ready');
+    rewardLetterParas = REWARD_LETTER.map(function(){
+      var p = document.createElement('p');
+      body.appendChild(p);
+      return p;
     });
-  }
-
-  /* =========================================================
-     BOUTON BASCULE : Mode Wrapped ⇄ Mode Hacker
-     ========================================================= */
-  if(secretEls.modeToggle){
-    secretEls.modeToggle.addEventListener('click', function(){
-      var goingHacker = secretEls.wrappedApp.getAttribute('data-mode') !== 'hacker';
-      secretEls.wrappedApp.setAttribute('data-mode', goingHacker ? 'hacker' : 'wrapped');
-      secretEls.modeToggleLabel.textContent = goingHacker ? '🎵 Mode Wrapped' : '💻 Mode Hacker';
-
-      /* balayage diagonal (bas-gauche → haut-droite) qui révèle l'autre univers ;
-         on rejoue le même balayage à l'envers (haut-droite → bas-gauche) quand
-         on revient au Wrapped, via .reverse qui inverse l'animation CSS */
-      if(!reduceMotion && secretEls.wipeBeam){
-        secretEls.wipeBeam.classList.remove('sweeping', 'reverse');
-        void secretEls.wipeBeam.offsetWidth;
-        if(!goingHacker){ secretEls.wipeBeam.classList.add('reverse'); }
-        secretEls.wipeBeam.classList.add('sweeping');
-        window.setTimeout(function(){ secretEls.wipeBeam.classList.remove('sweeping', 'reverse'); }, 950);
-      }
-
-      /* petit glitch RVB en plus, pour le peps */
-      if(!reduceMotion){
-        secretEls.wrappedApp.classList.remove('mode-switching');
-        void secretEls.wrappedApp.offsetWidth;
-        secretEls.wrappedApp.classList.add('mode-switching');
-        window.setTimeout(function(){ secretEls.wrappedApp.classList.remove('mode-switching'); }, 550);
-      }
-
-      if(goingHacker){
-        /* on quitte le Wrapped : on coupe l'avancée automatique des slides */
-        clearWrappedAutoAdvance();
+    var token = ++rewardTypingToken;
+    if(reduceMotion || rewardLetterDone){ fillRewardLetter(); return; }
+    var pi = 0, ci = 0;
+    function step(){
+      if(token !== rewardTypingToken) return;
+      if(pi >= REWARD_LETTER.length){ finishRewardLetter(); return; }
+      var text = REWARD_LETTER[pi];
+      var p = rewardLetterParas[pi];
+      if(ci === 0){ p.classList.add('is-typing'); }
+      if(ci < text.length){
+        ci++;
+        p.textContent = text.slice(0, ci);
+        var ch = text.charAt(ci - 1);
+        var wait = /[.!?…]/.test(ch) ? 280 : (/[,;:]/.test(ch) ? 140 : 26);
+        var stage = document.getElementById('reward-letter');
+        if(stage){ stage.scrollTop = stage.scrollHeight; }
+        window.setTimeout(step, wait);
       } else {
-        /* retour au Wrapped : "reprend le Wrapped au début" comme demandé,
-           et on coupe la pluie de code pour ne pas la laisser tourner dans le vide */
-        if(hackerRainOn && secretEls.btnMatrixRain){ secretEls.btnMatrixRain.click(); }
-        secretEls.hackerView.classList.remove('overclocked');
-        if(secretEls.btnOverclock){ secretEls.btnOverclock.classList.remove('is-on'); }
-        startWrapped();
+        p.classList.remove('is-typing');
+        pi++; ci = 0;
+        window.setTimeout(step, 450);
       }
+    }
+    step();
+  }
+
+  function openRewardEnvelope(){
+    var env = secretEls.envelope;
+    if(!env || env.classList.contains('open')) return;
+    env.classList.add('open');
+    if(secretEls.envelopeHint){ secretEls.envelopeHint.classList.add('is-hidden'); }
+    window.setTimeout(function(){
+      env.classList.add('gone');
+      window.setTimeout(function(){
+        env.classList.add('is-hidden');
+        showRewardLetter();
+      }, reduceMotion ? 0 : 450);
+    }, reduceMotion ? 0 : 750);
+  }
+
+  function showRewardLetter(){
+    secretEls.letterPaper.classList.add('show');
+    typeRewardLetter();
+  }
+
+  /* ---- ÉTAPE 2 : le mur de polaroïds ---- */
+  function updateGalleryCount(){
+    var n = Object.keys(rewardFlipped).length, total = REWARD_SOUVENIRS.length;
+    rewardSetText(secretEls.galleryCount, n >= total ? 'Tu les as tous retournés.' : (n + ' / ' + total + ' retournés'));
+    secretEls.galleryNext.classList.toggle('ready', n >= total);
+  }
+
+  function buildPolaroids(){
+    var wall = secretEls.polaroidWall;
+    wall.innerHTML = '';
+    var tilts = [-3.5, 2.5, -1.5, 3, -2.5, 1.5];
+    REWARD_SOUVENIRS.forEach(function(item, i){
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'polaroid';
+      card.setAttribute('aria-pressed', 'false');
+      card.setAttribute('aria-label', item.title + ' — toucher pour retourner');
+      card.style.setProperty('--tilt', tilts[i % tilts.length] + 'deg');
+      card.style.setProperty('--deal', (i * 0.11).toFixed(2) + 's');
+
+      var inner = document.createElement('span'); inner.className = 'polaroid-inner';
+      var front = document.createElement('span'); front.className = 'polaroid-face polaroid-front';
+      var photo = document.createElement('span'); photo.className = 'polaroid-photo';
+      function showEmpty(){
+        photo.classList.add('is-empty');
+        photo.innerHTML = '<svg aria-hidden="true"><use href="#icon-camera"/></svg><span>photo à ajouter</span>';
+      }
+      if(item.photo){
+        var img = new Image();
+        img.alt = '';
+        img.addEventListener('error', showEmpty);
+        img.src = item.photo;
+        photo.appendChild(img);
+      } else { showEmpty(); }
+      var cap = document.createElement('span'); cap.className = 'polaroid-cap'; cap.textContent = item.title;
+      front.appendChild(photo); front.appendChild(cap);
+
+      var back = document.createElement('span'); back.className = 'polaroid-face polaroid-back';
+      var txt = document.createElement('span'); txt.textContent = item.text;
+      back.appendChild(txt);
+
+      inner.appendChild(front); inner.appendChild(back);
+      card.appendChild(inner);
+      card.addEventListener('click', function(){
+        var on = !card.classList.contains('flipped');
+        card.classList.toggle('flipped', on);
+        card.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if(on){ rewardFlipped[i] = true; }
+        updateGalleryCount();
+        if(on && Object.keys(rewardFlipped).length === REWARD_SOUVENIRS.length && !reduceMotion){
+          burstFromElement(secretEls.galleryNext);
+        }
+      });
+      wall.appendChild(card);
+    });
+    updateGalleryCount();
+  }
+
+  /* ---- contenu statique (textes éditables) ---- */
+  function renderReward(){
+    rewardSetText(secretEls.envelopeTo, 'Pour ' + REWARD_TO);
+    rewardSetText(secretEls.letterGreeting, REWARD_GREETING);
+    rewardSetText(secretEls.letterSign, REWARD_SIGNATURE);
+    rewardSetText(secretEls.outroTitle, REWARD_OUTRO_TITLE);
+    rewardSetText(secretEls.outroText, REWARD_OUTRO_TEXT);
+    buildPolaroids();
+    updateRewardSteps();
+  }
+
+  /* (re)lance la récompense depuis le début : appelée quand le coffre s'ouvre */
+  function startReward(){
+    rewardLetterDone = saveGet('reward-letter-read') === '1';
+    rewardMaxStage = rewardLetterDone ? 2 : 0;
+    rewardFlipped = {};
+    rewardTypingToken++;
+    buildPolaroids();
+    var env = secretEls.envelope;
+    env.classList.remove('open', 'gone', 'is-hidden');
+    secretEls.envelopeHint.classList.remove('is-hidden');
+    secretEls.letterPaper.classList.remove('show');
+    secretEls.letterBody.innerHTML = '';
+    secretEls.letterSign.classList.remove('show');
+    secretEls.letterNext.classList.remove('show', 'ready');
+    rewardStage = 'letter';
+    secretEls.rewardStages.forEach(function(el){ el.classList.toggle('active', el.getAttribute('data-stage') === 'letter'); });
+    updateRewardSteps();
+    if(rewardLetterDone){
+      /* déjà lue une fois : on affiche directement la lettre complète, sans refaire l'enveloppe */
+      env.classList.add('open', 'gone', 'is-hidden');
+      secretEls.envelopeHint.classList.add('is-hidden');
+      showRewardLetter();
+    }
+    startRewardDust();
+    if(secretEls.rewardApp){ secretEls.rewardApp.focus({ preventScroll: true }); }
+  }
+
+  if(secretEls.envelope){ secretEls.envelope.addEventListener('click', openRewardEnvelope); }
+  if(secretEls.letterPaper){
+    /* un clic sur la lettre pendant qu'elle s'écrit = tout afficher d'un coup */
+    secretEls.letterPaper.addEventListener('click', function(){ if(!rewardLetterDone && secretEls.letterPaper.classList.contains('show')){ fillRewardLetter(); } });
+  }
+  if(secretEls.letterNext){ secretEls.letterNext.addEventListener('click', function(){ goRewardStage('gallery'); }); }
+  if(secretEls.galleryNext){ secretEls.galleryNext.addEventListener('click', function(){ unlockRewardStage(2); goRewardStage('outro'); }); }
+  if(secretEls.outroLetter){ secretEls.outroLetter.addEventListener('click', function(){ goRewardStage('letter'); }); }
+  if(secretEls.outroGallery){ secretEls.outroGallery.addEventListener('click', function(){ goRewardStage('gallery'); }); }
+  secretEls.rewardSteps.forEach(function(btn){
+    btn.addEventListener('click', function(){ goRewardStage(btn.getAttribute('data-stage')); });
+  });
+  if(secretEls.rewardApp){
+    secretEls.rewardApp.addEventListener('keydown', function(e){
+      if(e.target && e.target.tagName === 'INPUT') return;
+      var idx = REWARD_STAGES.indexOf(rewardStage);
+      if(e.key === 'ArrowRight' && idx < rewardMaxStage){ goRewardStage(REWARD_STAGES[idx + 1]); }
+      else if(e.key === 'ArrowLeft' && idx > 0){ goRewardStage(REWARD_STAGES[idx - 1]); }
     });
   }
 
@@ -1913,7 +1786,7 @@
     renderDigicodeDots();
     buildVirtualKeyboard();
     renderPhrase();
-    renderWrappedContent();
+    renderReward();
     renderDigicodeHint();
     /* reprise de la progression : on revient au niveau où elle s'était arrêtée */
     var savedLevel = saveGet('secret-level');

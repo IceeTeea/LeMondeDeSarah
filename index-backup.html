@@ -508,131 +508,69 @@ Des gros bisous moche 3 ❤️🥰😘</p>
         </div>
       </section>
 
-      <!-- ÉCRAN FINAL : le coffre secret. Une fois ouvert, il révèle le
-           "Bestie Wrapped" (façon Spotify Wrapped) avec un bouton bascule
-           vers un "Mode Hacker" (panneau de contrôle). Tout le contenu
-           (stats, highlight, répliques, badge, commandes) est ÉDITABLE
-           via les constantes WRAPPED_... tout en haut du script secret. -->
+      <!-- ÉCRAN FINAL : le coffre secret. Une fois ouvert, il révèle "Le coffre de
+           souvenirs" : une enveloppe, une lettre qui s'écrit toute seule, un mur
+           de polaroïds à retourner, puis un mot de la fin. Tout le contenu
+           est ÉDITABLE via les constantes REWARD_… tout en haut du script secret. -->
       <section class="secret-level" data-level="final" id="level-final">
         <div class="vault-scene" id="vault-scene">
           <div class="vault-door vault-door-left" aria-hidden="true"></div>
           <div class="vault-door vault-door-right" aria-hidden="true"></div>
           <div class="vault-glow" aria-hidden="true"></div>
 
-          <div class="wrapped-app" id="wrapped-app" data-mode="wrapped" tabindex="-1">
+          <div class="reward-app" id="reward-app" tabindex="-1">
+            <canvas class="reward-dust" id="reward-dust" aria-hidden="true"></canvas>
 
-            <!-- bouton bascule, toujours visible -->
-            <button class="mode-toggle" id="mode-toggle" type="button">
-              <span id="mode-toggle-label">💻 Mode Hacker</span>
-            </button>
+            <nav class="reward-steps" id="reward-steps" aria-label="Étapes du coffre">
+              <button class="reward-step" type="button" data-stage="letter"><span class="reward-step-dot" aria-hidden="true"></span>La lettre</button>
+              <button class="reward-step" type="button" data-stage="gallery" disabled><span class="reward-step-dot" aria-hidden="true"></span>Les souvenirs</button>
+              <button class="reward-step" type="button" data-stage="outro" disabled><span class="reward-step-dot" aria-hidden="true"></span>La fin</button>
+            </nav>
 
-            <!-- barre lumineuse qui balaie l'écran en diagonale au moment de la bascule
-                 (bas-gauche → haut-droite pour aller vers le Mode Hacker, l'inverse
-                 pour revenir au Wrapped) : purement décoratif, synchronisé en JS avec
-                 le "wipe" en diagonale du clip-path ci-dessous -->
-            <div class="wipe-beam" id="wipe-beam" aria-hidden="true"></div>
+            <!-- ÉTAPE 1 : l'enveloppe, puis la lettre qui s'écrit toute seule -->
+            <section class="reward-stage" id="reward-letter" data-stage="letter" aria-label="La lettre">
+              <div class="reward-inner">
+                <button class="envelope" id="envelope" type="button" aria-label="Ouvrir l'enveloppe">
+                  <span class="env-back"></span>
+                  <span class="env-flap"></span>
+                  <span class="env-front"></span>
+                  <span class="env-seal"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg></span>
+                  <span class="env-to" id="env-to"></span>
+                </button>
+                <p class="env-hint" id="env-hint">Touche l'enveloppe pour l'ouvrir.</p>
 
-            <!-- ============ MODE 1 : BESTIE WRAPPED ============ -->
-            <div class="wrapped-view" id="wrapped-view">
-              <!-- décor ambiant : confettis/étincelles qui flottent doucement + petits
-                   emoji qui dérivent en fond, pour une ambiance festive, pas vide -->
-              <canvas class="wrapped-ambient-canvas" id="wrapped-ambient-canvas" aria-hidden="true"></canvas>
-              <div class="wrapped-decor" aria-hidden="true">
-                <span class="wdecor wdecor-1">✨</span>
-                <span class="wdecor wdecor-2">🎉</span>
-                <span class="wdecor wdecor-3">💫</span>
-                <span class="wdecor wdecor-4">✨</span>
-                <span class="wdecor wdecor-5">🎊</span>
-                <span class="wdecor wdecor-6">⭐</span>
+                <article class="letter-paper" id="letter-paper">
+                  <h2 class="letter-greeting" id="letter-greeting" tabindex="-1"></h2>
+                  <div class="letter-body" id="letter-body" aria-live="off"></div>
+                  <p class="letter-sign" id="letter-sign"></p>
+                </article>
+                <button class="reward-next" id="reward-letter-next" type="button">Voir nos souvenirs</button>
               </div>
+            </section>
 
-              <div class="wrapped-progress" id="wrapped-progress" aria-hidden="true">
-                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
-                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
-                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
-                <span class="wrapped-bar"><span class="wrapped-bar-fill"></span></span>
+            <!-- ÉTAPE 2 : le mur de polaroïds à retourner -->
+            <section class="reward-stage" id="reward-gallery" data-stage="gallery" aria-label="Les souvenirs">
+              <div class="reward-inner">
+                <h2 class="reward-title" id="gallery-title" tabindex="-1">Nos souvenirs</h2>
+                <p class="reward-sub" id="gallery-sub">Touche un polaroïd pour le retourner.</p>
+                <div class="polaroid-wall" id="polaroid-wall"></div>
+                <p class="gallery-count" id="gallery-count" aria-live="polite"></p>
+                <button class="reward-next show" id="gallery-next" type="button">Le mot de la fin</button>
               </div>
+            </section>
 
-              <button class="wrapped-tapzone tapzone-left" id="tapzone-left" type="button" aria-label="Slide précédente" tabindex="-1"></button>
-              <button class="wrapped-tapzone tapzone-right" id="tapzone-right" type="button" aria-label="Slide suivante" tabindex="-1"></button>
-
-              <div class="wrapped-slides" id="wrapped-slides">
-                <!-- Slide 1 : les stats, compteurs animés -->
-                <section class="wrapped-slide" data-slide="1" id="wrapped-slide-1">
-                  <p class="wrapped-eyebrow">✦ Bestie Wrapped</p>
-                  <h2 class="wrapped-h">Votre année, en chiffres</h2>
-                  <div class="wrapped-stats" id="wrapped-stats"></div>
-                </section>
-
-                <!-- Slide 2 : le highlight -->
-                <section class="wrapped-slide" data-slide="2" id="wrapped-slide-2">
-                  <p class="wrapped-eyebrow">✦ Le highlight</p>
-                  <h2 class="wrapped-h" id="wrapped-highlight-title">—</h2>
-                  <p class="wrapped-highlight-text" id="wrapped-highlight-text"></p>
-                  <div class="wrapped-photo">
-                    <svg aria-hidden="true"><use href="#icon-camera"/></svg>
-                    <span>photo à ajouter ici</span>
-                  </div>
-                </section>
-
-                <!-- Slide 3 : hall of fame -->
-                <section class="wrapped-slide" data-slide="3" id="wrapped-slide-3">
-                  <p class="wrapped-eyebrow">✦ Hall of Fame</p>
-                  <h2 class="wrapped-h">Les répliques cultes</h2>
-                  <div class="wrapped-quotes" id="wrapped-quotes"></div>
-                </section>
-
-                <!-- Slide 4 : badge final -->
-                <section class="wrapped-slide" data-slide="4" id="wrapped-slide-4">
-                  <p class="wrapped-eyebrow">✦ Conclusion</p>
-                  <div class="wrapped-badge" id="wrapped-badge">
-                    <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-                    <span class="badge-text" id="wrapped-badge-text">DUO LÉGENDAIRE</span>
-                  </div>
-                  <p class="wrapped-badge-sub" id="wrapped-badge-sub"></p>
-                </section>
-              </div>
-
-              <div class="wrapped-nav-row">
-                <button class="wrapped-nav" id="wrapped-prev" type="button" aria-label="Slide précédente">‹</button>
-                <button class="wrapped-nav" id="wrapped-next" type="button" aria-label="Slide suivante">›</button>
-              </div>
-            </div>
-
-            <!-- ============ MODE 2 : HACKER (GOD MODE) — vrai look de terminal ============ -->
-            <div class="hacker-view" id="hacker-view">
-              <canvas class="hacker-rain" id="hacker-rain-canvas" aria-hidden="true"></canvas>
-              <div class="hacker-scanlines" aria-hidden="true"></div>
-
-              <div class="hacker-terminal-window">
-                <div class="hacker-titlebar">
-                  <span class="tl-dot tl-red" aria-hidden="true"></span>
-                  <span class="tl-dot tl-yellow" aria-hidden="true"></span>
-                  <span class="tl-dot tl-green" aria-hidden="true"></span>
-                  <span class="hacker-titlebar-text">sarah@bestie-os: ~</span>
-                </div>
-
-                <div class="hacker-body">
-                  <p class="hacker-title">&gt; panneau de contrôle — GOD MODE_</p>
-
-                  <div class="hacker-buttons">
-                    <button type="button" id="btn-matrix-rain" class="hacker-btn">🌧 Matrix Rain</button>
-                    <button type="button" id="btn-system-glitch" class="hacker-btn">⚡ System Glitch</button>
-                    <button type="button" id="btn-overclock" class="hacker-btn">🚀 Overclock</button>
-                  </div>
-
-                  <div class="hacker-output-wrap" id="hacker-output-wrap">
-                    <p class="hacker-output" id="hacker-output" aria-live="polite"></p>
-                  </div>
-
-                  <div class="hacker-terminal-row">
-                    <span class="hacker-caret" aria-hidden="true">&gt;</span>
-                    <input type="text" id="hacker-command-input" class="hacker-command-input" placeholder="tape une commande… (essaie « aide »)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Ligne de commande">
-                  </div>
+            <!-- ÉTAPE 3 : le mot de la fin -->
+            <section class="reward-stage" id="reward-outro" data-stage="outro" aria-label="Le mot de la fin">
+              <div class="reward-inner reward-outro-inner">
+                <svg class="icon-spark outro-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+                <h2 class="outro-title" id="outro-title" tabindex="-1"></h2>
+                <p class="outro-text" id="outro-text"></p>
+                <div class="outro-actions">
+                  <button class="reward-next show ghost" id="outro-letter" type="button">Relire la lettre</button>
+                  <button class="reward-next show ghost" id="outro-gallery" type="button">Revoir les souvenirs</button>
                 </div>
               </div>
-            </div>
-
+            </section>
           </div>
         </div>
       </section>
