@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mise à jour interactive — Mode Maintenance</title>
+  <title>Mise à jour en cours — Mode Maintenance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -104,16 +104,16 @@
       line-height: 1.65;
       font-weight: 300;
       min-height: 3.2em;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
       transition: opacity 0.4s ease;
     }
 
     /* Cercle de statut animé */
     .loader-wrapper {
       position: relative;
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 2.5rem auto;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem auto;
     }
 
     .loader-svg {
@@ -135,7 +135,7 @@
       stroke-linecap: round;
       stroke-dasharray: 283;
       stroke-dashoffset: 283;
-      transition: stroke-dashoffset 1s linear;
+      transition: stroke-dashoffset 0.5s ease;
     }
 
     .loader-number {
@@ -144,9 +144,18 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #e2c262;
+    }
+
+    /* Compte à rebours temps restant */
+    .time-remaining {
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin-bottom: 2rem;
     }
 
     /* Étapes d'avancement */
@@ -185,12 +194,12 @@
   <div class="container">
     <div class="brand-badge">
       <span class="pulse-dot"></span>
-      Déploiement en cours
+      Mise à jour en direct
     </div>
 
-    <h1>Mise à jour système</h1>
+    <h1>Maintenance du site</h1>
     
-    <p class="status-text" id="status-text">Préparation des nouveaux fichiers...</p>
+    <p class="status-text" id="status-text">Initialisation et déploiement des éléments...</p>
 
     <!-- Anneau de progression -->
     <div class="loader-wrapper">
@@ -204,17 +213,19 @@
         <circle class="loader-bg" cx="50" cy="50" r="45"></circle>
         <circle class="loader-circle" id="progress-circle" cx="50" cy="50" r="45"></circle>
       </svg>
-      <div class="loader-number" id="progress-percent">0%</div>
+      <div class="loader-number" id="progress-percent">1%</div>
     </div>
+
+    <div class="time-remaining" id="time-remaining">Fin prévue aujourd'hui à 12:00</div>
 
     <!-- Indicateurs d'étapes -->
     <div class="step-indicator">
-      <div class="step-dot active"></div>
-      <div class="step-dot"></div>
-      <div class="step-dot"></div>
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
     </div>
 
-    <div class="footer-text">Merci pour votre patience &bull; Bientôt en ligne</div>
+    <div class="footer-text">Merci pour votre patience &bull; Rendez-vous à 12h00</div>
   </div>
 
   <script>
@@ -264,49 +275,75 @@
     }
     animateBg();
 
-    // 2. Progression et changement de texte automatique
-    const steps = [
-      "Optimisation de la base de données et des visuels...",
-      "Déploiement des nouvelles fonctionnalités...",
-      "Dernières vérifications de sécurité avant réouverture..."
-    ];
+    // 2. Calcul du pourcentage en temps réel jusqu'au 19/10/2026 à 12h00
+    const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime(); // Début : 19/10/2026 à 00:50
+    const endTime = new Date(2026, 9, 19, 12, 0, 0).getTime();   // Fin : 19/10/2026 à 12:00
 
-    let progress = 0;
     const circle = document.getElementById('progress-circle');
     const percentText = document.getElementById('progress-percent');
     const statusText = document.getElementById('status-text');
-    const dots = document.querySelectorAll('.step-dot');
+    const timeRemaining = document.getElementById('time-remaining');
+    const dot1 = document.getElementById('dot-1');
+    const dot2 = document.getElementById('dot-2');
+    const dot3 = document.getElementById('dot-3');
     const maxDash = 283;
 
-    function updateProgress() {
-      if (progress < 100) {
-        progress += 1;
-        percentText.innerText = progress + "%";
-        
-        // Calcul du cercle SVG
-        const offset = maxDash - (progress / 100) * maxDash;
-        circle.style.strokeDashoffset = offset;
+    function updateRealProgress() {
+      const now = new Date().getTime();
+      const totalDuration = endTime - startTime;
+      const elapsed = now - startTime;
 
-        // Changement de texte et d'étape
-        if (progress === 35) {
-          statusText.style.opacity = '0';
-          setTimeout(() => {
-            statusText.innerText = steps[1];
-            statusText.style.opacity = '1';
-            dots[1].classList.add('active');
-          }, 400);
-        } else if (progress === 75) {
-          statusText.style.opacity = '0';
-          setTimeout(() => {
-            statusText.innerText = steps[2];
-            statusText.style.opacity = '1';
-            dots[2].classList.add('active');
-          }, 400);
-        }
+      let percentage = (elapsed / totalDuration) * 100;
+      
+      // Sécurité pour rester entre 1% et 100%
+      if (percentage < 1) percentage = 1;
+      if (percentage >= 100) percentage = 100;
+
+      const roundedPercent = Math.floor(percentage);
+      percentText.innerText = roundedPercent + "%";
+
+      // Animation du cercle SVG
+      const offset = maxDash - (percentage / 100) * maxDash;
+      circle.style.strokeDashoffset = offset;
+
+      // Calcul du temps restant
+      const timeLeftMs = endTime - now;
+      if (timeLeftMs > 0) {
+        const hours = Math.floor(timeLeftMs / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
+        timeRemaining.innerText = `Temps restant : ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        timeRemaining.innerText = "Mise à jour terminée ! Ouverture imminente...";
+      }
+
+      // Adaptation des textes selon le pourcentage réel
+      if (percentage < 33) {
+        statusText.innerText = "Optimisation des bases de données et des visuels...";
+        dot1.classList.add('active');
+        dot2.classList.remove('active');
+        dot3.classList.remove('active');
+      } else if (percentage < 75) {
+        statusText.innerText = "Déploiement des nouvelles fonctionnalités...";
+        dot1.classList.add('active');
+        dot2.classList.add('active');
+        dot3.classList.remove('active');
+      } else if (percentage < 100) {
+        statusText.innerText = "Dernières vérifications de sécurité avant réouverture...";
+        dot1.classList.add('active');
+        dot2.classList.add('active');
+        dot3.classList.add('active');
+      } else {
+        statusText.innerText = "Finalisation terminée ! Le site va rouvrir.";
+        dot1.classList.add('active');
+        dot2.classList.add('active');
+        dot3.classList.add('active');
       }
     }
 
-    setInterval(updateProgress, 350);
+    // Mise à jour toutes les secondes
+    setInterval(updateRealProgress, 1000);
+    updateRealProgress();
   </script>
 
 </body>
