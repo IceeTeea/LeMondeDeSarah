@@ -117,6 +117,7 @@
     });
 
     if(name === 'sky'){ startSkyLoop(); } else { stopSkyLoop(); }
+    if(name === 'secret' && secretResumeFinal){ secretResumeFinal = false; window.setTimeout(openFinalVault, reduceMotion ? 50 : 400); }
 
     window.scrollTo(0,0);
   }
@@ -1017,6 +1018,26 @@
 
   /* ————— ÉDITABLE : modifie ces constantes pour personnaliser le jeu ————— */
   var SECRET_CODE = "9204";        /* ÉDITABLE : code du digicode, 4 chiffres */
+  /* ÉDITABLE : indices progressifs du digicode, un nouvel indice tous les SECRET_HINT_EVERY mauvais essais */
+  var SECRET_HINTS = [
+    "Le code n'est pas ici… ouvre l'œil du côté de la fenêtre, dans la chambre. 👀",
+    "Regarde bien l'étagère de la chambre : les chiffres sont minuscules, presque invisibles.",
+    "Quatre objets, quatre chiffres : lis-les de gauche à droite."
+  ];
+  var SECRET_HINT_EVERY = 3;
+
+  /* ---- sauvegarde de la progression (localStorage, préfixe "sarah:") ----
+     Ajoute ?reset à l'adresse de la page pour tout remettre à zéro. */
+  function saveGet(k){ try{ return window.localStorage.getItem('sarah:' + k); }catch(e){ return null; } }
+  function saveSet(k, v){ try{ window.localStorage.setItem('sarah:' + k, v); }catch(e){} }
+  if(/[?&]reset\b/.test(window.location.search)){
+    try{
+      Object.keys(window.localStorage).forEach(function(key){
+        if(key.indexOf('sarah:') === 0){ window.localStorage.removeItem(key); }
+      });
+    }catch(e){}
+  }
+  var secretResumeFinal = false; /* vrai si on reprend directement sur le coffre déjà ouvert */
   var RIDDLE_QUESTION = "Je grandis chaque année sans jamais vieillir vraiment, et on me fête à chaque automne. Qui suis-je ?"; /* ÉDITABLE */
   var RIDDLE_ANSWER = "anniversaire"; /* ÉDITABLE — comparaison insensible à la casse et aux espaces */
   var SECRET_PHRASE = "MEILLEURE AMIE POUR LA VIE"; /* ÉDITABLE — lettres A-Z et espaces uniquement, devinable lettre par lettre OU d'un coup en tapant la phrase entière */
@@ -1288,6 +1309,7 @@
   }
 
   function showSecretLevel(name){
+    saveSet('secret-level', String(name));
     updateSecretProgress(name);
     Object.keys(secretEls.levels).forEach(function(key){
       var el = secretEls.levels[key];
@@ -1297,6 +1319,13 @@
     });
     void secretEls.levels[name].offsetWidth;
     secretEls.levels[name].classList.add('enter');
+  }
+
+  function openFinalVault(){
+    secretEls.vaultScene.classList.add('opened');
+    if(secretEls.secretScreen){ secretEls.secretScreen.classList.add('vault-fullscreen'); }
+    startWrapped();
+    if(secretEls.wrappedApp){ secretEls.wrappedApp.focus(); }
   }
 
   /* ---- overlay "Analyse en cours..." rejoué entre chaque niveau ---- */
@@ -1312,12 +1341,7 @@
       if(nextLevel === 'final'){
         /* la porte du coffre s'ouvre juste après l'arrivée sur l'écran final,
            puis le Bestie Wrapped démarre depuis la première slide */
-        window.setTimeout(function(){
-          secretEls.vaultScene.classList.add('opened');
-          if(secretEls.secretScreen){ secretEls.secretScreen.classList.add('vault-fullscreen'); }
-          startWrapped();
-          if(secretEls.wrappedApp){ secretEls.wrappedApp.focus(); }
-        }, reduceMotion ? 50 : 300);
+        window.setTimeout(openFinalVault, reduceMotion ? 50 : 300);
       }
     }, delay);
   }
@@ -1325,6 +1349,14 @@
   /* ---- NIVEAU 1 : digicode ---- */
   var digicodeValue = "";
   var digicodeSolved = false;
+  var digicodeFails = parseInt(saveGet('digicode-fails') || '0', 10) || 0;
+
+  function renderDigicodeHint(){
+    var el = document.getElementById('digicode-hint');
+    if(!el) return;
+    var idx = Math.min(SECRET_HINTS.length, Math.floor(digicodeFails / SECRET_HINT_EVERY)) - 1;
+    el.textContent = idx >= 0 ? ('Indice : ' + SECRET_HINTS[idx]) : '';
+  }
 
   function renderDigicodeDots(){
     var dots = secretEls.digicodeDots.querySelectorAll('.dot');
@@ -1355,7 +1387,10 @@
         playScanTransition(2, "Analyse en cours…");
       }, reduceMotion ? 150 : 900);
     } else {
+      digicodeFails++;
+      saveSet('digicode-fails', String(digicodeFails));
       digicodeShakeError("Code incorrect. Réessaie.");
+      renderDigicodeHint();
     }
   }
 
@@ -1492,6 +1527,7 @@
 
     playHackScan(function(){
       guessedLetters.push(letter);
+      saveSet('secret-letters', guessedLetters.join(''));
       if(phraseLetters.indexOf(letter) !== -1){
         setKeyState(letter, 'correct');
         secretEls.terminalMsg.textContent = "Lettre correcte : " + letter;
@@ -1515,6 +1551,7 @@
           if(guessedLetters.indexOf(letter) === -1){ guessedLetters.push(letter); }
           setKeyState(letter, 'correct');
         });
+        saveSet('secret-letters', guessedLetters.join(''));
         renderPhrase();
         secretEls.terminalMsg.textContent = "Phrase reconnue.";
         secretEls.terminalMsg.className = 'terminal-msg is-ok';
@@ -1877,7 +1914,21 @@
     buildVirtualKeyboard();
     renderPhrase();
     renderWrappedContent();
-    showSecretLevel(1);
+    renderDigicodeHint();
+    /* reprise de la progression : on revient au niveau où elle s'était arrêtée */
+    var savedLevel = saveGet('secret-level');
+    if(savedLevel === '3'){
+      (saveGet('secret-letters') || '').split('').forEach(function(l){
+        if(/^[A-Z]$/.test(l) && guessedLetters.indexOf(l) === -1){
+          guessedLetters.push(l);
+          setKeyState(l, phraseLetters.indexOf(l) !== -1 ? 'correct' : 'incorrect');
+        }
+      });
+      renderPhrase();
+    }
+    if(savedLevel === '2' || savedLevel === '3'){ showSecretLevel(savedLevel); }
+    else if(savedLevel === 'final'){ secretResumeFinal = true; showSecretLevel('final'); }
+    else { showSecretLevel(1); }
   }
 
   /* =========================================================

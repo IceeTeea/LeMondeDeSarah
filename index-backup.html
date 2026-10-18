@@ -355,36 +355,35 @@ Des gros bisous moche 3 ❤️🥰😘</p>
 <!-- ================= ÉCRAN 6 : FENÊTRE ================= -->
 <div class="screen" id="screen-window">
   <div class="window-screen" id="room-scene">
-    <!-- ÉDITABLE (décor) : petite chambre autour de la fenêtre, purement décorative -->
+    <!-- ÉDITABLE (décor) : chambre gaming RGB autour de la fenêtre, purement visuelle.
+         Le code du digicode est caché sur l'étagère (.sd), de gauche à droite. -->
+    <div class="room-led" aria-hidden="true"></div>
+    <div class="room-ambient" aria-hidden="true"></div>
     <div class="room-floor" aria-hidden="true"></div>
-    <div class="room-rug" aria-hidden="true"></div>
-    <div class="room-plant" aria-hidden="true">
-      <span class="plant-pot"></span>
-      <span class="plant-leaf leaf-1"></span>
-      <span class="plant-leaf leaf-2"></span>
-      <span class="plant-leaf leaf-3"></span>
+    <div class="room-neon" aria-hidden="true">GG</div>
+    <div class="room-hex" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="room-poster" aria-hidden="true"></div>
+    <div class="room-desk" aria-hidden="true">
+      <div class="gm-chair"><i></i></div>
+      <i class="gm-leg l"></i><i class="gm-leg r"></i>
+      <div class="gm-pc"><i class="fan"></i><i class="fan"></i><i class="fan"></i></div>
+      <div class="gm-monitor"><div class="gm-screen"></div><i class="gm-stand"></i></div>
+      <div class="gm-top"></div>
+      <i class="gm-pad"></i><i class="gm-kb"></i><i class="gm-mouse"></i>
     </div>
     <div class="room-shelf" aria-hidden="true">
-      <span class="shelf-book book-1"></span>
-      <span class="shelf-book book-2"></span>
-      <span class="shelf-book book-3"></span>
-      <span class="shelf-frame"></span>
+      <span class="shelf-book book-1"><i class="sd">9</i></span>
+      <span class="shelf-book book-2"><i class="sd">2</i></span>
+      <span class="shelf-book book-3"><i class="sd">0</i></span>
+      <span class="shelf-figure"></span>
+      <span class="shelf-frame"><i class="sd">4</i></span>
     </div>
-    <div class="room-lamp-glow" aria-hidden="true"></div>
-    <div class="fairy-lights" id="fairy-lights" aria-hidden="true">
-      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
-      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
-      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
-    </div>
-    <div class="curtain curtain-left" aria-hidden="true"></div>
-    <div class="curtain curtain-right" aria-hidden="true"></div>
 
     <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Depuis l'intérieur</p>
     <h2 tabindex="-1" id="window-heading">Regarde par la fenêtre</h2>
     <p class="lede">le ciel est calme, ce soir. clique sur la vitre pour aller le voir de plus près.</p>
 
     <div class="window-frame" id="window-frame">
-      <div class="curtain-rod" aria-hidden="true"></div>
       <button class="window-glass" id="window-glass" type="button" aria-label="Sortir regarder le ciel">
         <canvas id="window-stars-canvas"></canvas>
         <span class="window-hint" aria-hidden="true"><svg class="icon-spark"><use href="#icon-spark"/></svg></span>
@@ -440,7 +439,7 @@ Des gros bisous moche 3 ❤️🥰😘</p>
 
     <div class="secret-stage" id="secret-stage">
 
-      <!-- NIVEAU 1 : digicode. Le code par défaut ("1855") est ÉDITABLE
+      <!-- NIVEAU 1 : digicode. Le code est ÉDITABLE
            dans la constante SECRET_CODE tout en haut du script secret. -->
       <section class="secret-level" data-level="1" id="level-1">
         <div class="glass-card" id="digicode-card">
@@ -466,6 +465,7 @@ Des gros bisous moche 3 ❤️🥰😘</p>
             <button type="button" data-key="submit">Valider</button>
           </div>
           <p class="digicode-error" id="digicode-error" role="alert"></p>
+          <p class="digicode-hint" id="digicode-hint" aria-live="polite"></p>
         </div>
       </section>
 
