@@ -6,7 +6,7 @@
   <title>Mise à jour Système — Édition Cosmos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -174,7 +174,7 @@
       margin-bottom: 1.75rem;
     }
 
-    /* Barre de progression avec éclat néon */
+    /* Barre de progression */
     .progress-section {
       margin-bottom: 1.75rem;
     }
@@ -217,41 +217,42 @@
       margin-top: 0.75rem;
     }
 
-    /* BOUTON ÉPINGLE PATCH NOTE */
+    /* BOUTON ÉPINGLE PATCH NOTE HAUT DE GAMME */
     .patch-pin-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      gap: 0.7rem;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(168, 85, 247, 0.12));
+      border: 1px solid rgba(212, 175, 55, 0.4);
       color: #fef08a;
-      padding: 0.65rem 1.4rem;
-      border-radius: 14px;
-      font-size: 0.85rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 16px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       margin-top: 0.5rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      letter-spacing: 0.02em;
     }
 
     .patch-pin-btn:hover {
-      background: rgba(212, 175, 55, 0.15);
-      border-color: rgba(212, 175, 55, 0.6);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(168, 85, 247, 0.25));
+      border-color: rgba(212, 175, 55, 0.8);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(212, 175, 55, 0.25);
     }
 
-    /* MODALE HOLOGRAPHIQUE PATCH NOTE */
+    /* MODALE HOLOGRAPHIQUE PATCH NOTE LUXE */
     .patch-modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(3, 5, 10, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(3, 5, 10, 0.88);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       z-index: 10;
       display: flex;
       align-items: center;
@@ -269,16 +270,16 @@
 
     .patch-card {
       width: 100%;
-      max-width: 520px;
-      max-height: 80vh;
-      background: rgba(12, 17, 30, 0.95);
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      border-radius: 28px;
-      padding: 2.5rem;
+      max-width: 560px;
+      max-height: 85vh;
+      background: rgba(10, 14, 26, 0.95);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 30px;
+      padding: 2.5rem 2rem;
       overflow-y: auto;
       text-align: left;
-      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 50px rgba(168, 85, 247, 0.15);
-      transform: scale(0.9);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(168, 85, 247, 0.2);
+      transform: scale(0.92);
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -297,9 +298,11 @@
 
     .patch-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #fef08a;
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -307,64 +310,96 @@
 
     .close-btn {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: #94a3b8;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       transition: all 0.2s ease;
     }
 
     .close-btn:hover {
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.5);
       color: #f87171;
     }
 
-    .patch-tag {
-      display: inline-block;
-      background: rgba(168, 85, 247, 0.2);
+    .patch-badge-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .patch-tag-major {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: #fef08a;
+      padding: 0.25rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .patch-tag-date {
+      background: rgba(168, 85, 247, 0.15);
       border: 1px solid rgba(168, 85, 247, 0.4);
       color: #c084fc;
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.7rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
       font-weight: 600;
-      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
     }
 
-    .patch-section-title {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #cbd5e1;
-      margin: 1.25rem 0 0.75rem 0;
-      font-weight: 600;
+    /* BLOCS DE FONCTIONNALITÉS DESIGN */
+    .patch-block {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.3s ease;
     }
 
-    .patch-list {
-      list-style: none;
+    .patch-block:hover {
+      border-color: rgba(212, 175, 55, 0.25);
     }
 
-    .patch-list li {
+    .patch-block-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .patch-item {
       font-size: 0.88rem;
       color: #94a3b8;
       line-height: 1.6;
-      margin-bottom: 0.6rem;
-      padding-left: 1.25rem;
+      margin-bottom: 0.5rem;
+      padding-left: 1.2rem;
       position: relative;
     }
 
-    .patch-list li::before {
+    .patch-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .patch-item::before {
       content: "✦";
       position: absolute;
       left: 0;
       color: #fef08a;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
 
     .interactive-hint {
@@ -372,6 +407,19 @@
       color: #475569;
       margin-top: 1.5rem;
       font-style: italic;
+    }
+
+    /* Scrollbar personnalisée */
+    .patch-card::-webkit-scrollbar {
+      width: 6px;
+    }
+    .patch-card::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+    }
+    .patch-card::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.4);
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -411,7 +459,7 @@
 
     <!-- Bouton Épingle Patch Note -->
     <button class="patch-pin-btn" id="open-patch-btn">
-      📌 Consulter le Patch Note (v2.4)
+      ✨ Découvrir le Patch Note (v2.4)
     </button>
 
     <div class="interactive-hint">✨ Touchez l'écran pour générer des étincelles</div>
@@ -422,32 +470,44 @@
     <div class="patch-card">
       <div class="patch-header">
         <div class="patch-title">
-          📌 Patch Note &bull; v2.4
+          ⚡ Patch Note &bull; v2.4
         </div>
         <div class="close-btn" id="close-patch-btn">&times;</div>
       </div>
 
-      <span class="patch-tag">Mise à jour majeure &bull; 19 Octobre 2026</span>
+      <div class="patch-badge-row">
+        <span class="patch-tag-major">🚀 MISE À JOUR MAJEURE</span>
+        <span class="patch-tag-date">19 OCTOBRE 2026</span>
+      </div>
 
-      <div class="patch-section-title" style="color: #fef08a;">🚀 Nouveautés majeures</div>
-      <ul class="patch-list">
-        <li>Refonte complète de l'interface graphique avec le nouveau thème Cosmos.</li>
-        <li>Intégration d'effets visuels réactifs et d'animations 3D haute performance.</li>
-        <li>Ajout de la synchronisation en temps réel pour le suivi des mises à jour.</li>
-      </ul>
+      <!-- BLOC 1: NOUVEAUTÉS -->
+      <div class="patch-block">
+        <div class="patch-block-title" style="color: #fef08a;">
+          🌌 Nouvelle Expérience Visuelle
+        </div>
+        <div class="patch-item">Design Cosmos d'exception avec fond stellaire réactif et effets de verre dépoli.</div>
+        <div class="patch-item">Nouveau moteur d'animations ultra-fluide cadencé à 60 FPS.</div>
+        <div class="patch-item">Particules interactives qui réagissent aux clics et aux mouvements.</div>
+      </div>
 
-      <div class="patch-section-title" style="color: #c084fc;">⚡ Optimisations & Performances</div>
-      <ul class="patch-list">
-        <li>Réduction du temps de chargement global de plus de 45%.</li>
-        <li>Optimisation du rendu mobile et de la consommation de batterie.</li>
-        <li>Amélioration de la stabilité du serveur sous forte charge.</li>
-      </ul>
+      <!-- BLOC 2: FONCTIONNALITÉS -->
+      <div class="patch-block">
+        <div class="patch-block-title" style="color: #c084fc;">
+          ⚡ Performances & Fluidité
+        </div>
+        <div class="patch-item">Temps de chargement réduit de 45% grâce au nouveau système de rendu.</div>
+        <div class="patch-item">Optimisation complète pour mobiles, tablettes et écrans haute résolution.</div>
+        <div class="patch-item">Synchronisation en temps réel pour un suivi exact de la progression.</div>
+      </div>
 
-      <div class="patch-section-title" style="color: #38bdf8;">🛠️ Correctifs & Sécurité</div>
-      <ul class="patch-list">
-        <li>Mise à jour des protocoles de chiffrement de sécurité (AES-256).</li>
-        <li>Correction des bugs d'affichage sur certains navigateurs mobiles.</li>
-      </ul>
+      <!-- BLOC 3: SÉCURITÉ -->
+      <div class="patch-block">
+        <div class="patch-block-title" style="color: #38bdf8;">
+          🛡️ Sécurité & Infrastructure
+        </div>
+        <div class="patch-item">Mise à jour des protocoles de sécurité avec chiffrement AES-256.</div>
+        <div class="patch-item">Stabilité du serveur renforcée pour garantir zéro interruption.</div>
+      </div>
     </div>
   </div>
 
