@@ -322,7 +322,7 @@
 
     .patch-card {
       width: 100%;
-      max-width: 560px;
+      max-width: 580px;
       max-height: 85vh;
       background: var(--paper);
       color: var(--ink);
@@ -351,7 +351,7 @@
 
     .patch-title {
       font-family: var(--f-display);
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--ink);
       display: flex;
@@ -410,25 +410,27 @@
       letter-spacing: 0.08em;
     }
 
-    /* Onglets de navigation dans le Patch Note */
+    /* Onglets de navigation */
     .tab-navigation {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       margin-bottom: 1.25rem;
       border-bottom: 2px solid var(--ink);
       padding-bottom: 0.5rem;
+      overflow-x: auto;
     }
 
     .tab-btn {
       font-family: var(--f-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--ink);
       background: transparent;
       border: 2px solid transparent;
-      padding: 0.4em 0.8em;
+      padding: 0.4em 0.75em;
       border-radius: 8px;
       cursor: pointer;
+      white-space: nowrap;
       transition: all 0.2s ease;
     }
 
@@ -475,10 +477,10 @@
     }
 
     .patch-item {
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: var(--ink);
       line-height: 1.5;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.45rem;
       padding-left: 1.1rem;
       position: relative;
     }
@@ -557,7 +559,7 @@
 
     <!-- Bouton Épingle Patch Note -->
     <button class="patch-pin-btn" id="open-patch-btn">
-      📌 Consulter le Patch Note (v1.0)
+      📌 Découvrir le Patch Note 🌌
     </button>
 
     <div class="interactive-hint">✨ Clique n'importe où pour envoyer des étincelles</div>
@@ -568,66 +570,83 @@
     <div class="patch-card">
       <div class="patch-header">
         <div class="patch-title">
-          📌 Patch Note &bull; v1.0 (Lancement)
+          🌌 Univers de Sarah &bull; Patch Note
         </div>
         <button class="close-btn" id="close-patch-btn">&times;</button>
       </div>
 
       <div class="patch-badge-row">
-        <span class="patch-tag-major">🎉 VERSION INITIALE</span>
+        <span class="patch-tag-major">🚀 REVALORISATION MAJEURE</span>
         <span class="patch-tag-date">19 OCTOBRE 2026</span>
       </div>
 
       <!-- Onglets de Navigation -->
       <div class="tab-navigation">
-        <button class="tab-btn active" data-tab="tab-features">🚀 Nouveautés</button>
-        <button class="tab-btn" data-tab="tab-games">🎮 Mini-Jeux</button>
-        <button class="tab-btn" data-tab="tab-secret">🔒 Mode Secret</button>
+        <button class="tab-btn active" data-tab="tab-univers">🌌 Univers</button>
+        <button class="tab-btn" data-tab="tab-contenu">📅 Contenu</button>
+        <button class="tab-btn" data-tab="tab-espaces">🎮 Espaces</button>
+        <button class="tab-btn" data-tab="tab-systeme">⚙️ Système</button>
       </div>
 
-      <!-- ONGLET 1: NOUVEAUTÉS -->
-      <div class="tab-content active" id="tab-features">
+      <!-- ONGLET 1: UNIVERS -->
+      <div class="tab-content active" id="tab-univers">
         <div class="patch-block">
-          <div class="patch-block-title">🌌 Univers & Design Cosmos</div>
-          <div class="patch-item">Design cosmique personnalisé avec nébuleuses animées et fond stellaire.</div>
-          <div class="patch-item">Navigabilité fluide sans rechargement de page pour une immersion totale.</div>
+          <div class="patch-block-title">🚀 Une nouvelle façon d'entrer</div>
+          <div class="patch-item">Un écran d’intro « Pour Sarah » accueille désormais la première visite.</div>
+          <div class="patch-item">L’accueil devient la carte de l’univers : une planète par section (Messages, Lettres, Calendrier, la chambre, Secret, L’Échappée, Playlist, Ciné, Soleil/Lune). On clique, on y va.</div>
+          <div class="patch-item">Les polices du site sont enfin chargées : le rendu est plus soigné.</div>
         </div>
 
         <div class="patch-block block-2">
-          <div class="patch-block-title">📅 Calendrier des 30 jours</div>
-          <div class="patch-item">30 pensées et messages uniques à débloquer au fil des jours.</div>
-          <div class="patch-item">Sauvegarde automatique des cases déjà ouvertes dans ton navigateur.</div>
+          <div class="patch-block-title">☀️ Jour & Nuit 🌙</div>
+          <div class="patch-item">Un bouton Soleil/Lune permet de changer l’ambiance visuelle du site à tout moment.</div>
+          <div class="patch-item">Le site bascule automatiquement en mode nuit lorsqu'on s'approche de la carte, du calendrier, de la chambre et du ciel.</div>
+        </div>
+      </div>
+
+      <!-- ONGLET 2: CONTENU -->
+      <div class="tab-content" id="tab-contenu">
+        <div class="patch-block">
+          <div class="patch-block-title">📅 Calendrier Stellaire</div>
+          <div class="patch-item">Fini la grille de cases : place à un chemin de 30 étoiles reliées entre elles.</div>
+          <div class="patch-item">Nouveau mois arrivé : Novembre 2026, avec 30 nouveaux mots personnalisés du 1er au 30 novembre.</div>
+          <div class="patch-item">Septembre et octobre restent accessibles facilement grâce à un système d'onglets.</div>
+        </div>
+
+        <div class="patch-block block-2">
+          <div class="patch-block-title">✉️ Lettres Spéciales</div>
+          <div class="patch-item">6 nouvelles lettres ajoutées (quand tu as peur de demain, quand tu as envie de tout lâcher, ton anniversaire, quand tu te trouves nulle, quand on s’est disputés, quand tu veux juste un câlin).</div>
+          <div class="patch-item">Les lettres déjà ouvertes restent enregistrées même après rechargement de la page et affichent la mention « ouverte ✓ ».</div>
         </div>
 
         <div class="patch-block block-3">
-          <div class="patch-block-title">✉️ Lettres personnalisées</div>
-          <div class="patch-item">Section spéciale « À ouvrir quand... » avec des conseils et mots doux sur-mesure.</div>
+          <div class="patch-block-title">💬 Messages & Fratrie</div>
+          <div class="patch-item">Les 4 preuves ont été entièrement réécrites.</div>
+          <div class="patch-item">La fratrie est présentée dans un lecteur à onglets : un message à la fois, en grand et facile à lire sur ordinateur comme sur téléphone.</div>
         </div>
       </div>
 
-      <!-- ONGLET 2: MINI-JEUX -->
-      <div class="tab-content" id="tab-games">
+      <!-- ONGLET 3: ESPACES -->
+      <div class="tab-content" id="tab-espaces">
         <div class="patch-block">
-          <div class="patch-block-title">✨ Ciel & Constellations</div>
-          <div class="patch-item">Ciel interactif explorable à la souris ou au doigt pour découvrir des souvenirs cachés.</div>
+          <div class="patch-block-title">🖼️ La Chambre Gaming RGB</div>
+          <div class="patch-item">La fenêtre sur le ciel est maintenant une vraie scène de chambre gaming RGB, avec mur, sol, rideaux, bureau et étagère. Tout tient parfaitement dans l’écran, sans défilement.</div>
+          <div class="patch-item">Dans L’Échappée, la chambre en 3D a été refaite : un vrai setup gaming, des LED partout et un PC interactif à explorer.</div>
         </div>
 
         <div class="patch-block block-2">
-          <div class="patch-block-title">🖼️ Chambre Gaming RGB</div>
-          <div class="patch-item">Décor interactif avec effets néons et éléments réactifs au mouvement.</div>
+          <div class="patch-block-title">🤫 Section Secret</div>
+          <div class="patch-item">Une toute nouvelle récompense pour celles qui vont jusqu’au bout : une lettre, des souvenirs et une surprise. Pas de spoiler ! 🤫</div>
         </div>
       </div>
 
-      <!-- ONGLET 3: MODE SECRET -->
-      <div class="tab-content" id="tab-secret">
+      <!-- ONGLET 4: SYSTÈME -->
+      <div class="tab-content" id="tab-systeme">
         <div class="patch-block">
-          <div class="patch-block-title">🔐 Digicode & Énigmes</div>
-          <div class="patch-item">Zone sécurisée à 3 niveaux (Digicode, Énigme, Terminal informatique).</div>
-        </div>
-
-        <div class="patch-block block-2">
-          <div class="patch-block-title">🏆 Le Coffre de Souvenirs</div>
-          <div class="patch-item">Accès final à un coffre-fort 3D abritant une lettre animée et un mur de polaroïds.</div>
+          <div class="patch-block-title">🛠️ Ergonomie & Sauvegarde</div>
+          <div class="patch-item">La progression générale est sauvegardée automatiquement.</div>
+          <div class="patch-item">L'interface est entièrement adaptée et optimisée pour les petits écrans (mobiles, tablettes).</div>
+          <div class="patch-item">Option pour désactiver les animations pour celles qui le préfèrent.</div>
         </div>
       </div>
 
@@ -777,7 +796,7 @@
       }
     });
 
-    // Gestion du changement d'onglets
+    // Navigation par onglets
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const targetTab = btn.getAttribute('data-tab');
