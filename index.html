@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maintenance — Édition Limitée</title>
+  <title>Mise à jour interactive — Mode Maintenance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -22,35 +22,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem 1.5rem;
-      overflow-x: hidden;
+      padding: 1.5rem;
+      overflow: hidden;
       position: relative;
     }
 
-    /* Lumières d'ambiance d'arrière-plan */
-    .bg-glow-1 {
+    /* Arrière-plan dynamique avec canvas */
+    #bg-canvas {
       position: absolute;
-      top: -15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
-      filter: blur(80px);
-      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 0;
-    }
-
-    .bg-glow-2 {
-      position: absolute;
-      bottom: -10%;
-      right: 10%;
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
-      filter: blur(100px);
       pointer-events: none;
-      z-index: 0;
     }
 
     /* Carte principale */
@@ -58,38 +43,37 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 580px;
-      background: rgba(10, 14, 23, 0.75);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      max-width: 540px;
+      background: rgba(10, 14, 23, 0.7);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(212, 175, 55, 0.25);
       border-radius: 28px;
-      padding: 3.5rem 3rem;
+      padding: 3.5rem 2.5rem;
       text-align: center;
       box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9),
                   inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
-    /* Badge doré animé */
     .brand-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.03));
-      border: 1px solid rgba(212, 175, 55, 0.4);
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.35);
       color: #e2c262;
-      padding: 0.5rem 1.25rem;
+      padding: 0.45rem 1.15rem;
       border-radius: 9999px;
       font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       margin-bottom: 2rem;
     }
 
     .pulse-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       background-color: #e2c262;
       border-radius: 50%;
       box-shadow: 0 0 10px #e2c262;
@@ -98,157 +82,231 @@
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 0.3; transform: scale(0.85); }
     }
 
-    /* Titre d'exception */
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: 2.25rem;
+      font-size: 2.1rem;
       font-weight: 700;
       letter-spacing: -0.01em;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      margin-bottom: 0.85rem;
+      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      line-height: 1.2;
+      line-height: 1.25;
     }
 
-    p {
+    /* Message dynamique */
+    .status-text {
       color: #94a3b8;
       font-size: 0.95rem;
-      line-height: 1.7;
+      line-height: 1.65;
       font-weight: 300;
+      min-height: 3.2em;
       margin-bottom: 2.5rem;
+      transition: opacity 0.4s ease;
     }
 
-    /* Compte à rebours chic */
-    .countdown-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .time-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-      padding: 1.25rem 0.5rem;
-    }
-
-    .time-value {
-      font-family: 'Cinzel', serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #ffffff;
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    .time-label {
-      font-size: 0.7rem;
-      color: #64748b;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    /* Barre de progression épurée */
-    .progress-container {
-      width: 100%;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 9999px;
-      overflow: hidden;
+    /* Cercle de statut animé */
+    .loader-wrapper {
       position: relative;
-      margin-bottom: 2rem;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 2.5rem auto;
     }
 
-    .progress-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .loader-svg {
+      width: 100%;
       height: 100%;
-      width: 35%;
-      background: linear-gradient(90deg, transparent, #e2c262, transparent);
-      animation: shimmer 2.5s infinite ease-in-out;
+      transform: rotate(-90deg);
     }
 
-    @keyframes shimmer {
-      0% { left: -35%; }
-      100% { left: 100%; }
+    .loader-bg {
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 4;
+      fill: none;
+    }
+
+    .loader-circle {
+      stroke: url(#gold-gradient);
+      stroke-width: 4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .loader-number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #e2c262;
+    }
+
+    /* Étapes d'avancement */
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-dot {
+      width: 24px;
+      height: 4px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.5s ease;
+    }
+
+    .step-dot.active {
+      background: #e2c262;
+      box-shadow: 0 0 10px rgba(226, 194, 98, 0.5);
     }
 
     .footer-text {
       font-size: 0.8rem;
-      color: #475569;
+      color: #64748b;
       letter-spacing: 0.05em;
-    }
-
-    @media (max-width: 480px) {
-      .container { padding: 2.5rem 1.5rem; }
-      h1 { font-size: 1.75rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="bg-glow-1"></div>
-  <div class="bg-glow-2"></div>
+  <!-- Particules animées -->
+  <canvas id="bg-canvas"></canvas>
 
   <div class="container">
     <div class="brand-badge">
       <span class="pulse-dot"></span>
-      Mise à jour privée
+      Déploiement en cours
     </div>
 
-    <h1>Excellence en Préparation</h1>
+    <h1>Mise à jour système</h1>
     
-    <p>Nous perfectionnons actuellement l'expérience. Le site sera de nouveau accessible dans un instant avec une toute nouvelle version.</p>
+    <p class="status-text" id="status-text">Préparation des nouveaux fichiers...</p>
 
-    <!-- Compte à rebours dynamique -->
-    <div class="countdown-grid">
-      <div class="time-box">
-        <span class="time-value" id="hours">00</span>
-        <span class="time-label">Heures</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="minutes">45</span>
-        <span class="time-label">Minutes</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="seconds">00</span>
-        <span class="time-label">Secondes</span>
-      </div>
+    <!-- Anneau de progression -->
+    <div class="loader-wrapper">
+      <svg class="loader-svg" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e2c262" />
+            <stop offset="100%" stop-color="#a855f7" />
+          </linearGradient>
+        </defs>
+        <circle class="loader-bg" cx="50" cy="50" r="45"></circle>
+        <circle class="loader-circle" id="progress-circle" cx="50" cy="50" r="45"></circle>
+      </svg>
+      <div class="loader-number" id="progress-percent">0%</div>
     </div>
 
-    <div class="progress-container">
-      <div class="progress-bar"></div>
+    <!-- Indicateurs d'étapes -->
+    <div class="step-indicator">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
     </div>
 
-    <div class="footer-text">Merci pour votre patience &bull; À très vite</div>
+    <div class="footer-text">Merci pour votre patience &bull; Bientôt en ligne</div>
   </div>
 
   <script>
-    // Compte à rebours factice animé pour l'effet visuel
-    let totalSeconds = 2700; // 45 minutes
+    // 1. Animation des particules en arrière-plan
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-    function updateTimer() {
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
-      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
-      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
-
-      if (totalSeconds > 0) {
-        totalSeconds--;
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.8 + 0.5;
+        this.speedY = Math.random() * -0.5 - 0.2;
+        this.opacity = Math.random() * 0.5 + 0.1;
+      }
+      update() {
+        this.y += this.speedY;
+        if (this.y < 0) this.reset();
+      }
+      draw() {
+        ctx.fillStyle = `rgba(226, 194, 98, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    setInterval(updateTimer, 1000);
-    updateTimer();
+    for (let i = 0; i < 40; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateBg() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateBg);
+    }
+    animateBg();
+
+    // 2. Progression et changement de texte automatique
+    const steps = [
+      "Optimisation de la base de données et des visuels...",
+      "Déploiement des nouvelles fonctionnalités...",
+      "Dernières vérifications de sécurité avant réouverture..."
+    ];
+
+    let progress = 0;
+    const circle = document.getElementById('progress-circle');
+    const percentText = document.getElementById('progress-percent');
+    const statusText = document.getElementById('status-text');
+    const dots = document.querySelectorAll('.step-dot');
+    const maxDash = 283;
+
+    function updateProgress() {
+      if (progress < 100) {
+        progress += 1;
+        percentText.innerText = progress + "%";
+        
+        // Calcul du cercle SVG
+        const offset = maxDash - (progress / 100) * maxDash;
+        circle.style.strokeDashoffset = offset;
+
+        // Changement de texte et d'étape
+        if (progress === 35) {
+          statusText.style.opacity = '0';
+          setTimeout(() => {
+            statusText.innerText = steps[1];
+            statusText.style.opacity = '1';
+            dots[1].classList.add('active');
+          }, 400);
+        } else if (progress === 75) {
+          statusText.style.opacity = '0';
+          setTimeout(() => {
+            statusText.innerText = steps[2];
+            statusText.style.opacity = '1';
+            dots[2].classList.add('active');
+          }, 400);
+        }
+      }
+    }
+
+    setInterval(updateProgress, 350);
   </script>
 
 </body>
