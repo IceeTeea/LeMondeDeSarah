@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mise à jour en cours — Mode Maintenance</title>
+  <title>Mise à jour Système — Édition Cosmos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      user-select: none;
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #030508;
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #03050a;
       color: #f8fafc;
       min-height: 100vh;
       display: flex;
@@ -27,324 +28,422 @@
       position: relative;
     }
 
-    /* Arrière-plan dynamique avec canvas */
-    #bg-canvas {
+    #space-canvas {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: 0;
-      pointer-events: none;
     }
 
-    /* Carte principale */
-    .container {
+    /* Halo lumineux d'arrière-plan */
+    .ambient-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(212, 175, 55, 0.08) 40%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatGlow 8s infinite ease-in-out;
+    }
+
+    @keyframes floatGlow {
+      0%, 100% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.15) translate(-20px, 15px); }
+    }
+
+    /* Carte Interface Futuriste */
+    .command-card {
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 540px;
-      background: rgba(10, 14, 23, 0.7);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      max-width: 580px;
+      background: rgba(8, 12, 22, 0.75);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
       border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 28px;
+      border-radius: 32px;
       padding: 3.5rem 2.5rem;
       text-align: center;
-      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 50px 120px -20px rgba(0, 0, 0, 0.95),
+                  0 0 40px rgba(168, 85, 247, 0.1),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
-    .brand-badge {
+    /* Orbe Holographique Central */
+    .orb-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orb-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px dashed rgba(212, 175, 55, 0.4);
+      animation: rotateRing 12s linear infinite;
+    }
+
+    .orb-ring-reverse {
+      position: absolute;
+      width: 82%;
+      height: 82%;
+      border-radius: 50%;
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      border-top-color: transparent;
+      animation: rotateRing 6s linear infinite reverse;
+    }
+
+    @keyframes rotateRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .orb-core {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fef08a, #d97706 40%, #7e22ce 80%);
+      box-shadow: 0 0 35px rgba(212, 175, 55, 0.6), 0 0 60px rgba(168, 85, 247, 0.4);
+      animation: orbPulse 3s infinite ease-in-out;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes orbPulse {
+      0%, 100% { transform: scale(0.95); box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
+      50% { transform: scale(1.08); box-shadow: 0 0 50px rgba(212, 175, 55, 0.8), 0 0 80px rgba(168, 85, 247, 0.6); }
+    }
+
+    /* Badge Statut */
+    .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      color: #e2c262;
-      padding: 0.45rem 1.15rem;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(168, 85, 247, 0.15));
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: #fef08a;
+      padding: 0.5rem 1.2rem;
       border-radius: 9999px;
       font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .pulse-dot {
       width: 7px;
       height: 7px;
-      background-color: #e2c262;
+      background-color: #fef08a;
       border-radius: 50%;
-      box-shadow: 0 0 10px #e2c262;
-      animation: pulse 2s infinite ease-in-out;
+      box-shadow: 0 0 10px #fef08a;
+      animation: blink 1.5s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.85); }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: 2.1rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
       margin-bottom: 0.85rem;
-      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 50%, #c084fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      line-height: 1.25;
     }
 
-    /* Message dynamique */
     .status-text {
       color: #94a3b8;
       font-size: 0.95rem;
-      line-height: 1.65;
+      line-height: 1.6;
       font-weight: 300;
-      min-height: 3.2em;
-      margin-bottom: 1.5rem;
-      transition: opacity 0.4s ease;
-    }
-
-    /* Cercle de statut animé */
-    .loader-wrapper {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 1.5rem auto;
-    }
-
-    .loader-svg {
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
-
-    .loader-bg {
-      stroke: rgba(255, 255, 255, 0.05);
-      stroke-width: 4;
-      fill: none;
-    }
-
-    .loader-circle {
-      stroke: url(#gold-gradient);
-      stroke-width: 4;
-      fill: none;
-      stroke-linecap: round;
-      stroke-dasharray: 283;
-      stroke-dashoffset: 283;
-      transition: stroke-dashoffset 0.5s ease;
-    }
-
-    .loader-number {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #e2c262;
-    }
-
-    /* Compte à rebours temps restant */
-    .time-remaining {
-      color: #cbd5e1;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
+      min-height: 3em;
       margin-bottom: 2rem;
     }
 
-    /* Étapes d'avancement */
-    .step-indicator {
+    /* Barre de progression avec éclat néon */
+    .progress-section {
+      margin-bottom: 2rem;
+    }
+
+    .progress-header {
       display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      margin-bottom: 0.6rem;
     }
 
-    .step-dot {
-      width: 24px;
-      height: 4px;
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.1);
-      transition: all 0.5s ease;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .step-dot.active {
-      background: #e2c262;
-      box-shadow: 0 0 10px rgba(226, 194, 98, 0.5);
+    .progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 1%;
+      background: linear-gradient(90deg, #d97706, #fef08a, #c084fc);
+      border-radius: 9999px;
+      box-shadow: 0 0 15px rgba(254, 240, 138, 0.7);
+      transition: width 0.5s ease;
     }
 
-    .footer-text {
-      font-size: 0.8rem;
-      color: #64748b;
+    .time-remaining {
+      font-size: 0.85rem;
+      color: #e2e8f0;
       letter-spacing: 0.05em;
+      margin-top: 0.8rem;
+    }
+
+    /* Panneau de télémétrie en bas */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .telemetry-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 0.75rem 0.5rem;
+    }
+
+    .telemetry-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fef08a;
+      display: block;
+    }
+
+    .telemetry-label {
+      font-size: 0.68rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.2rem;
+    }
+
+    .interactive-hint {
+      font-size: 0.75rem;
+      color: #475569;
+      margin-top: 1.5rem;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
-  <!-- Particules animées -->
-  <canvas id="bg-canvas"></canvas>
+  <canvas id="space-canvas"></canvas>
+  <div class="ambient-glow"></div>
 
-  <div class="container">
-    <div class="brand-badge">
+  <div class="command-card" id="card">
+    <div class="status-badge">
       <span class="pulse-dot"></span>
-      Mise à jour en direct
+      Déploiement Orbital
     </div>
 
-    <h1>Maintenance du site</h1>
+    <!-- Orbe Visuel -->
+    <div class="orb-container">
+      <div class="orb-ring"></div>
+      <div class="orb-ring-reverse"></div>
+      <div class="orb-core"></div>
+    </div>
+
+    <h1>Mise à jour Système</h1>
     
-    <p class="status-text" id="status-text">Initialisation et déploiement des éléments...</p>
+    <p class="status-text" id="status-text">Initialisation du noyau de données...</p>
 
-    <!-- Anneau de progression -->
-    <div class="loader-wrapper">
-      <svg class="loader-svg" viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#e2c262" />
-            <stop offset="100%" stop-color="#a855f7" />
-          </linearGradient>
-        </defs>
-        <circle class="loader-bg" cx="50" cy="50" r="45"></circle>
-        <circle class="loader-circle" id="progress-circle" cx="50" cy="50" r="45"></circle>
-      </svg>
-      <div class="loader-number" id="progress-percent">1%</div>
+    <!-- Progression globale -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>Progression Globale</span>
+        <span id="percent-label" style="color:#fef08a; font-weight: 700;">1%</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="time-remaining" id="time-remaining">Calcul du temps restant...</div>
     </div>
 
-    <div class="time-remaining" id="time-remaining">Fin prévue aujourd'hui à 12:00</div>
-
-    <!-- Indicateurs d'étapes -->
-    <div class="step-indicator">
-      <div class="step-dot active" id="dot-1"></div>
-      <div class="step-dot" id="dot-2"></div>
-      <div class="step-dot" id="dot-3"></div>
+    <!-- Télémétrie en temps réel -->
+    <div class="telemetry-grid">
+      <div class="telemetry-box">
+        <span class="telemetry-value" id="fps-val">60 FPS</span>
+        <span class="telemetry-label">Fluidité</span>
+      </div>
+      <div class="telemetry-box">
+        <span class="telemetry-value">AES-256</span>
+        <span class="telemetry-label">Sécurité</span>
+      </div>
+      <div class="telemetry-box">
+        <span class="telemetry-value" id="ping-val">12 ms</span>
+        <span class="telemetry-label">Latence</span>
+      </div>
     </div>
 
-    <div class="footer-text">Merci pour votre patience &bull; Rendez-vous très bientôt</div>
+    <div class="interactive-hint">✨ Touchez l'écran ou cliquez pour générer des étincelles</div>
   </div>
 
   <script>
-    // 1. Animation des particules en arrière-plan
-    const canvas = document.getElementById('bg-canvas');
+    // --- 1. Canvas d'étoiles et de particules interactives ---
+    const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
+    let width, height;
+    let stars = [];
+    let sparks = [];
+    let mouse = { x: -1000, y: -1000 };
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < 90; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 1.8 + 0.2,
+          alpha: Math.random() * 0.8 + 0.2,
+          speed: Math.random() * 0.3 + 0.05
+        });
+      }
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
 
-    class Particle {
-      constructor() {
-        this.reset();
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    // Clic / Tap interactif générant des étincelles
+    window.addEventListener('click', (e) => {
+      for (let i = 0; i < 15; i++) {
+        sparks.push({
+          x: e.clientX,
+          y: e.clientY,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6,
+          size: Math.random() * 3 + 1,
+          color: Math.random() > 0.5 ? '#fef08a' : '#c084fc',
+          life: 1
+        });
       }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.8 + 0.5;
-        this.speedY = Math.random() * -0.5 - 0.2;
-        this.opacity = Math.random() * 0.5 + 0.1;
-      }
-      update() {
-        this.y += this.speedY;
-        if (this.y < 0) this.reset();
-      }
-      draw() {
-        ctx.fillStyle = `rgba(226, 194, 98, ${this.opacity})`;
+    });
+
+    function renderBackground() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Dessin des étoiles
+      stars.forEach(s => {
+        s.y -= s.speed;
+        if (s.y < 0) s.y = height;
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
         ctx.fill();
+      });
+
+      // Dessin des étincelles interactives
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        let p = sparks[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+
+        if (p.life <= 0) {
+          sparks.splice(i, 1);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
       }
+
+      requestAnimationFrame(renderBackground);
     }
+    renderBackground();
 
-    for (let i = 0; i < 40; i++) {
-      particles.push(new Particle());
-    }
+    // --- 2. Calcul du pourcentage en temps réel (19/10/2026 jusqu'à 12:00) ---
+    const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime(); // 19 Octobre 2026, 00:50
+    const endTime = new Date(2026, 9, 19, 12, 0, 0).getTime();   // 19 Octobre 2026, 12:00
 
-    function animateBg() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(animateBg);
-    }
-    animateBg();
-
-    // 2. Calcul du pourcentage en temps réel jusqu'au 19/10/2026 à 12h00
-    const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime(); // Début : 19/10/2026 à 00:50
-    const endTime = new Date(2026, 9, 19, 12, 0, 0).getTime();   // Fin : 19/10/2026 à 12:00
-
-    const circle = document.getElementById('progress-circle');
-    const percentText = document.getElementById('progress-percent');
+    const progressFill = document.getElementById('progress-fill');
+    const percentLabel = document.getElementById('percent-label');
     const statusText = document.getElementById('status-text');
     const timeRemaining = document.getElementById('time-remaining');
-    const dot1 = document.getElementById('dot-1');
-    const dot2 = document.getElementById('dot-2');
-    const dot3 = document.getElementById('dot-3');
-    const maxDash = 283;
+    const pingVal = document.getElementById('ping-val');
 
-    function updateRealProgress() {
+    function updateProgress() {
       const now = new Date().getTime();
       const totalDuration = endTime - startTime;
       const elapsed = now - startTime;
 
       let percentage = (elapsed / totalDuration) * 100;
-      
-      // Sécurité pour rester entre 1% et 100%
       if (percentage < 1) percentage = 1;
       if (percentage >= 100) percentage = 100;
 
       const roundedPercent = Math.floor(percentage);
-      percentText.innerText = roundedPercent + "%";
+      percentLabel.innerText = roundedPercent + "%";
+      progressFill.style.width = percentage + "%";
 
-      // Animation du cercle SVG
-      const offset = maxDash - (percentage / 100) * maxDash;
-      circle.style.strokeDashoffset = offset;
-
-      // Calcul du temps restant
+      // Temps restant
       const timeLeftMs = endTime - now;
       if (timeLeftMs > 0) {
         const hours = Math.floor(timeLeftMs / (1000 * 60 * 60));
         const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
-        timeRemaining.innerText = `Temps restant : ${hours}h ${minutes}m ${seconds}s`;
+        timeRemaining.innerText = `Fin prévue dans : ${hours}h ${minutes}m ${seconds}s`;
       } else {
-        timeRemaining.innerText = "Mise à jour terminée ! Ouverture imminente...";
+        timeRemaining.innerText = "✨ Mise à jour terminée ! Ouverture imminente...";
       }
 
-      // Adaptation des textes selon le pourcentage réel
-      if (percentage < 33) {
-        statusText.innerText = "Optimisation des bases de données et des visuels...";
-        dot1.classList.add('active');
-        dot2.classList.remove('active');
-        dot3.classList.remove('active');
-      } else if (percentage < 75) {
-        statusText.innerText = "Déploiement des nouvelles fonctionnalités...";
-        dot1.classList.add('active');
-        dot2.classList.add('active');
-        dot3.classList.remove('active');
-      } else if (percentage < 100) {
-        statusText.innerText = "Dernières vérifications de sécurité avant réouverture...";
-        dot1.classList.add('active');
-        dot2.classList.add('active');
-        dot3.classList.add('active');
+      // Changement dynamique des phrases d'avancement
+      if (percentage < 30) {
+        statusText.innerText = "Compilation des scripts CSS & optimisation des performances...";
+      } else if (percentage < 65) {
+        statusText.innerText = "Synchronisation des bases de données et des modules graphiques...";
+      } else if (percentage < 95) {
+        statusText.innerText = "Tests de sécurité et calibrage final des interfaces...";
       } else {
-        statusText.innerText = "Finalisation terminée ! Le site va rouvrir.";
-        dot1.classList.add('active');
-        dot2.classList.add('active');
-        dot3.classList.add('active');
+        statusText.innerText = "Tout est prêt ! Finalisation du déploiement...";
       }
+
+      // Variation amusante du ping
+      pingVal.innerText = (10 + Math.floor(Math.random() * 5)) + " ms";
     }
 
-    // Mise à jour toutes les secondes
-    setInterval(updateRealProgress, 1000);
-    updateRealProgress();
+    setInterval(updateProgress, 1000);
+    updateProgress();
   </script>
-
 </body>
 </html>
