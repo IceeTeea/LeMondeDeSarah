@@ -24,7 +24,7 @@
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
-      overflow: hidden;
+      overflow-x: hidden;
       position: relative;
     }
 
@@ -60,10 +60,10 @@
       z-index: 1;
       width: 100%;
       max-width: 580px;
-      background: rgba(8, 12, 22, 0.75);
+      background: rgba(8, 12, 22, 0.85);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
-      border: 1px solid rgba(212, 175, 55, 0.25);
+      border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 32px;
       padding: 3.2rem 2.5rem;
       text-align: center;
@@ -271,7 +271,7 @@
       width: 100%;
       max-width: 520px;
       max-height: 80vh;
-      background: rgba(12, 17, 30, 0.9);
+      background: rgba(12, 17, 30, 0.95);
       border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 28px;
       padding: 2.5rem;
@@ -367,18 +367,6 @@
       font-size: 0.75rem;
     }
 
-    /* Personalisation Scrollbar */
-    .patch-card::-webkit-scrollbar {
-      width: 6px;
-    }
-    .patch-card::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.2);
-    }
-    .patch-card::-webkit-scrollbar-thumb {
-      background: rgba(212, 175, 55, 0.3);
-      border-radius: 10px;
-    }
-
     .interactive-hint {
       font-size: 0.75rem;
       color: #475569;
@@ -389,4 +377,220 @@
 </head>
 <body>
 
-  <canvas id="space
+  <canvas id="space-canvas"></canvas>
+  <div class="ambient-glow"></div>
+
+  <div class="command-card">
+    <div class="status-badge">
+      <span class="pulse-dot"></span>
+      Déploiement Orbital
+    </div>
+
+    <!-- Orbe Visuel -->
+    <div class="orb-container">
+      <div class="orb-ring"></div>
+      <div class="orb-ring-reverse"></div>
+      <div class="orb-core"></div>
+    </div>
+
+    <h1>Mise à jour Système</h1>
+    
+    <p class="status-text" id="status-text">Initialisation du noyau de données...</p>
+
+    <!-- Progression globale -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>Progression Globale</span>
+        <span id="percent-label" style="color:#fef08a; font-weight: 700;">1%</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="time-remaining" id="time-remaining">Calcul du temps restant...</div>
+    </div>
+
+    <!-- Bouton Épingle Patch Note -->
+    <button class="patch-pin-btn" id="open-patch-btn">
+      📌 Consulter le Patch Note (v2.4)
+    </button>
+
+    <div class="interactive-hint">✨ Touchez l'écran pour générer des étincelles</div>
+  </div>
+
+  <!-- Fenêtre Modale Patch Notes -->
+  <div class="patch-modal-overlay" id="patch-modal">
+    <div class="patch-card">
+      <div class="patch-header">
+        <div class="patch-title">
+          📌 Patch Note &bull; v2.4
+        </div>
+        <div class="close-btn" id="close-patch-btn">&times;</div>
+      </div>
+
+      <span class="patch-tag">Mise à jour majeure &bull; 19 Octobre 2026</span>
+
+      <div class="patch-section-title" style="color: #fef08a;">🚀 Nouveautés majeures</div>
+      <ul class="patch-list">
+        <li>Refonte complète de l'interface graphique avec le nouveau thème Cosmos.</li>
+        <li>Intégration d'effets visuels réactifs et d'animations 3D haute performance.</li>
+        <li>Ajout de la synchronisation en temps réel pour le suivi des mises à jour.</li>
+      </ul>
+
+      <div class="patch-section-title" style="color: #c084fc;">⚡ Optimisations & Performances</div>
+      <ul class="patch-list">
+        <li>Réduction du temps de chargement global de plus de 45%.</li>
+        <li>Optimisation du rendu mobile et de la consommation de batterie.</li>
+        <li>Amélioration de la stabilité du serveur sous forte charge.</li>
+      </ul>
+
+      <div class="patch-section-title" style="color: #38bdf8;">🛠️ Correctifs & Sécurité</div>
+      <ul class="patch-list">
+        <li>Mise à jour des protocoles de chiffrement de sécurité (AES-256).</li>
+        <li>Correction des bugs d'affichage sur certains navigateurs mobiles.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. Canvas d'étoiles et étincelles interactives ---
+    const canvas = document.getElementById('space-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let stars = [];
+    let sparks = [];
+
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < 90; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 1.8 + 0.2,
+          alpha: Math.random() * 0.8 + 0.2,
+          speed: Math.random() * 0.3 + 0.05
+        });
+      }
+    }
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+
+    window.addEventListener('click', (e) => {
+      if (e.target.closest('#patch-modal')) return;
+
+      for (let i = 0; i < 15; i++) {
+        sparks.push({
+          x: e.clientX,
+          y: e.clientY,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6,
+          size: Math.random() * 3 + 1,
+          color: Math.random() > 0.5 ? '#fef08a' : '#c084fc',
+          life: 1
+        });
+      }
+    });
+
+    function renderBackground() {
+      ctx.clearRect(0, 0, width, height);
+
+      stars.forEach(s => {
+        s.y -= s.speed;
+        if (s.y < 0) s.y = height;
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        let p = sparks[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+
+        if (p.life <= 0) {
+          sparks.splice(i, 1);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      requestAnimationFrame(renderBackground);
+    }
+    renderBackground();
+
+    // --- 2. Calcul du pourcentage en temps réel (19/10/2026 jusqu'à 12:00) ---
+    const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime();
+    const endTime = new Date(2026, 9, 19, 12, 0, 0).getTime();
+
+    const progressFill = document.getElementById('progress-fill');
+    const percentLabel = document.getElementById('percent-label');
+    const statusText = document.getElementById('status-text');
+    const timeRemaining = document.getElementById('time-remaining');
+
+    function updateProgress() {
+      const now = new Date().getTime();
+      const totalDuration = endTime - startTime;
+      const elapsed = now - startTime;
+
+      let percentage = (elapsed / totalDuration) * 100;
+      if (percentage < 1) percentage = 1;
+      if (percentage >= 100) percentage = 100;
+
+      const roundedPercent = Math.floor(percentage);
+      percentLabel.innerText = roundedPercent + "%";
+      progressFill.style.width = percentage + "%";
+
+      const timeLeftMs = endTime - now;
+      if (timeLeftMs > 0) {
+        const hours = Math.floor(timeLeftMs / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
+        timeRemaining.innerText = `Fin prévue dans : ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        timeRemaining.innerText = "✨ Mise à jour terminée ! Ouverture imminente...";
+      }
+
+      if (percentage < 30) {
+        statusText.innerText = "Compilation des scripts CSS & optimisation des performances...";
+      } else if (percentage < 65) {
+        statusText.innerText = "Synchronisation des bases de données et des modules graphiques...";
+      } else if (percentage < 95) {
+        statusText.innerText = "Tests de sécurité et calibrage final des interfaces...";
+      } else {
+        statusText.innerText = "Tout est prêt ! Finalisation du déploiement...";
+      }
+    }
+
+    setInterval(updateProgress, 1000);
+    updateProgress();
+
+    // --- 3. Gestion de la modale Patch Note ---
+    const modal = document.getElementById('patch-modal');
+    const openBtn = document.getElementById('open-patch-btn');
+    const closeBtn = document.getElementById('close-patch-btn');
+
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
