@@ -46,6 +46,55 @@
 
   var DAYS_IN_CAL = DAY_TEXTS.length; /* 30 jours, à partir de CAL_START ci-dessus */
 
+  /* ÉDITABLE : le calendrier de novembre 2026 (30 jours, du 1er au 30 novembre).
+     Textes d'exemple : remplace-les par les tiens, comme pour septembre. */
+  var NOV_TEXTS = [
+    "Nouveau mois, nouvelle page blanche. J'espère qu'elle te ressemblera : douce, un peu folle, et pleine de petites victoires. Quoi qu'il arrive en novembre, je suis là.",
+    "Novembre a parfois cette lumière grise qui fatigue. Si tu te sens un peu à plat aujourd'hui, c'est normal. Fais-toi un thé, mets une couverture sur tes épaules, et dis-toi que je pense à toi.",
+    "Tu ne t'en rends probablement pas compte, mais tu as une manière de rassurer les gens rien qu'en étant là. Moi, ça m'a souvent fait un bien fou.",
+    "Aujourd'hui, je voulais juste te dire merci. Pour les messages à des heures impossibles, pour les fous rires, pour tout ce qu'on n'a même pas besoin de se dire.",
+    "Si tu avais une petite voix dans la tête qui te dit que tu n'en fais pas assez, dis-lui de se taire de ma part. Ce que tu fais compte, et ce que tu es compte encore plus.",
+    "Prends dix minutes rien que pour toi aujourd'hui. Pas pour être productive, pas pour répondre à quelqu'un. Juste pour respirer. Tu l'as bien mérité.",
+    "Il y a des amitiés qui s'usent avec le temps. La nôtre, elle, a pris de la profondeur. Je ne l'échangerais contre rien au monde.",
+    "Les jours où tout paraît compliqué, rappelle-toi d'où tu viens. Regarde tout ce que tu as déjà traversé : tu es bien plus solide que tu ne le penses.",
+    "Je sais que tu es du genre à t'occuper de tout le monde avant toi. Aujourd'hui, c'est moi qui m'occupe de toi, avec ce petit message. Il ne remplace pas un câlin, mais il y pense très fort.",
+    "Quand je repense à nos souvenirs, ce n'est jamais les grands moments qui me viennent en premier. Ce sont les petits : un fou rire, une vanne, un silence tranquille. Merci pour ça.",
+    "Tu as le droit de ne pas aller bien tout le temps. Tu as le droit de te reposer, de dire non, de changer d'avis. Je serai toujours de ton côté.",
+    "Je suis fier de la personne que tu deviens, même quand tu n'es pas sûre de toi. Surtout quand tu n'es pas sûre de toi, en fait.",
+    "Il paraît qu'on est la moyenne des gens qu'on fréquente. Si c'est vrai, alors j'ai beaucoup de chance de t'avoir dans ma vie.",
+    "Aujourd'hui, je te souhaite un truc tout bête : un bon repas, une chanson qui te fait du bien, et quelqu'un qui te fait rire. Si c'est moi, c'est encore mieux.",
+    "Ne laisse personne te faire croire que tu en demandes trop. Tu mérites des gens qui te respectent, t'écoutent et te tiennent la main quand il le faut.",
+    "On a eu des hauts, des bas, des moments de doute, et on est toujours là l'un pour l'autre. Ça, c'est la plus belle preuve que cette amitié est solide.",
+    "Si tu es en train de lire ça un soir où tout te semble lourd, ferme les yeux deux secondes. Tu n'es pas seule. Je ne suis jamais très loin, même quand les kilomètres s'en mêlent.",
+    "Ce que j'aime chez toi, c'est que tu restes toi-même, sans calcul ni faux-semblant. C'est rare, et c'est précieux. Ne change jamais ça.",
+    "Un petit rappel pour aujourd'hui : tu n'as pas besoin d'être parfaite pour être aimée. Tu l'es déjà, exactement comme tu es.",
+    "J'espère que tu as pris le temps de rire aujourd'hui. Sinon, voilà ton rappel : repense à notre pire moment de honte, et laisse-le faire effet.",
+    "Je ne te le dis peut-être pas assez, mais tes messages, tes vocaux et ta présence sont des petits morceaux de bonheur dans mes journées.",
+    "Il y aura toujours des journées plus lourdes que d'autres. Mais il y aura toujours quelqu'un pour te dire que ça va aller. Aujourd'hui, c'est moi, et je le pense vraiment.",
+    "Tu as plus de courage que tu ne le crois. Je l'ai vu plus d'une fois, et ça m'a toujours impressionné. Continue d'avancer à ton rythme.",
+    "Merci d'être la personne à qui je peux tout dire sans avoir peur d'être jugé. C'est un luxe que peu de gens ont, et je le sais.",
+    "Peu importe ce que décembre nous réserve, j'espère qu'on le traversera comme on traverse tout le reste : ensemble, avec nos blagues et nos vocaux interminables.",
+    "Je te souhaite un week-end sans pression : un bon film, de la musique, et zéro culpabilité de ne rien faire. Tu as le droit de ralentir, tu sais.",
+    "Si tu devais retenir une seule chose de ce mois : tu comptes. Pour moi, pour ceux qui t'aiment, et pour la vie qui a de la chance de t'avoir.",
+    "Dans quelques jours, ce calendrier sera fini. Mais ce qu'il raconte, lui, ne s'arrête pas : tu es précieuse, tu es aimée, et tu mérites qu'on te le dise souvent.",
+    "J'ai adoré écrire chacun de ces petits mots pour toi. Si l'un d'eux t'a fait sourire ou t'a fait du bien, alors ce mois n'aura pas été écrit pour rien.",
+    "Dernier jour de novembre. Merci d'avoir ouvert chaque case, merci d'être là, merci d'être toi. Je n'ai pas fini de te le dire : tu es ma meilleure amie, et ça, rien ne le changera."
+];
+
+  /* Les calendriers disponibles : on peut passer de l'un à l'autre avec les onglets. */
+  var SEPT_TEXTS = DAY_TEXTS;
+  var CALENDARS = [
+    { id: 'sept', label: 'Septembre · octobre', heading: 'Septembre · octobre', start: new Date(2026, 8, 10), texts: SEPT_TEXTS, prefix: 'jour-',  hash: 'calendar',     storeKey: 'sarah-cal-opened' },
+    { id: 'nov',  label: 'Novembre',            heading: 'Novembre',            start: new Date(2026, 10, 1), texts: NOV_TEXTS,  prefix: 'nov-',   hash: 'calendar-nov', storeKey: 'sarah-cal-opened-nov' }
+  ];
+  var activeCal = CALENDARS[0];
+  function setCalendar(i){
+    activeCal = CALENDARS[i];
+    CAL_START = activeCal.start;
+    DAY_TEXTS = activeCal.texts;
+    DAYS_IN_CAL = DAY_TEXTS.length;
+  }
+
   /* ÉDITABLE : les lettres. Change trigger / word / sub comme tu veux,
      ou ajoute/retire des objets dans ce tableau — tout s'adapte automatiquement. */
   var LETTERS = [
@@ -57,7 +106,13 @@
     { trigger: "À ouvrir quand... tu te sens seule",      word: "PRÉSENCE",    sub: "Même si des kilomètres ou du silence nous séparent en ce moment, mon amitié pour toi ne bouge pas. Tu as un ancrage solide ici, et tu pourras toujours compter sur moi, peu importe l'heure." },
     { trigger: "À ouvrir quand... tu as réussi un truc",   word: "FIERTÉ",       sub: "Je le savais ! Tu as travaillé dur pour ça et tu mérites amplement cette victoire. Savoure ce moment à 100 %, je suis tellement fier de toi !" },
     { trigger: "À ouvrir quand... tu as besoin de rigoler",   word: "DÉLIRE",    sub: "Rappelle-toi juste de nos pires moments de honte et de nos vocal à rallonge pour 0 raison. On est complètement folles/fous, mais c'est pour ça que notre duo est imbattable." },
-    { trigger: "À ouvrir quand... tu te sens nostalgique",          word: "SOUVENIRS",  sub: "Regarde tout le chemin qu'on a parcouru depuis le début. On a créé des moments incroyables, et le plus beau dans tout ça, c'est qu'on a encore toute la vie pour en fabriquer d'autres." }
+    { trigger: "À ouvrir quand... tu te sens nostalgique",          word: "SOUVENIRS",  sub: "Regarde tout le chemin qu'on a parcouru depuis le début. On a créé des moments incroyables, et le plus beau dans tout ça, c'est qu'on a encore toute la vie pour en fabriquer d'autres." },
+    { trigger: "À ouvrir quand... tu as peur de demain", word: "CONFIANCE", sub: "Demain, tu n'as pas besoin de tout savoir à l'avance. Avance pas à pas, à ton rythme : tu t'es toujours débrouillée, et ça ne va pas changer. Et si ça devient trop lourd, tu sais où me trouver." },
+    { trigger: "À ouvrir quand... tu as envie de tout lâcher", word: "TIENS BON", sub: "Je sais que certains jours donnent envie de tout arrêter. Ce n'est pas de la faiblesse, c'est de la fatigue. Repose-toi d'abord, on reparlera du reste ensuite. Je suis là, et je ne te lâche pas." },
+    { trigger: "À ouvrir quand... c'est ton anniversaire", word: "JOYEUX ANNIV", sub: "Une année de plus, et toujours la même lumière en toi. Merci d'exister, merci d'être dans ma vie. Je te souhaite une journée remplie de rires, de gâteau et de gens qui t'aiment. Tu le mérites tellement." },
+    { trigger: "À ouvrir quand... tu te trouves nulle", word: "FAUX", sub: "Cette petite voix qui te dit que tu es nulle ? Elle ment. Je te vois telle que tu es vraiment : drôle, sensible, loyale, courageuse. Si tu as du mal à le croire aujourd'hui, crois-moi, moi." },
+    { trigger: "À ouvrir quand... on s'est disputés", word: "PAIX", sub: "Une dispute ne change rien à ce que tu représentes pour moi. On est deux têtes pas toujours d'accord, mais on tient trop l'un à l'autre pour laisser ça durer. Respire, et reviens me parler quand tu veux." },
+    { trigger: "À ouvrir quand... tu veux juste un câlin", word: "CÂLIN", sub: "Voilà un énorme câlin virtuel, serré comme il faut, avec tout ce qu'il faut de chaleur. En attendant le vrai, ferme les yeux et imagine-moi juste à côté de toi." }
   ];
 
   var todayReal = new Date();
@@ -73,14 +128,14 @@
   /* ---- petit stockage local : quelles cases ont déjà été ouvertes (confort visuel seulement) ---- */
   function getOpened(){
     try{
-      var raw = window.localStorage.getItem('sarah-cal-opened');
+      var raw = window.localStorage.getItem(activeCal.storeKey);
       return raw ? JSON.parse(raw) : [];
     }catch(e){ return []; }
   }
   function markOpened(d){
     try{
       var list = getOpened();
-      if(list.indexOf(d) === -1){ list.push(d); window.localStorage.setItem('sarah-cal-opened', JSON.stringify(list)); }
+      if(list.indexOf(d) === -1){ list.push(d); window.localStorage.setItem(activeCal.storeKey, JSON.stringify(list)); }
     }catch(e){}
   }
 
@@ -88,6 +143,7 @@
      NAVIGATION ENTRE ÉCRANS
      ========================================================= */
   var screens = {
+    map: document.getElementById('screen-map'),
     home: document.getElementById('screen-home'),
     calendar: document.getElementById('screen-calendar'),
     day: document.getElementById('screen-day'),
@@ -116,6 +172,8 @@
       }
     });
 
+    applyTheme(name);
+    if(name === 'map'){ window.setTimeout(drawMapLines, 30); }
     if(name === 'sky'){ startSkyLoop(); } else { stopSkyLoop(); }
     if(name === 'secret' && secretResumeFinal){ secretResumeFinal = false; window.setTimeout(openFinalVault, reduceMotion ? 50 : 400); }
     else if(name === 'secret' && secretEls.secretScreen && secretEls.secretScreen.classList.contains('vault-fullscreen')){ window.setTimeout(startRewardDust, 100); }
@@ -125,13 +183,14 @@
 
   function route(){
     var hash = window.location.hash.replace('#','');
-    if(hash.indexOf('jour-') === 0){
-      var d = parseInt(hash.replace('jour-',''), 10);
+    if(hash.indexOf('jour-') === 0 || hash.indexOf('nov-') === 0){
+      setCalendar(hash.indexOf('nov-') === 0 ? 1 : 0);
+      var d = parseInt(hash.replace(activeCal.prefix,''), 10);
       if(d >= 1 && d <= DAYS_IN_CAL && isUnlocked(d)){
         openDay(d, false);
         return;
       }
-      window.location.hash = 'calendar';
+      window.location.hash = activeCal.hash;
       return;
     }
     if(hash.indexOf('lettre-') === 0){
@@ -153,18 +212,19 @@
       window.location.hash = 'sky';
       return;
     }
-    if(hash === 'calendar'){ renderCalendar(); showScreen('calendar'); return; }
-    if(hash === 'letters'){ showScreen('letters'); return; }
+    if(hash === 'calendar' || hash === 'calendar-nov'){ setCalendar(hash === 'calendar-nov' ? 1 : 0); renderCalendar(); showScreen('calendar'); return; }
+    if(hash === 'letters'){ renderLetters(); showScreen('letters'); return; }
     if(hash === 'window'){ showScreen('window'); return; }
     if(hash === 'sky'){ closeConstellation(); showScreen('sky'); return; }
     if(hash === 'secret'){ showScreen('secret'); return; }
-    showScreen('home');
+    if(hash === 'home'){ showScreen('home'); return; }
+    showScreen('map');
   }
 
   navLinks.forEach(function(btn){
     btn.addEventListener('click', function(){
       var target = btn.getAttribute('data-nav');
-      window.location.hash = target === 'home' ? '' : target;
+      window.location.hash = target === 'map' ? '' : target;
       closeOrbit();
     });
   });
@@ -201,7 +261,7 @@
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Escape') return;
     if(orbitContainer.classList.contains('open')){ closeOrbit(); orbitHub.focus(); return; }
-    if(screens.day.classList.contains('active')){ window.location.hash = 'calendar'; }
+    if(screens.day.classList.contains('active')){ window.location.hash = activeCal.hash; }
     else if(screens.calendar.classList.contains('active')){ window.location.hash = ''; }
     else if(screens.letter.classList.contains('active')){ window.location.hash = 'letters'; }
     else if(screens.letters.classList.contains('active')){ window.location.hash = ''; }
@@ -220,43 +280,62 @@
   var calStatus = document.getElementById('cal-status');
 
   function renderCalendar(){
-    var firstWeekday = (dateForDay(1).getDay() + 6) % 7; /* 0 = lundi */
-    var totalCells = Math.ceil((firstWeekday + DAYS_IN_CAL) / 7) * 7;
     var opened = getOpened();
+    var calHeading = document.getElementById('cal-heading');
+    if(calHeading){ calHeading.textContent = activeCal.heading; }
+    document.querySelectorAll('.cal-tab').forEach(function(t){
+      var on = t.getAttribute('data-cal') === activeCal.hash;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    var COLS = 5, ROW_H = 116, TOP = 56;
+    var rows = Math.ceil(DAYS_IN_CAL / COLS);
+    var H = TOP * 2 + (rows - 1) * ROW_H;
+    var pts = [];
+    for(var i = 0; i < DAYS_IN_CAL; i++){
+      var r = Math.floor(i / COLS), c = i % COLS;
+      if(r % 2 === 1){ c = COLS - 1 - c; }
+      pts.push({ x: 10 + c * 20 + Math.sin(i * 1.7) * 2.2, y: TOP + r * ROW_H + Math.sin(i * 1.3) * 16 });
+    }
     calGrid.innerHTML = '';
+    calGrid.style.height = H + 'px';
 
-    for(var i = 0; i < totalCells; i++){
-      var dayNum = i - firstWeekday + 1;
-      if(dayNum < 1 || dayNum > DAYS_IN_CAL){
-        var empty = document.createElement('div');
-        empty.className = 'day-box is-empty';
-        empty.setAttribute('aria-hidden','true');
-        calGrid.appendChild(empty);
-        continue;
-      }
-      (function(d){
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'cal-path-lines');
+    svg.setAttribute('viewBox', '0 0 100 ' + H);
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    for(var k = 0; k < pts.length - 1; k++){
+      var p0 = pts[k], p1 = pts[k + 1];
+      var path = document.createElementNS(NS, 'path');
+      var midY = (p0.y + p1.y) / 2;
+      var horizontal = Math.floor(k / COLS) === Math.floor((k + 1) / COLS);
+      var dstr = horizontal
+        ? 'M' + p0.x + ' ' + p0.y + ' C ' + ((p0.x + p1.x) / 2) + ' ' + (p0.y - 10) + ', ' + ((p0.x + p1.x) / 2) + ' ' + (p1.y + 10) + ', ' + p1.x + ' ' + p1.y
+        : 'M' + p0.x + ' ' + p0.y + ' C ' + (p0.x + (p0.x > 50 ? 9 : -9)) + ' ' + (p0.y + 40) + ', ' + (p1.x + (p1.x > 50 ? 9 : -9)) + ' ' + (p1.y - 40) + ', ' + p1.x + ' ' + p1.y;
+      path.setAttribute('d', dstr);
+      path.setAttribute('class', isUnlocked(k + 2) ? 'lit' : '');
+      svg.appendChild(path);
+    }
+    calGrid.appendChild(svg);
+
+    for(var n = 0; n < DAYS_IN_CAL; n++){
+      (function(d, pt){
         var unlocked = isUnlocked(d);
+        var wasOpened = opened.indexOf(d) !== -1;
         var box = document.createElement('button');
         box.type = 'button';
-        box.className = 'day-box' + (unlocked ? '' : ' is-locked') + (isToday(d) ? ' is-today' : '');
+        box.className = 'day-star' + (unlocked ? '' : ' is-locked') + (isToday(d) ? ' is-today' : '') + (wasOpened && unlocked ? ' is-opened' : '');
+        box.style.left = pt.x + '%';
+        box.style.top = pt.y + 'px';
 
-        var numEl = document.createElement('span');
-        numEl.className = 'num';
-        numEl.textContent = d;
-        box.appendChild(numEl);
-
-        var markEl = document.createElement('span');
-        markEl.className = 'mark';
-        if(unlocked){
-          markEl.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
-          box.setAttribute('aria-label', 'Jour ' + d + (opened.indexOf(d) !== -1 ? ' — déjà ouvert' : ' — à ouvrir'));
-        } else {
-          markEl.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-lock"/></svg>';
-          box.setAttribute('aria-label', 'Jour ' + d + ' — verrouillé jusqu\'au ' + frDate(d));
-        }
-        box.appendChild(markEl);
-
-        if(opened.indexOf(d) !== -1 && unlocked){ box.style.opacity = '0.72'; }
+        box.innerHTML = '<svg class="ds-shape" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>' +
+          '<span class="ds-num">' + d + '</span>' +
+          (unlocked ? '' : '<svg class="ds-lock" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-lock"/></svg>');
+        box.setAttribute('aria-label', unlocked
+          ? 'Jour ' + d + (wasOpened ? ' — déjà ouvert' : ' — à ouvrir')
+          : 'Jour ' + d + ' — verrouillé jusqu\'au ' + frDate(d));
 
         box.addEventListener('click', function(){
           if(!unlocked){
@@ -266,15 +345,15 @@
             return;
           }
           if(reduceMotion){
-            window.location.hash = 'jour-' + d;
+            window.location.hash = activeCal.prefix + d;
             return;
           }
           box.classList.add('popping');
-          window.setTimeout(function(){ window.location.hash = 'jour-' + d; }, 320);
+          window.setTimeout(function(){ window.location.hash = activeCal.prefix + d; }, 320);
         });
 
         calGrid.appendChild(box);
-      })(dayNum);
+      })(n + 1, pts[n]);
     }
 
     if(todayMid.getTime() < dateForDay(1).getTime()){
@@ -285,6 +364,10 @@
       calStatus.textContent = 'On est le ' + todayMid.toLocaleDateString('fr-FR', { day:'numeric', month:'long' }) + ' : les cases jusqu\'à aujourd\'hui sont ouvertes.';
     }
   }
+
+  document.querySelectorAll('.cal-tab').forEach(function(t){
+    t.addEventListener('click', function(){ window.location.hash = t.getAttribute('data-cal'); });
+  });
 
   /* =========================================================
      ÉCRAN JOUR OUVERT
@@ -314,6 +397,8 @@
     dayPrev.disabled = !(d > 1 && isUnlocked(d - 1));
     dayNext.disabled = !(d < DAYS_IN_CAL && isUnlocked(d + 1));
 
+    var backBtn = document.querySelector('#screen-day .day-nav [data-nav]');
+    if(backBtn){ backBtn.setAttribute('data-nav', activeCal.hash); }
     showScreen('day');
     window.setTimeout(function(){ dayTextEl.focus(); }, 50);
 
@@ -323,10 +408,10 @@
   }
 
   dayPrev.addEventListener('click', function(){
-    if(currentDay > 1 && isUnlocked(currentDay - 1)){ window.location.hash = 'jour-' + (currentDay - 1); }
+    if(currentDay > 1 && isUnlocked(currentDay - 1)){ window.location.hash = activeCal.prefix + (currentDay - 1); }
   });
   dayNext.addEventListener('click', function(){
-    if(currentDay < DAYS_IN_CAL && isUnlocked(currentDay + 1)){ window.location.hash = 'jour-' + (currentDay + 1); }
+    if(currentDay < DAYS_IN_CAL && isUnlocked(currentDay + 1)){ window.location.hash = activeCal.prefix + (currentDay + 1); }
   });
 
   /* =========================================================
@@ -340,13 +425,26 @@
   var letterNext = document.getElementById('letter-next');
   var currentLetter = null;
 
+  /* lettres déjà ouvertes : mémorisées pour qu'elles restent "ouvertes" après un refresh */
+  function getOpenedLetters(){
+    try{ var raw = window.localStorage.getItem('sarah-letters-opened'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
+  }
+  function markLetterOpened(i){
+    try{
+      var list = getOpenedLetters();
+      if(list.indexOf(i) === -1){ list.push(i); window.localStorage.setItem('sarah-letters-opened', JSON.stringify(list)); }
+    }catch(e){}
+  }
+
   function renderLetters(){
+    var openedLetters = getOpenedLetters();
     lettersGrid.innerHTML = '';
     LETTERS.forEach(function(item, i){
       var card = document.createElement('button');
       card.type = 'button';
-      card.className = 'letter-card';
-      card.setAttribute('aria-label', item.trigger);
+      var wasRead = openedLetters.indexOf(i) !== -1;
+      card.className = 'letter-card' + (wasRead ? ' is-opened' : '');
+      card.setAttribute('aria-label', item.trigger + (wasRead ? ' — déjà ouverte' : ''));
 
       var flap = document.createElement('span');
       flap.className = 'envelope-flap';
@@ -380,6 +478,7 @@
   function openLetter(i){
     currentLetter = i;
     var item = LETTERS[i];
+    markLetterOpened(i);
     letterTriggerEl.textContent = '« ' + item.trigger + ' »';
     letterWordEl.className = 'day-text ' + (item.word.length <= 8 ? 'len-s' : 'len-m');
     letterWordEl.innerHTML = buildWords(item.word);
@@ -898,6 +997,145 @@
   }
 
   /* =========================================================
+     THÈME JOUR / NUIT
+     Automatique : clair sur les messages et les lettres, puis de plus en
+     plus "nuit" à mesure qu'on va vers la carte, le calendrier, la fenêtre
+     et le secret. Le bouton force un des deux (et se souvient du choix).
+     ========================================================= */
+  var NIGHT_SCREENS = { map:1, calendar:1, day:1, window:1, sky:1, secret:1 };
+  var themeToggle = document.getElementById('theme-toggle');
+  var currentScreenName = 'map';
+  function lsGet(k){ try{ return window.localStorage.getItem('sarah:' + k); }catch(e){ return null; } }
+  function lsSet(k, v){ try{ if(v === null){ window.localStorage.removeItem('sarah:' + k); } else { window.localStorage.setItem('sarah:' + k, v); } }catch(e){} }
+  function themeOverride(){ return lsGet('theme'); }
+  function applyTheme(name){
+    if(name){ currentScreenName = name; }
+    var auto = NIGHT_SCREENS[currentScreenName] ? 'night' : 'day';
+    var ov = themeOverride();
+    var theme = (ov === 'day' || ov === 'night') ? ov : auto;
+    document.documentElement.setAttribute('data-theme', theme);
+    if(themeToggle){
+      themeToggle.setAttribute('aria-pressed', theme === 'night' ? 'true' : 'false');
+      themeToggle.setAttribute('aria-label', theme === 'night' ? 'Passer en mode jour' : 'Passer en mode nuit');
+    }
+  }
+  if(themeToggle){
+    themeToggle.addEventListener('click', function(){
+      var now = document.documentElement.getAttribute('data-theme');
+      var next = now === 'night' ? 'day' : 'night';
+      var auto = NIGHT_SCREENS[currentScreenName] ? 'night' : 'day';
+      lsSet('theme', next === auto ? null : next);
+      applyTheme();
+    });
+  }
+
+  /* =========================================================
+     CARTE DE L'UNIVERS : fils pointillés entre les planètes
+     ========================================================= */
+  var mapStage = document.getElementById('map-stage');
+  var mapLines = document.getElementById('map-lines');
+  function drawMapLines(){
+    if(!mapStage || !mapLines || !screens.map.classList.contains('active')) return;
+    var box = mapStage.getBoundingClientRect();
+    var orbs = mapStage.querySelectorAll('.planet .orb');
+    var pts = [];
+    orbs.forEach(function(o){
+      var r = o.getBoundingClientRect();
+      pts.push([r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]);
+    });
+    var d = '';
+    pts.forEach(function(pt, i){ d += (i ? ' L ' : 'M ') + pt[0].toFixed(1) + ' ' + pt[1].toFixed(1); });
+    mapLines.setAttribute('viewBox', '0 0 ' + box.width.toFixed(0) + ' ' + box.height.toFixed(0));
+    mapLines.innerHTML = '<path d="' + d + '"/>';
+  }
+  window.addEventListener('resize', drawMapLines);
+
+  /* =========================================================
+     LA FRATRIE : un lecteur à onglets (un message à la fois)
+     ========================================================= */
+  (function(){
+    var reader = document.getElementById('fam-reader');
+    var tabsEl = document.getElementById('fam-tabs');
+    if(!reader || !tabsEl) return;
+    var cards = reader.querySelectorAll('.fam-card');
+    var tabs = [];
+    function select(i, focus){
+      cards.forEach(function(card, k){ card.classList.toggle('is-active', k === i); });
+      tabs.forEach(function(tab, k){
+        tab.setAttribute('aria-selected', k === i ? 'true' : 'false');
+        tab.tabIndex = k === i ? 0 : -1;
+        tab.classList.toggle('is-active', k === i);
+      });
+      if(focus){ tabs[i].focus(); }
+    }
+    cards.forEach(function(card, i){
+      var who = (card.querySelector('.who') || {}).textContent || '';
+      var role = (card.querySelector('.badge') || {}).textContent || '';
+      card.id = 'fam-card-' + i;
+      var tab = document.createElement('button');
+      tab.type = 'button'; tab.className = 'fam-tab'; tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', card.id);
+      tab.innerHTML = '<span class="fam-avatar" aria-hidden="true"></span><span class="fam-tab-text"><span class="fam-tab-name"></span><span class="fam-tab-role"></span></span>';
+      tab.querySelector('.fam-avatar').textContent = who.trim().charAt(0).toUpperCase();
+      tab.querySelector('.fam-tab-name').textContent = who.trim();
+      tab.querySelector('.fam-tab-role').textContent = role.trim();
+      tab.addEventListener('click', function(){ select(i); });
+      tab.addEventListener('keydown', function(e){
+        var d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+        if(d){ e.preventDefault(); select((i + d + cards.length) % cards.length, true); }
+      });
+      tabsEl.appendChild(tab); tabs.push(tab);
+    });
+    reader.classList.add('is-ready');
+    select(0);
+  })();
+
+  /* =========================================================
+     ÉCRAN D'INTRO "Pour Sarah" (première visite seulement)
+     ========================================================= */
+  var introEl = document.getElementById('intro');
+  if(introEl){
+    var introHash = window.location.hash.replace('#', '');
+    var introSeen = lsGet('intro') === '1' && !/[?&]reset\b/.test(window.location.search);
+    if(!introSeen && (introHash === '' || introHash === 'map')){
+      introEl.hidden = false;
+      document.body.classList.add('intro-open');
+      var ic = document.getElementById('intro-stars');
+      var ictx = ic.getContext('2d');
+      var istars = [];
+      var iw = 0, ih = 0, iraf = null;
+      var sizeIntro = function(){
+        iw = ic.width = window.innerWidth; ih = ic.height = window.innerHeight;
+        istars = [];
+        for(var i = 0; i < 130; i++){ istars.push({ x: Math.random() * iw, y: Math.random() * ih, r: Math.random() * 1.5 + 0.3, ph: Math.random() * 6.28, sp: 0.4 + Math.random() }); }
+      };
+      sizeIntro();
+      var drawIntro = function(t){
+        ictx.clearRect(0, 0, iw, ih);
+        ictx.fillStyle = '#F5F0FF';
+        for(var i = 0; i < istars.length; i++){
+          var st = istars[i];
+          ictx.globalAlpha = reduceMotion ? 0.7 : 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(st.ph + t * 0.001 * st.sp));
+          ictx.beginPath(); ictx.arc(st.x, st.y, st.r, 0, 6.283); ictx.fill();
+        }
+        if(!reduceMotion){ iraf = requestAnimationFrame(drawIntro); }
+      };
+      iraf = requestAnimationFrame(drawIntro);
+      var introBtn = document.getElementById('intro-btn');
+      window.setTimeout(function(){ introBtn.focus(); }, 60);
+      introBtn.addEventListener('click', function(){
+        lsSet('intro', '1');
+        introEl.classList.add('leaving');
+        document.body.classList.remove('intro-open');
+        window.setTimeout(function(){
+          introEl.hidden = true;
+          if(iraf){ cancelAnimationFrame(iraf); }
+        }, reduceMotion ? 10 : 900);
+      });
+    }
+  }
+
+  /* =========================================================
      CHAMP D'ÉTOILES SCINTILLANTES
      ========================================================= */
   var starsCanvas = document.getElementById('stars-canvas');
@@ -928,7 +1166,7 @@
         var s = stars[i];
         var tw = reduceMotion ? 0.7 : (0.5 + 0.5*Math.sin(s.phase + t*0.0006*s.speed));
         sctx.globalAlpha = 0.15 + tw*0.55;
-        sctx.fillStyle = '#3E1470';
+        sctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'night' ? '#F5F0FF' : '#3E1470';
         sctx.beginPath();
         sctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
         sctx.fill();

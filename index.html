@@ -16,13 +16,14 @@
       --magenta:    #FF3C8E;
       --tangerine:  #FF8A3D;
       --lime:       #C7F13B;
+      --card-1:     #FFE0EE;
+      --card-2:     #FFE7CE;
       --card-3:     #E8DBFF;
 
       --f-display: 'Unbounded', sans-serif;
       --f-script:  'Caveat', cursive;
       --f-body:    'Plus Jakarta Sans', sans-serif;
       --f-mono:    'JetBrains Mono', monospace;
-      --f-cinzel:  'Cinzel', serif;
     }
 
     * {
@@ -78,7 +79,7 @@
       height: 100%;
     }
 
-    /* Carte principale style "Poster / Card" */
+    /* Carte principale */
     .command-card {
       position: relative;
       z-index: 2;
@@ -321,12 +322,12 @@
 
     .patch-card {
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       max-height: 85vh;
       background: var(--paper);
       color: var(--ink);
       border: 3px solid var(--ink);
-      border-radius: 24px;
+      border-radius: 28px;
       padding: 2.2rem 1.8rem;
       overflow-y: auto;
       text-align: left;
@@ -350,7 +351,7 @@
 
     .patch-title {
       font-family: var(--f-display);
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: var(--ink);
       display: flex;
@@ -409,8 +410,49 @@
       letter-spacing: 0.08em;
     }
 
+    /* Onglets de navigation dans le Patch Note */
+    .tab-navigation {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      font-family: var(--f-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ink);
+      background: transparent;
+      border: 2px solid transparent;
+      padding: 0.4em 0.8em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: var(--card-3);
+    }
+
+    /* Contenu des sections */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     .patch-block {
-      background: #FFE0EE;
+      background: var(--card-1);
       border: 2px solid var(--ink);
       border-radius: 16px;
       padding: 1.1rem;
@@ -418,19 +460,22 @@
       box-shadow: 4px 4px 0 var(--ink);
     }
 
-    .patch-block:nth-child(2) { background: #FFE7CE; }
-    .patch-block:nth-child(3) { background: #E8DBFF; }
+    .patch-block.block-2 { background: var(--card-2); }
+    .patch-block.block-3 { background: var(--card-3); }
 
     .patch-block-title {
       font-family: var(--f-display);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--ink);
       margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
     .patch-item {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--ink);
       line-height: 1.5;
       margin-bottom: 0.4rem;
@@ -494,7 +539,7 @@
     </div>
 
     <h1>Mise à jour Système</h1>
-    <span class="subtitle">Le Monde de Sarah fait peau neuve...</span>
+    <span class="subtitle">Le Monde de Sarah prépare son arrivée...</span>
     
     <p class="status-text" id="status-text">Initialisation du noyau de données...</p>
 
@@ -512,7 +557,7 @@
 
     <!-- Bouton Épingle Patch Note -->
     <button class="patch-pin-btn" id="open-patch-btn">
-      ✨ Découvrir le Patch Note (v2.4)
+      📌 Consulter le Patch Note (v1.0)
     </button>
 
     <div class="interactive-hint">✨ Clique n'importe où pour envoyer des étincelles</div>
@@ -523,44 +568,69 @@
     <div class="patch-card">
       <div class="patch-header">
         <div class="patch-title">
-          📌 Patch Note &bull; v2.4
+          📌 Patch Note &bull; v1.0 (Lancement)
         </div>
         <button class="close-btn" id="close-patch-btn">&times;</button>
       </div>
 
       <div class="patch-badge-row">
-        <span class="patch-tag-major">🚀 MISE À JOUR MAJEURE</span>
+        <span class="patch-tag-major">🎉 VERSION INITIALE</span>
         <span class="patch-tag-date">19 OCTOBRE 2026</span>
       </div>
 
-      <!-- BLOC 1: NOUVEAUTÉS -->
-      <div class="patch-block">
-        <div class="patch-block-title">
-          🌌 Nouvelle Expérience Visuelle
-        </div>
-        <div class="patch-item">Design Cosmos avec arrière-plan stellaire et palette nébuleuse.</div>
-        <div class="patch-item">Nouveau moteur d'animations réactif et fluide.</div>
-        <div class="patch-item">Effets interactifs et particules à chaque interaction.</div>
+      <!-- Onglets de Navigation -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="tab-features">🚀 Nouveautés</button>
+        <button class="tab-btn" data-tab="tab-games">🎮 Mini-Jeux</button>
+        <button class="tab-btn" data-tab="tab-secret">🔒 Mode Secret</button>
       </div>
 
-      <!-- BLOC 2: FONCTIONNALITÉS -->
-      <div class="patch-block">
-        <div class="patch-block-title">
-          ⚡ Performances & Fluidité
+      <!-- ONGLET 1: NOUVEAUTÉS -->
+      <div class="tab-content active" id="tab-features">
+        <div class="patch-block">
+          <div class="patch-block-title">🌌 Univers & Design Cosmos</div>
+          <div class="patch-item">Design cosmique personnalisé avec nébuleuses animées et fond stellaire.</div>
+          <div class="patch-item">Navigabilité fluide sans rechargement de page pour une immersion totale.</div>
         </div>
-        <div class="patch-item">Temps de chargement optimisé pour tous les appareils.</div>
-        <div class="patch-item">Optimisation complète pour mobiles, tablettes et écrans HD.</div>
-        <div class="patch-item">Compteur temps réel synchronisé jusqu'à l'ouverture.</div>
+
+        <div class="patch-block block-2">
+          <div class="patch-block-title">📅 Calendrier des 30 jours</div>
+          <div class="patch-item">30 pensées et messages uniques à débloquer au fil des jours.</div>
+          <div class="patch-item">Sauvegarde automatique des cases déjà ouvertes dans ton navigateur.</div>
+        </div>
+
+        <div class="patch-block block-3">
+          <div class="patch-block-title">✉️ Lettres personnalisées</div>
+          <div class="patch-item">Section spéciale « À ouvrir quand... » avec des conseils et mots doux sur-mesure.</div>
+        </div>
       </div>
 
-      <!-- BLOC 3: SÉCURITÉ -->
-      <div class="patch-block">
-        <div class="patch-block-title">
-          🛡️ Sécurité & Infrastructure
+      <!-- ONGLET 2: MINI-JEUX -->
+      <div class="tab-content" id="tab-games">
+        <div class="patch-block">
+          <div class="patch-block-title">✨ Ciel & Constellations</div>
+          <div class="patch-item">Ciel interactif explorable à la souris ou au doigt pour découvrir des souvenirs cachés.</div>
         </div>
-        <div class="patch-item">Mise à jour des protocoles de sécurité et stabilité du serveur.</div>
-        <div class="patch-item">Correction des petits bugs d'affichage sur navigateurs mobiles.</div>
+
+        <div class="patch-block block-2">
+          <div class="patch-block-title">🖼️ Chambre Gaming RGB</div>
+          <div class="patch-item">Décor interactif avec effets néons et éléments réactifs au mouvement.</div>
+        </div>
       </div>
+
+      <!-- ONGLET 3: MODE SECRET -->
+      <div class="tab-content" id="tab-secret">
+        <div class="patch-block">
+          <div class="patch-block-title">🔐 Digicode & Énigmes</div>
+          <div class="patch-item">Zone sécurisée à 3 niveaux (Digicode, Énigme, Terminal informatique).</div>
+        </div>
+
+        <div class="patch-block block-2">
+          <div class="patch-block-title">🏆 Le Coffre de Souvenirs</div>
+          <div class="patch-item">Accès final à un coffre-fort 3D abritant une lettre animée et un mur de polaroïds.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -609,7 +679,6 @@
     function renderBackground(t) {
       ctx.clearRect(0, 0, width, height);
 
-      // Dessin des étoiles
       stars.forEach(s => {
         const tw = 0.5 + 0.5 * Math.sin(s.phase + t * 0.001 * s.speed);
         ctx.globalAlpha = 0.2 + tw * 0.6;
@@ -619,7 +688,6 @@
         ctx.fill();
       });
 
-      // Dessin des étincelles au clic
       for (let i = sparks.length - 1; i >= 0; i--) {
         let p = sparks[i];
         p.x += p.vx;
@@ -688,10 +756,12 @@
     setInterval(updateProgress, 1000);
     updateProgress();
 
-    // --- 3. Modale Patch Note ---
+    // --- 3. Modale Patch Note & Onglets ---
     const modal = document.getElementById('patch-modal');
     const openBtn = document.getElementById('open-patch-btn');
     const closeBtn = document.getElementById('close-patch-btn');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
     openBtn.addEventListener('click', () => {
       modal.classList.add('active');
@@ -705,6 +775,19 @@
       if (e.target === modal) {
         modal.classList.remove('active');
       }
+    });
+
+    // Gestion du changement d'onglets
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(targetTab).classList.add('active');
+      });
     });
   </script>
 </body>

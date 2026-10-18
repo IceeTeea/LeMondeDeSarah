@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Univers de Sarah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;700&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 
 </head>
@@ -45,9 +48,9 @@
     <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
   </button>
   <nav class="orbit-menu" id="orbit-menu" aria-label="Navigation principale">
-    <button class="orbit-node nav-link" type="button" data-nav="home" style="--nx:118px; --ny:6px; --nd:0.05s" tabindex="-1">
+    <button class="orbit-node nav-link" type="button" data-nav="map" style="--nx:118px; --ny:6px; --nd:0.05s" tabindex="-1">
       <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Accueil</span>
+      <span class="node-label">La carte</span>
     </button>
     <button class="orbit-node nav-link" type="button" data-nav="calendar" style="--nx:100px; --ny:64px; --nd:0.1s" tabindex="-1">
       <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
@@ -89,6 +92,52 @@
   </nav>
 </div>
 <p class="wordmark" aria-hidden="true">✦ Univers de Sarah</p>
+
+<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Passer en mode nuit" aria-pressed="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="tt-moon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/><g class="tt-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></g></svg>
+</button>
+
+<!-- ================= INTRO (première visite seulement) ================= -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
+  <canvas class="intro-stars" id="intro-stars" aria-hidden="true"></canvas>
+  <div class="intro-inner">
+    <svg class="intro-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+    <h1 class="intro-title" id="intro-title">Pour Sarah</h1>
+    <p class="intro-sub">un petit univers construit rien que pour toi</p>
+    <button class="intro-btn" id="intro-btn" type="button">Entrer</button>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 0 : CARTE DE L'UNIVERS ================= -->
+<div class="screen" id="screen-map">
+  <div class="map-screen">
+    <div class="map-head">
+      <h2 id="map-heading" tabindex="-1">Ton univers</h2>
+      <p class="map-lede">choisis une planète</p>
+    </div>
+    <div class="map-stage" id="map-stage">
+      <svg class="map-lines" id="map-lines" aria-hidden="true"></svg>
+      <a class="planet p-messages" href="#home" style="--c1:#ff8fc3;--c2:#c2185b;--x:11%;--y:30%;--mx:30%;--my:8%">
+        <span class="orb"></span><span class="p-name">Messages</span><span class="p-sub">ce que je pense de toi</span></a>
+      <a class="planet p-letters" href="#letters" style="--c1:#ffd0a0;--c2:#e5651f;--x:26%;--y:64%;--mx:70%;--my:19%">
+        <span class="orb"></span><span class="p-name">Lettres</span><span class="p-sub">à ouvrir selon l'humeur</span></a>
+      <a class="planet p-calendar" href="#calendar" style="--c1:#e4ff8a;--c2:#6a9a00;--x:37%;--y:24%;--mx:30%;--my:30%">
+        <span class="orb"></span><span class="p-name">Calendrier</span><span class="p-sub">un chemin d'étoiles</span></a>
+      <a class="planet p-window" href="#window" style="--c1:#b9a3ff;--c2:#4d22b5;--x:51%;--y:57%;--mx:70%;--my:41%">
+        <span class="orb"></span><span class="p-name">La chambre</span><span class="p-sub">et sa fenêtre sur le ciel</span></a>
+      <a class="planet p-secret" href="#secret" style="--c1:#9dffd0;--c2:#0a8a5a;--x:63%;--y:22%;--mx:30%;--my:52%">
+        <span class="orb"></span><span class="p-name">Secret</span><span class="p-sub">il faut un code</span></a>
+      <a class="planet p-sanctuary" href="sanctuary.html" style="--c1:#8fe9ff;--c2:#0b6fa8;--x:79%;--y:58%;--mx:70%;--my:63%">
+        <span class="orb"></span><span class="p-name">L'Échappée</span><span class="p-sub">une pièce à explorer</span></a>
+      <a class="planet p-playlist" href="spotify-playlist.html" style="--c1:#ff9a9a;--c2:#b3202f;--x:91%;--y:26%;--mx:30%;--my:74%">
+        <span class="orb"></span><span class="p-name">Playlist</span><span class="p-sub">notre bande-son</span></a>
+      <a class="planet p-cinema" href="cinema.html" style="--c1:#ffe08a;--c2:#b57a00;--x:72%;--y:86%;--mx:70%;--my:85%">
+        <span class="orb"></span><span class="p-name">Ciné</span><span class="p-sub">la salle obscure</span></a>
+      <a class="planet p-sunmoon" href="soleil-lune.html" style="--c1:#fff3b0;--c2:#7d6bd6;--x:32%;--y:88%;--mx:30%;--my:95%">
+        <span class="orb"></span><span class="p-name">Soleil / Lune</span><span class="p-sub">choisis ton astre</span></a>
+    </div>
+  </div>
+</div>
 
 <!-- ================= ÉCRAN 1 : ACCUEIL ================= -->
 <div class="screen" id="screen-home">
@@ -138,19 +187,19 @@
         <div class="message-grid">
           <article class="msg-card" data-reveal>
             <span class="tag">Preuve n°01</span>
-            <p>Tu as ce don unique d'être à la fois la personne la plus drôle et la plus profondément gentille que je connaisse. Ton énergie et ton humour rendent le quotidien bien plus léger, sans jamais forcer.</p>
+            <p>Il y a des gens qui entrent dans une pièce et tout devient plus léger. C'est toi. Sans même le vouloir, tu rends les journées ordinaires plus douces, et c'est un cadeau dont je ne me lasse pas.</p>
           </article>
           <article class="msg-card" data-reveal>
             <span class="tag">Preuve n°02</span>
-            <p>Tu es l'une des très rares personnes avec qui je peux parler de tout sans filtre, passer des heures à refaire le monde ou simplement partager un silence sans que ce soit bizarre. Une vraie évidence.</p>
+            <p>Je t'ai vue encaisser des choses qui auraient fait plier beaucoup de monde, et continuer à sourire, à prendre soin des autres. Cette force tranquille, c'est ce qui m'impressionne le plus chez toi.</p>
           </article>
           <article class="msg-card" data-reveal>
             <span class="tag">Preuve n°03</span>
-            <p>Même quand tu te prends la tête pour des détails ou que tu doutes de toi, tu restes quelqu'un d'incroyablement précieux pour ton entourage. Tu apportes une bienveillance qu'on ne trouve pas à tous les coins de rue.</p>
+            <p>Avec toi, je n'ai jamais eu à faire semblant. Tu écoutes sans juger, tu trouves les mots justes même quand moi je les cherche, et tu me fais sentir que mes histoires comptent, même les plus petites.</p>
           </article>
           <article class="msg-card" data-reveal>
             <span class="tag">Preuve n°04</span>
-            <p>Ta loyauté et ta sincérité font toute la différence. Savoir que je peux compter sur toi les yeux fermés et que notre amitié reste intacte peu importe le temps qui passe, c'est ce que je chéris le plus chez toi.</p>
+            <p>Notre amitié, c'est des fous rires pour rien, des vocaux qui n'en finissent plus et des silences qui ne pèsent jamais. Je ne sais pas ce que je ferais sans ça, et je n'ai pas l'intention de le découvrir.</p>
           </article>
         </div>
 
@@ -167,10 +216,12 @@
         </div>
       </div>
 
-      <!-- ÉDITABLE : remplace les 3 messages de la fratrie ci-dessous -->
-      <div class="family-track-wrap">
-        <div class="family-track">
-          <article class="fam-card">
+      <!-- ÉDITABLE : les messages de la fratrie (un <article> par personne) -->
+      <div class="container">
+        <div class="fam-reader" id="fam-reader">
+          <div class="fam-tabs" id="fam-tabs" role="tablist" aria-label="Choisir un message de la fratrie"></div>
+          <div class="fam-stage">
+          <article class="fam-card" role="tabpanel">
             <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
             <p class="who">Alexis</p>
             <p>Heyllo ma Sœur d'amour magique a moi que j'aime ! 
@@ -189,7 +240,7 @@ Loin de moi l'idée de prendre la vedette sur notre chèr et fort sympathique Ic
 Je t'aime ma soeur, ma Jynx ! 
 Et de la part de Homer Simpson : Ta gueule ! ❤️</p>
           </article>
-          <article class="fam-card">
+          <article class="fam-card" role="tabpanel">
             <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
             <p class="who">Tywenn</p>
             <p>Coucou Sassou 😁 ! Je ne suis pas la meilleur personne pour mettre ce genre de choses par écrit, mais je voulais quand même te laisser quelques mots.
@@ -204,50 +255,12 @@ Je ne te le dis peut-être pas souvent, mais tu comptes beaucoup pour moi et je 
 
 Des gros bisous moche 3 ❤️🥰😘</p>
           </article>
-          <article class="fam-card">
+          <article class="fam-card" role="tabpanel">
             <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Sœur</span>
             <p class="who">Jessica</p>
             <p>A toi, ma sœur, mais pas seulement, pas juste une sœur mais une âme sœur, une âme jumelle, mon souffle de vie, mon rayon de soleil, ma safe-place, là où naît mon courage, là où se meurent mes doutes, le départ de mes forces, la destination de ma volonté, c'est dans ton existence que j'ai trouvé ma raison d'être, ma détermination à combattre chaque épreuve de la vie, sans toi je serais incomplète, inachevée. Il n’existe aucune définition de l'amour qui puisse poser des mots sur la puissance et la profondeur de celui que je te porte, tant il transcende tout ce qui existe de tangible en notre monde. A toi, ma sœur, je t'aime bien au-delà des mots, bien au-delà des émotions, bien au-delà de chaque réalité qui fût, qui est et qui sera.</p>
           </article>
-          <article class="fam-card" aria-hidden="true">
-            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
-            <p class="who">Alexis</p>
-            <p>Heyllo ma Sœur d'amour magique a moi que j'aime ! 
-
-Ben voilà, apparemment il y en a un qui souhaitait te faire plaisir alors j'en profite pour te faire rappeler juste par un pur égoïsme d'amour que je suis Fan de toi ! 
-
-On en a traversé des épreuves, depuis qu'on est gamin, les bon et mauvais moment.. mais je suis extrêmement fière de notre parcours car grâce a cela et contre tout. On est plus que jamais proche avec toi Jess et tyty.
-
-Aujourd'hui ont est complice grâce a nos connaissances égale sur toute la cinématographie qu'on nous a inculquer depuis qu'on est pitchou et c'est pas fini ^^
-
-
-On se tape des barres a tout bout de champ et on a actuellement des Xenomorph a buter !!
-
-Loin de moi l'idée de prendre la vedette sur notre chèr et fort sympathique Ice, mais je voulais te faire savoir encore est toujours que tu fais partie des personnes que j'aime par dessus absolument tout au monde ! 
-
-Je t'aime ma soeur, ma Jynx ! 
-Et de la part de Homer Simpson : Ta gueule ! ❤️</p>
-          </article>
-          <article class="fam-card" aria-hidden="true">
-            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
-            <p class="who">Tywenn</p>
-            <p>Coucou Sassou 😁 ! Je ne suis pas la meilleur personne pour mettre ce genre de choses par écrit, mais je voulais quand même te laisser quelques mots.
-
-Ce que j’aime chez toi, c’est ta gentillesse et surtout l’humour qu’on peut avoir ensemble et avec notre frère et notre sœur. C’est peut-être des choses simples, mais c’est justement ces petits moments qui comptent beaucoup pour moi.
-
-Je repense notamment de temps en temps à nos parties sur Back 4 Blood. C’est un jeu que j’aime énormément, et le fait d’y avoir joué pour la première fois avec toi en a fait un souvenir que je garde particulièrement. C’était juste des parties de jeu, mais j’ai vraiment passé de très bons moments avec toi.
-
-S’il y a une chose que j’aimerais que tu retiennes, c’est de toujours avoir confiance en toi. N’aie pas peur d’avancer, d’essayer, de te tromper ou de prendre et de reprendre des chemins différents. La vie passe vite, je dis ça alors que j'en est que 19 ans, mais je le vois, alors profite, profite des personnes qui t’entourent et surtout, profite des moments que la vie te donne.
-
-Je ne te le dis peut-être pas souvent, mais tu comptes beaucoup pour moi et je suis content de t’avoir comme sœur ❤️❤️❤️
-
-Des gros bisous moche 3 ❤️🥰😘</p>
-          </article>
-          <article class="fam-card" aria-hidden="true">
-            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Sœur</span>
-            <p class="who">Jessica</p>
-            <p>A toi, ma sœur, mais pas seulement, pas juste une sœur mais une âme sœur, une âme jumelle, mon souffle de vie, mon rayon de soleil, ma safe-place, là où naît mon courage, là où se meurent mes doutes, le départ de mes forces, la destination de ma volonté, c'est dans ton existence que j'ai trouvé ma raison d'être, ma détermination à combattre chaque épreuve de la vie, sans toi je serais incomplète, inachevée. Il n’existe aucune définition de l'amour qui puisse poser des mots sur la puissance et la profondeur de celui que je te porte, tant il transcende tout ce qui existe de tangible en notre monde. A toi, ma sœur, je t'aime bien au-delà des mots, bien au-delà des émotions, bien au-delà de chaque réalité qui fût, qui est et qui sera.</p>
-          </article>
+          </div>
         </div>
       </div>
     </section>
@@ -258,7 +271,7 @@ Des gros bisous moche 3 ❤️🥰😘</p>
           <div class="cal-teaser" data-reveal>
             <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Et ce n'est pas fini</p>
             <h2>Un mois entier de toi</h2>
-            <p class="sub">une case par jour, à partir d'aujourd'hui</p>
+            <p class="sub">septembre, octobre… et novembre en plus</p>
             <button class="btn-cal" type="button" data-nav="calendar">
               <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
               Ouvrir le calendrier
@@ -292,21 +305,22 @@ Des gros bisous moche 3 ❤️🥰😘</p>
     <div class="cal-header">
       <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Calendrier secret</p>
       <h2 tabindex="-1" id="cal-heading">Un mois de toi</h2>
-      <span class="lede">une case par jour, un peu d'amour à chaque fois</span>
+      <span class="lede">une étoile par jour, un peu d'amour à chaque fois</span>
+      <div class="cal-tabs" role="tablist" aria-label="Choisir le mois">
+        <button class="cal-tab is-active" type="button" role="tab" data-cal="calendar" aria-selected="true">Septembre · octobre</button>
+        <button class="cal-tab" type="button" role="tab" data-cal="calendar-nov" aria-selected="false">Novembre</button>
+      </div>
       <p class="cal-status" id="cal-status">Chargement…</p>
     </div>
 
     <div class="cal-grid-wrap">
-      <div class="cal-weekdays">
-        <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
-      </div>
-      <div class="cal-grid" id="cal-grid" aria-label="Cases du calendrier"></div>
+      <div class="cal-path" id="cal-grid" aria-label="Chemin d'étoiles : une étoile par jour"></div>
     </div>
 
     <div class="cal-legend">
       <span><span class="legend-dot today"></span>aujourd'hui</span>
-      <span><span class="legend-dot"></span>ouvrable</span>
-      <span><span class="legend-dot locked"></span>verrouillée</span>
+      <span><span class="legend-dot"></span>à ouvrir</span>
+      <span><span class="legend-dot locked"></span>pas encore</span>
     </div>
   </div>
 </div>
@@ -379,9 +393,13 @@ Des gros bisous moche 3 ❤️🥰😘</p>
       <span class="shelf-frame"><i class="sd">4</i></span>
     </div>
 
-    <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Depuis l'intérieur</p>
-    <h2 tabindex="-1" id="window-heading">Regarde par la fenêtre</h2>
-    <p class="lede">le ciel est calme, ce soir. clique sur la vitre pour aller le voir de plus près.</p>
+    <div class="room-wall" aria-hidden="true"></div>
+    <div class="room-rug" aria-hidden="true"></div>
+    <div class="room-caption">
+      <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Depuis l'intérieur</p>
+      <h2 tabindex="-1" id="window-heading">Regarde par la fenêtre</h2>
+      <p class="lede">le ciel est calme, ce soir. clique sur la vitre pour aller le voir de plus près.</p>
+    </div>
 
     <div class="window-frame" id="window-frame">
       <button class="window-glass" id="window-glass" type="button" aria-label="Sortir regarder le ciel">
@@ -391,6 +409,7 @@ Des gros bisous moche 3 ❤️🥰😘</p>
       <div class="window-mullions" aria-hidden="true"></div>
     </div>
     <div class="window-sill" aria-hidden="true"></div>
+    <div class="room-curtain l" aria-hidden="true"></div><div class="room-curtain r" aria-hidden="true"></div>
   </div>
 </div>
 
