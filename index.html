@@ -40,6 +40,7 @@
       padding: 1.5rem;
       overflow-x: hidden;
       position: relative;
+      transition: background-color 0.5s ease;
     }
 
     .bg-layer {
@@ -56,6 +57,7 @@
       filter: blur(70px);
       opacity: 0.55;
       mix-blend-mode: multiply;
+      transition: background 0.5s ease;
     }
 
     .blob-1 { width: 45vw; height: 45vw; background: var(--magenta); top: -12vw; left: -10vw; animation: blobFloat 26s ease-in-out infinite; }
@@ -87,6 +89,7 @@
       text-align: center;
       box-shadow: 10px 10px 0 var(--magenta);
       overflow: hidden;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
     .status-badge {
@@ -266,12 +269,12 @@
       box-shadow: 6px 6px 0 var(--lime);
     }
 
-    /* Modale Interactive (Mini-Jeu / Hack Système) */
+    /* Modale Terminal Interactif Réel */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(28, 16, 48, 0.88);
-      backdrop-filter: blur(10px);
+      background: rgba(10, 5, 20, 0.9);
+      backdrop-filter: blur(12px);
       z-index: 10;
       display: flex;
       align-items: center;
@@ -287,85 +290,77 @@
       pointer-events: auto;
     }
 
-    .modal-card {
+    .terminal-window {
       width: 100%;
-      max-width: 520px;
-      background: var(--paper);
-      color: var(--ink);
-      border: 3px solid var(--ink);
-      border-radius: 28px;
-      padding: 2.2rem;
-      text-align: center;
-      box-shadow: 8px 8px 0 var(--magenta);
+      max-width: 650px;
+      background: #08040d;
+      border: 3px solid var(--lime);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 0 40px rgba(199, 241, 59, 0.3);
+      font-family: var(--f-mono);
+      color: var(--lime);
       transform: scale(0.9);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .modal-overlay.active .modal-card {
+    .modal-overlay.active .terminal-window {
       transform: scale(1);
     }
 
-    .modal-title {
-      font-family: var(--f-display);
-      font-size: 1.25rem;
-      font-weight: 800;
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed rgba(199, 241, 59, 0.3);
+      padding-bottom: 0.75rem;
       margin-bottom: 1rem;
-    }
-
-    .modal-desc {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-
-    .hack-options {
-      display: grid;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .hack-option-btn {
-      background: var(--ink);
-      color: var(--paper);
-      border: 2px solid var(--ink);
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
-      font-family: var(--f-mono);
       font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 3px 3px 0 var(--magenta);
+    }
+
+    .terminal-screen {
+      background: #030106;
+      border: 1px solid rgba(199, 241, 59, 0.2);
+      border-radius: 10px;
+      padding: 1rem;
+      height: 240px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
       text-align: left;
     }
 
-    .hack-option-btn:hover {
-      background: var(--grape);
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0 var(--magenta);
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0d0714;
+      border: 2px solid var(--lime);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
     }
 
-    .result-box {
+    .terminal-prompt {
+      color: var(--magenta);
+      font-weight: 700;
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
       font-family: var(--f-mono);
       font-size: 0.85rem;
-      padding: 1rem;
-      border-radius: 12px;
-      background: #FFE0EE;
-      border: 2px solid var(--ink);
-      display: none;
-      margin-top: 1rem;
+      outline: none;
     }
 
-    .close-modal-btn {
-      background: var(--ink);
-      color: var(--paper);
-      border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: 999px;
-      font-family: var(--f-mono);
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 1rem;
+    .terminal-hints {
+      font-size: 0.7rem;
+      color: rgba(251, 243, 231, 0.4);
+      margin-top: 0.75rem;
+      text-align: left;
     }
 
     .interactive-hint {
@@ -373,6 +368,26 @@
       font-size: 1.2rem;
       color: var(--tangerine);
       margin-top: 1.5rem;
+    }
+
+    /* Effets déclenchés par commandes */
+    body.glitch-mode {
+      animation: glitchAnim 0.2s infinite alternate;
+    }
+    @keyframes glitchAnim {
+      0% { transform: translate(2px, -2px); filter: hue-rotate(90deg); }
+      100% { transform: translate(-2px, 2px); filter: hue-rotate(270deg); }
+    }
+
+    body.matrix-mode {
+      background-color: #000 !important;
+      color: #0f0 !important;
+    }
+    body.matrix-mode .command-card {
+      background: #021102;
+      border-color: #0f0;
+      box-shadow: 10px 10px 0 #0f0;
+      color: #0f0;
     }
   </style>
 </head>
@@ -385,7 +400,7 @@
     <canvas id="stars-canvas"></canvas>
   </div>
 
-  <div class="command-card">
+  <div class="command-card" id="main-card">
     <div class="status-badge">
       <span class="pulse-dot"></span>
       Déploiement Orbital
@@ -413,31 +428,34 @@
       <div class="time-remaining" id="time-remaining">Calcul du temps restant...</div>
     </div>
 
-    <!-- Bouton pour lancer le Mini-Jeu / Intrusion -->
-    <button class="action-btn" id="open-hack-btn">
-      ⚠️ Lancer le protocole d'intrusion
+    <button class="action-btn" id="open-terminal-btn">
+      ⚡ Ouvrir le Terminal d'Override
     </button>
 
     <div class="interactive-hint">✨ Clique n'importe où pour envoyer des étincelles</div>
   </div>
 
-  <!-- Modale Mini-Jeu / Hack -->
-  <div class="modal-overlay" id="hack-modal">
-    <div class="modal-card">
-      <div class="modal-title">🚨 PROTOCOLE D'INTRUSION</div>
-      <div class="modal-desc">
-        Le système central résiste. Choisis une action pour forcer le décryptage des données orbitales de Sarah :
+  <!-- Modale Terminal Réel -->
+  <div class="modal-overlay" id="terminal-modal">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <span>⚡ OVERRIDE_CONSOLE // v2.6.4</span>
+        <button id="close-terminal-btn" style="background:var(--magenta); color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; font-weight:bold;">&times;</button>
       </div>
 
-      <div class="hack-options" id="hack-options">
-        <button class="hack-option-btn" data-action="1">💻 Surcharger le processeur quantique avec du café virtuel</button>
-        <button class="hack-option-btn" data-action="2">🚀 Lancer un boost de Rocket League dans le serveur</button>
-        <button class="hack-option-btn" data-action="3">🐈 Envoyer un chat noir hacker pour piroter le pare-feu</button>
+      <div class="terminal-screen" id="terminal-screen">
+        <div>> Connexion au noyau central réussie...</div>
+        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir la liste des commandes qui modifient le site en direct.</div><br>
       </div>
 
-      <div class="result-box" id="hack-result"></div>
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">root@system:~#</span>
+        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande ici (ex: couleur rouge)..." autofocus>
+      </div>
 
-      <button class="close-modal-btn" id="close-modal-btn">Fermer le protocole</button>
+      <div class="terminal-hints">
+        Commandes : <code>aide</code>, <code>couleur [vert/rose/cyan/defaut]</code>, <code>glitch</code>, <code>vitesse max</code>, <code>reset</code>, <code>clear</code>
+      </div>
     </div>
   </div>
 
@@ -467,7 +485,7 @@
     initCanvas();
 
     window.addEventListener('click', (e) => {
-      if (e.target.closest('.modal-card')) return;
+      if (e.target.closest('.terminal-window')) return;
       const colors = ['#FF3C8E', '#FF8A3D', '#6C2BD9', '#C7F13B'];
       for (let i = 0; i < 14; i++) {
         sparks.push({
@@ -538,37 +556,94 @@
         const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
         timeRemaining.innerText = `Fin prévue dans : ${hours}h ${minutes}m ${seconds}s`;
-      } else {
-        timeRemaining.innerText = "✨ Mise à jour terminée ! Ouverture imminente...";
       }
     }
     setInterval(updateProgress, 1000);
     updateProgress();
 
-    // --- Logique du Mini-Jeu ---
-    const modal = document.getElementById('hack-modal');
-    const openBtn = document.getElementById('open-hack-btn');
-    const closeBtn = document.getElementById('close-modal-btn');
-    const hackOptions = document.querySelectorAll('.hack-option-btn');
-    const resultBox = document.getElementById('hack-result');
+    // --- Logique Terminal & Effets réels sur le site ---
+    const modal = document.getElementById('terminal-modal');
+    const openBtn = document.getElementById('open-terminal-btn');
+    const closeBtn = document.getElementById('close-terminal-btn');
+    const terminalScreen = document.getElementById('terminal-screen');
+    const terminalInput = document.getElementById('terminal-input');
+    const mainCard = document.getElementById('main-card');
 
-    openBtn.addEventListener('click', () => modal.classList.add('active'));
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      setTimeout(() => terminalInput.focus(), 100);
+    });
+
     closeBtn.addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    hackOptions.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const action = btn.getAttribute('data-action');
-        resultBox.style.display = 'block';
-        
-        if (action === '1') {
-          resultBox.innerHTML = "☕ <b>Surcharge réussie !</b> Le processeur surchauffe de bonheur. Vitesse de chargement augmentée de 42% !";
-        } else if (action === '2') {
-          resultBox.innerHTML = "🚀 <b>BOOST ACTIVÉ !</b> Le site a franchi le mur du son. Attention aux turbulences galactiques !";
-        } else if (action === '3') {
-          resultBox.innerHTML = "🐈 <b>Accès Root obtenu !</b> Le chat a marché sur le clavier et validé tous les codes secrets. Bien joué !";
+    function log(text, color = 'var(--lime)') {
+      const div = document.createElement('div');
+      div.style.color = color;
+      div.innerHTML = text;
+      terminalScreen.appendChild(div);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
+
+    terminalInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const fullCmd = terminalInput.value.trim();
+        const cmdLower = fullCmd.toLowerCase();
+        log(`> ${fullCmd}`, '#fff');
+        terminalInput.value = '';
+
+        if (cmdLower === 'aide') {
+          log('Commandes d’impact direct :');
+          log(' - <b>couleur vert</b> / <b>rose</b> / <b>cyan</b> : Change la couleur principale du site en direct.');
+          log(' - <b>glitch</b> : Active un effet de distorsion visuelle de l’écran.');
+          log(' - <b>vitesse max</b> : Force la barre de progression à 100% instantanément.');
+          log(' - <b>reset</b> : Réinitialise tous les effets visuels.');
+          log(' - <b>clear</b> : Efface l’écran du terminal.');
+        } 
+        else if (cmdLower.startsWith('couleur ')) {
+          const colorName = cmdLower.split(' ')[1];
+          if (colorName === 'vert') {
+            document.documentElement.style.setProperty('--lime', '#00ff66');
+            document.documentElement.style.setProperty('--magenta', '#00ffaa');
+            log('✨ Succès : Le site est passé en mode Cyber Vert !', '#00ff66');
+          } else if (colorName === 'rose') {
+            document.documentElement.style.setProperty('--lime', '#ff007f');
+            document.documentElement.style.setProperty('--magenta', '#ff00aa');
+            log('✨ Succès : Le site est passé en mode Néon Rose !', '#ff007f');
+          } else if (colorName === 'cyan') {
+            document.documentElement.style.setProperty('--lime', '#00f0ff');
+            document.documentElement.style.setProperty('--magenta', '#0077ff');
+            log('✨ Succès : Le site est passé en mode Glitch Cyan !', '#00f0ff');
+          } else {
+            log('Couleur inconnue. Essaie : vert, rose ou cyan.', '#ff3c8e');
+          }
         }
-      });
+        else if (cmdLower === 'glitch') {
+          document.body.classList.toggle('glitch-mode');
+          log('⚠️ ALERTE : Distorsion temporelle et glitch visuel activés sur tout l’écran !', '#ff3c8e');
+        }
+        else if (cmdLower === 'vitesse max') {
+          progressFill.style.width = '100%';
+          percentLabel.innerText = '100%';
+          statusText.innerText = '🚀 Vitesse maximale atteinte ! Déploiement forcé.';
+          log('🚀 100% atteint en force brute ! Le système a cédé.', '#C7F13B');
+        }
+        else if (cmdLower === 'reset') {
+          document.body.classList.remove('glitch-mode', 'matrix-mode');
+          document.documentElement.style.setProperty('--lime', '#C7F13B');
+          document.documentElement.style.setProperty('--magenta', '#FF3C8E');
+          log('🔄 Système réinitialisé à son état d’origine.');
+        }
+        else if (cmdLower === 'clear') {
+          terminalScreen.innerHTML = '';
+        }
+        else if (fullCmd === '') {
+          // Rien
+        }
+        else {
+          log(`Commande inconnue : "${fullCmd}". Tape <b>aide</b>.`, '#ff3c8e');
+        }
+      }
     });
   </script>
 </body>
