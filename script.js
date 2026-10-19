@@ -1326,7 +1326,7 @@
     }catch(e){}
   }
   var secretResumeFinal = false; /* vrai si on reprend directement sur le coffre déjà ouvert */
-  var RIDDLE_QUESTION = "Je grandis chaque année sans jamais vieillir vraiment, et on me fête à chaque automne. Qui suis-je ?"; /* ÉDITABLE */
+  var RIDDLE_QUESTION = "On m'ajoute à ton nom une fois par an, pourtant je ne change pas qui tu es. Je mesure le temps qui s'accumule sans ajouter le moindre poids. Qui suis-je ?"; /* ÉDITABLE */
   var RIDDLE_ANSWER = "anniversaire"; /* ÉDITABLE — comparaison insensible à la casse et aux espaces */
   var SECRET_PHRASE = "MEILLEURE AMIE POUR LA VIE"; /* ÉDITABLE — lettres A-Z et espaces uniquement, devinable lettre par lettre OU d'un coup en tapant la phrase entière */
   /* —————————————————————————————————————————————————————————————————
