@@ -1,694 +1,747 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Univers de Sarah</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;700&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chantier en Cours — Le Monde de Sarah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Unbounded:wght@700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper:      #FBF3E7;
+      --ink:        #1C1030;
+      --grape:      #6C2BD9;
+      --magenta:    #FF3C8E;
+      --tangerine:  #FF8A3D;
+      --lime:       #C7F13B;
+      --warning:    #FFD700;
 
+      --f-display: 'Unbounded', sans-serif;
+      --f-script:  'Caveat', cursive;
+      --f-body:    'Plus Jakarta Sans', sans-serif;
+      --f-mono:    'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--f-body);
+      background-color: var(--ink);
+      color: var(--paper);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.5s ease, font-family 0.3s ease;
+    }
+
+    body.code-font-mode {
+      font-family: var(--f-mono) !important;
+    }
+
+    /* Rayures de chantier de fond */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(28, 16, 48, 0.9),
+        rgba(28, 16, 48, 0.9) 40px,
+        rgba(255, 138, 61, 0.05) 40px,
+        rgba(255, 138, 61, 0.05) 80px
+      );
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      mix-blend-mode: screen;
+    }
+
+    .blob-1 { width: 50vw; height: 50vw; background: var(--tangerine); top: -15vw; left: -10vw; animation: blobFloat 24s ease-in-out infinite; }
+    .blob-2 { width: 45vw; height: 45vw; background: var(--magenta); bottom: -15vw; right: -10vw; animation: blobFloat 20s ease-in-out infinite reverse; }
+
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(3vw, 4vw) scale(1.1); }
+    }
+
+    #stars-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .command-card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 600px;
+      background: #140b24;
+      color: var(--paper);
+      border: 4px solid var(--tangerine);
+      border-radius: 32px;
+      padding: 3.2rem 2.5rem;
+      text-align: center;
+      box-shadow: 12px 12px 0 var(--magenta);
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    }
+
+    .command-card.perspective-mode {
+      transform: perspective(1000px) rotateX(12deg) rotateY(-12deg) rotateZ(2deg);
+      box-shadow: -20px 20px 0 var(--lime), 20px -20px 0 var(--tangerine);
+    }
+
+    .command-card.invert-layout {
+      direction: rtl;
+    }
+
+    @keyframes heavyExplosion {
+      0% { transform: scale(1) rotate(0deg); filter: blur(0); }
+      20% { transform: scale(0.8) rotate(-12deg); filter: contrast(250%); }
+      40% { transform: scale(1.35) rotate(18deg) translate(25px, -25px); background: #ff3c8e; color: #000; }
+      60% { transform: scale(0.9) rotate(-10deg) translate(-20px, 20px); filter: blur(3px); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .command-card.explosion-active {
+      animation: heavyExplosion 0.8s ease-in-out;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--warning);
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      padding: 0.5rem 1.2rem;
+      border-radius: 9999px;
+      font-family: var(--f-mono);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .pulse-dot {
+      width: 9px;
+      height: 9px;
+      background-color: var(--magenta);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--magenta);
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(0.7); }
+    }
+
+    .orb-container {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .orb-container.hidden {
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+      margin: 0 auto 0 auto;
+      height: 0;
+    }
+
+    .orb-container.dance-mode {
+      animation: crazyDance 0.35s infinite alternate ease-in-out;
+    }
+    @keyframes crazyDance {
+      0% { transform: scale(1.15) rotate(-25deg) translateY(-12px); }
+      100% { transform: scale(1.35) rotate(25deg) translateY(12px); }
+    }
+
+    .orb-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3px dashed var(--tangerine);
+      animation: rotateRing 10s linear infinite;
+    }
+
+    .orb-ring-reverse {
+      position: absolute;
+      width: 75%;
+      height: 75%;
+      border-radius: 50%;
+      border: 3px solid var(--magenta);
+      border-top-color: transparent;
+      animation: rotateRing 5s linear infinite reverse;
+    }
+
+    @keyframes rotateRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .orb-core {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--warning), var(--tangerine) 50%, var(--magenta) 100%);
+      box-shadow: 0 0 30px var(--tangerine);
+      animation: orbPulse 2.5s infinite ease-in-out;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes orbPulse {
+      0%, 100% { transform: scale(0.92); }
+      50% { transform: scale(1.1); box-shadow: 0 0 45px var(--warning); }
+    }
+
+    h1 {
+      font-family: var(--f-display);
+      font-size: clamp(1.5rem, 4.5vw, 2.1rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      color: var(--paper);
+    }
+
+    .subtitle {
+      font-family: var(--f-script);
+      font-size: 1.7rem;
+      color: var(--tangerine);
+      transform: rotate(-1.5deg);
+      display: block;
+      margin-bottom: 1.25rem;
+    }
+
+    .status-text {
+      color: var(--paper);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.9;
+      min-height: 2.8em;
+      margin-bottom: 1.75rem;
+    }
+
+    .progress-section {
+      margin-bottom: 1.75rem;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--warning);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 14px;
+      background: rgba(251, 243, 231, 0.1);
+      border: 2px solid var(--tangerine);
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 1%;
+      background: linear-gradient(90deg, var(--warning), var(--tangerine), var(--magenta));
+      border-radius: 9999px;
+      transition: width 0.5s ease;
+    }
+
+    .time-remaining {
+      font-family: var(--f-mono);
+      font-size: 0.8rem;
+      color: var(--paper);
+      margin-top: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .action-btn {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--ink);
+      background: var(--warning);
+      border: 2px solid var(--warning);
+      padding: 0.85em 1.6em;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6em;
+      box-shadow: 4px 4px 0 var(--magenta);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      margin-top: 0.5rem;
+    }
+
+    .action-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--magenta);
+    }
+
+    /* Modale Terminal de Chantier */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 5, 20, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .terminal-window {
+      width: 100%;
+      max-width: 650px;
+      background: #0d0617;
+      border: 3px solid var(--tangerine);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 0 40px rgba(255, 138, 61, 0.3);
+      font-family: var(--f-mono);
+      color: var(--warning);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .terminal-window {
+      transform: scale(1);
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed rgba(255, 138, 61, 0.4);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.0rem;
+      font-size: 0.82rem;
+    }
+
+    .terminal-screen {
+      background: #04020a;
+      border: 1px solid rgba(255, 138, 61, 0.2);
+      border-radius: 10px;
+      padding: 1rem;
+      height: 240px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #140b24;
+      border: 2px solid var(--tangerine);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+    }
+
+    .terminal-prompt {
+      color: var(--magenta);
+      font-weight: 700;
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--f-mono);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .terminal-hints {
+      font-size: 0.7rem;
+      color: rgba(251, 243, 231, 0.4);
+      margin-top: 0.75rem;
+      text-align: left;
+    }
+
+    .interactive-hint {
+      font-family: var(--f-script);
+      font-size: 1.2rem;
+      color: var(--tangerine);
+      margin-top: 1.5rem;
+    }
+  </style>
 </head>
 <body>
 
-<svg class="visually-hidden" aria-hidden="true">
-  <symbol id="icon-spark" viewBox="0 0 24 24">
-    <path d="M12 0c0 6.6 1.8 9.4 8 12-6.2 2.6-8 5.4-8 12 0-6.6-1.8-9.4-8-12 6.2-2.6 8-5.4 8-12z"/>
-  </symbol>
-  <symbol id="icon-lock" viewBox="0 0 24 24">
-    <path d="M6 10V8a6 6 0 0 1 12 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z"/>
-  </symbol>
-  <symbol id="icon-camera" viewBox="0 0 24 24">
-    <path d="M9 3l-1.5 2H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3.5L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-  </symbol>
-</svg>
+  <div class="bg-layer">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <canvas id="stars-canvas"></canvas>
+  </div>
 
-<div class="bg-layer" aria-hidden="true">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-  <canvas id="stars-canvas"></canvas>
-</div>
-<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+  <div class="command-card" id="main-card">
+    <div class="status-badge" id="badge-container">
+      <span class="pulse-dot"></span>
+      <span id="badge-text">🚧 GROS ŒUVRE EN COURS</span>
+    </div>
 
-<div class="nav-orbit" id="nav-orbit">
-  <div class="orbit-backdrop" aria-hidden="true"></div>
-  <svg class="orbit-lines" viewBox="0 0 160 440" aria-hidden="true">
-    <line x1="27" y1="27" x2="138" y2="26"></line>
-    <line x1="27" y1="27" x2="120" y2="84"></line>
-    <line x1="27" y1="27" x2="96" y2="140"></line>
-    <line x1="27" y1="27" x2="66" y2="192"></line>
-    <line x1="27" y1="27" x2="30" y2="238"></line>
-    <line x1="27" y1="27" x2="30" y2="298"></line>
-    <line x1="27" y1="27" x2="30" y2="356"></line>
-    <line x1="27" y1="27" x2="30" y2="414"></line>
-  </svg>
-  <button class="orbit-hub" id="orbit-hub" type="button" aria-expanded="false" aria-controls="orbit-menu" aria-label="Ouvrir la navigation">
-    <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-  </button>
-  <nav class="orbit-menu" id="orbit-menu" aria-label="Navigation principale">
-    <button class="orbit-node nav-link" type="button" data-nav="map" style="--nx:118px; --ny:6px; --nd:0.05s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">La carte</span>
+    <div class="orb-container" id="orb-container">
+      <div class="orb-ring"></div>
+      <div class="orb-ring-reverse"></div>
+      <div class="orb-core"></div>
+    </div>
+
+    <h1 id="main-title">Chantier Spatial Majeur</h1>
+    <span class="subtitle" id="main-subtitle">Le Monde de Sarah est en pleine reconstruction...</span>
+    
+    <p class="status-text" id="status-text">Pose des fondations galactiques et soudure des structures...</p>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>Avancée du Chantier</span>
+        <span id="percent-label" style="color: var(--warning); font-weight: 700;">1%</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="time-remaining" id="time-remaining">Fin des travaux prévue à 15h00...</div>
+    </div>
+
+    <button class="action-btn" id="open-terminal-btn">
+      🏗️ Ouvrir le Panneau de Chantier
     </button>
-    <button class="orbit-node nav-link" type="button" data-nav="calendar" style="--nx:100px; --ny:64px; --nd:0.1s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Calendrier</span>
-    </button>
-    <button class="orbit-node nav-link" type="button" data-nav="letters" style="--nx:76px; --ny:120px; --nd:0.15s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Lettres</span>
-    </button>
-    <button class="orbit-node nav-link" type="button" data-nav="window" style="--nx:46px; --ny:172px; --nd:0.2s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Ciel</span>
-    </button>
-    <button class="orbit-node nav-link" type="button" data-nav="secret" style="--nx:10px; --ny:218px; --nd:0.25s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Secret</span>
-    </button>
-    <!-- lien externe : ouvre la page Playlist Spotify dans le même onglet
-         (elle a son propre bouton "Quitter" pour revenir ici), volontairement
-         en dehors du routage par hash (pas de data-nav) -->
-    <a class="orbit-node orbit-node-external" href="spotify-playlist.html" style="--nx:10px; --ny:278px; --nd:0.3s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Playlist</span>
-    </a>
-    <!-- lien externe : ouvre le sanctuaire "L'Échappée" dans le même onglet
-         (elle a son propre bouton "Quitter" pour revenir ici), volontairement
-         en dehors du routage par hash (pas de data-nav) -->
-    <a class="orbit-node orbit-node-sanctuary" href="sanctuary.html" style="--nx:10px; --ny:336px; --nd:0.35s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Échappée</span>
-    </a>
-    <!-- lien externe : ouvre la salle de ciné dans le même onglet
-         (elle a son propre lien de retour pour revenir ici), volontairement
-         en dehors du routage par hash (pas de data-nav) -->
-    <a class="orbit-node orbit-node-cinema" href="cinema.html" style="--nx:10px; --ny:394px; --nd:0.4s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-camera"/></svg></span>
-      <span class="node-label">Ciné</span>
-    </a>
-  </nav>
-</div>
-<p class="wordmark" aria-hidden="true">✦ Univers de Sarah</p>
 
-<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Passer en mode nuit" aria-pressed="false">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="tt-moon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/><g class="tt-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></g></svg>
-</button>
-
-<!-- ================= INTRO (première visite seulement) ================= -->
-<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
-  <canvas class="intro-stars" id="intro-stars" aria-hidden="true"></canvas>
-  <div class="intro-inner">
-    <svg class="intro-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-    <h1 class="intro-title" id="intro-title">Pour Sarah</h1>
-    <p class="intro-sub">un petit univers construit rien que pour toi</p>
-    <button class="intro-btn" id="intro-btn" type="button">Entrer</button>
+    <div class="interactive-hint">✨ Clique n'importe où pour faire jaillir des étincelles de soudure</div>
   </div>
-</div>
 
-<!-- ================= PATCH NOTE (à l'ouverture, une fois par version) ================= -->
-<div class="patch" id="patch" role="dialog" aria-modal="true" aria-labelledby="patch-title" hidden>
-  <div class="patch-backdrop" data-patch-close></div>
-  <div class="patch-panel">
-    <button class="patch-close" type="button" data-patch-close aria-label="Fermer la page des nouveautés">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
-    </button>
-    <header class="patch-head">
-      <p class="patch-badge"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Mise à jour · octobre 2026</p>
-      <h2 id="patch-title">Quoi de neuf dans l'univers&nbsp;?</h2>
-      <p class="patch-lede">Voici tout ce qui a changé pour toi.</p>
-    </header>
-    <div class="patch-body">
-      <div class="patch-grid">
-          <section class="patch-card" style="--a:#ff8fc3">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Une nouvelle façon d'entrer</h3>
-            <ul>
-              <li>Un écran d'intro « Pour Sarah » à la première visite.</li>
-              <li>L'accueil devient la <strong>carte de l'univers</strong> : une planète par section, il suffit de cliquer.</li>
-              <li>Les polices du site sont enfin chargées pour un rendu plus soigné.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#b9a3ff">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Jour et nuit</h3>
-            <ul>
-              <li>Un bouton soleil/lune change l'ambiance du site.</li>
-              <li>Le mode nuit s'active tout seul près de la carte, du calendrier, de la chambre et du ciel.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#e4ff8a">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Calendrier</h3>
-            <ul>
-              <li>Un <strong>chemin de 30 étoiles</strong> reliées entre elles remplace la grille.</li>
-              <li>Nouveau mois : <strong>novembre 2026</strong>, avec 30 nouveaux mots.</li>
-              <li>Septembre et octobre restent accessibles, via des onglets.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#ffd0a0">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Lettres</h3>
-            <ul>
-              <li><strong>6 nouvelles lettres</strong> à ouvrir selon l'humeur.</li>
-              <li>Les lettres déjà ouvertes le restent, même après avoir rechargé le site.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#ff9a9a">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Messages</h3>
-            <ul>
-              <li>Les 4 preuves ont été réécrites.</li>
-              <li>La fratrie se lit dans un <strong>lecteur à onglets</strong> : un message à la fois, en grand, sur ordinateur comme sur téléphone.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#8fe9ff">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>La chambre</h3>
-            <ul>
-              <li>La fenêtre sur le ciel devient une vraie chambre gaming RGB : bureau, étagère, rideaux, le tout sans défilement.</li>
-              <li>Dans L'Échappée, la chambre en 3D a été refaite, avec un vrai setup gaming et un PC à explorer.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#9dffd0">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Section Secret</h3>
-            <ul>
-              <li>Une toute nouvelle récompense pour celles qui vont jusqu'au bout. Pas de spoiler. 🤫</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#ffe08a">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Petits plus</h3>
-            <ul>
-              <li>Ta progression est sauvegardée.</li>
-              <li>Le site s'adapte aux petits écrans.</li>
-              <li>Les animations se désactivent si tu préfères.</li>
-            </ul>
-          </section>
-      </div>
-    </div>
-    <footer class="patch-foot">
-      <p>Tu pourras rouvrir cette page depuis la carte, avec « Voir les nouveautés ».</p>
-      <button class="patch-go" type="button" data-patch-close>C'est parti</button>
-    </footer>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 0 : CARTE DE L'UNIVERS ================= -->
-<div class="screen" id="screen-map">
-  <div class="map-screen">
-    <div class="map-head">
-      <h2 id="map-heading" tabindex="-1">Ton univers</h2>
-      <p class="map-lede">choisis une planète</p>
-      <button class="patch-open" id="patch-open" type="button">Voir les nouveautés</button>
-    </div>
-    <div class="map-stage" id="map-stage">
-      <svg class="map-lines" id="map-lines" aria-hidden="true"></svg>
-      <a class="planet p-messages" href="#home" style="--c1:#ff8fc3;--c2:#c2185b;--x:11%;--y:30%;--mx:30%;--my:8%">
-        <span class="orb"></span><span class="p-name">Messages</span><span class="p-sub">ce que je pense de toi</span></a>
-      <a class="planet p-letters" href="#letters" style="--c1:#ffd0a0;--c2:#e5651f;--x:26%;--y:64%;--mx:70%;--my:19%">
-        <span class="orb"></span><span class="p-name">Lettres</span><span class="p-sub">à ouvrir selon l'humeur</span></a>
-      <a class="planet p-calendar" href="#calendar" style="--c1:#e4ff8a;--c2:#6a9a00;--x:37%;--y:24%;--mx:30%;--my:30%">
-        <span class="orb"></span><span class="p-name">Calendrier</span><span class="p-sub">un chemin d'étoiles</span></a>
-      <a class="planet p-window" href="#window" style="--c1:#b9a3ff;--c2:#4d22b5;--x:51%;--y:57%;--mx:70%;--my:41%">
-        <span class="orb"></span><span class="p-name">La chambre</span><span class="p-sub">et sa fenêtre sur le ciel</span></a>
-      <a class="planet p-secret" href="#secret" style="--c1:#9dffd0;--c2:#0a8a5a;--x:63%;--y:22%;--mx:30%;--my:52%">
-        <span class="orb"></span><span class="p-name">Secret</span><span class="p-sub">il faut un code</span></a>
-      <a class="planet p-sanctuary" href="sanctuary.html" style="--c1:#8fe9ff;--c2:#0b6fa8;--x:79%;--y:58%;--mx:70%;--my:63%">
-        <span class="orb"></span><span class="p-name">L'Échappée</span><span class="p-sub">une pièce à explorer</span></a>
-      <a class="planet p-playlist" href="spotify-playlist.html" style="--c1:#ff9a9a;--c2:#b3202f;--x:91%;--y:26%;--mx:30%;--my:74%">
-        <span class="orb"></span><span class="p-name">Playlist</span><span class="p-sub">notre bande-son</span></a>
-      <a class="planet p-cinema" href="cinema.html" style="--c1:#ffe08a;--c2:#b57a00;--x:72%;--y:86%;--mx:70%;--my:85%">
-        <span class="orb"></span><span class="p-name">Ciné</span><span class="p-sub">la salle obscure</span></a>
-      <a class="planet p-sunmoon" href="soleil-lune.html" style="--c1:#fff3b0;--c2:#7d6bd6;--x:32%;--y:88%;--mx:30%;--my:95%">
-        <span class="orb"></span><span class="p-name">Soleil / Lune</span><span class="p-sub">choisis ton astre</span></a>
-    </div>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 1 : ACCUEIL ================= -->
-<div class="screen" id="screen-home">
-  <main>
-    <section class="hero">
-      <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Une page rien que pour toi</p>
-      <h1 class="hero-title" aria-label="Sarah">
-        <span class="letter" style="animation-delay:.05s">S</span><span class="letter" style="animation-delay:.14s">a</span><span class="letter" style="animation-delay:.23s">r</span><span class="letter" style="animation-delay:.32s">a</span><span class="letter" style="animation-delay:.41s">h</span>
-      </h1>
-      <p class="hero-subtitle">l'étoile la plus brillante que je connaisse</p>
-      <p class="hero-text">Ici, pas de filtre, pas de mise en scène — juste tout ce qu'on pense de toi, réuni dans un petit coin d'univers. Descends, prends ton temps.</p>
-      <div class="hero-actions">
-        <a class="btn-wish" id="wish-btn" href="soleil-lune.html">
-          <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-          Soleil / Lune
-        </a>
-        <span class="scroll-cue">continue de scroller
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
-        </span>
-      </div>
-    </section>
-
-    <div class="ticker-wrap" aria-hidden="true">
-      <div class="ticker">
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>MEILLEURE AMIE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>HUMAINE EXCEPTIONNELLE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>LUMIÈRE DE LA GALAXIE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>COSMIC QUEEN</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>IRREMPLAÇABLE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>MEILLEURE AMIE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>HUMAINE EXCEPTIONNELLE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>LUMIÈRE DE LA GALAXIE</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>COSMIC QUEEN</span>
-        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>IRREMPLAÇABLE</span>
-      </div>
-    </div>
-
-    <section class="block" id="messages">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Message depuis ma galaxie</p>
-          <h2>Ce que je pense de toi</h2>
-          <span class="lede">Quatre vérités, écrites depuis mon cœur :</span>
-        </div>
-
-        <!-- ÉDITABLE : remplace les 4 textes ci-dessous par tes vrais messages -->
-        <div class="message-grid">
-          <article class="msg-card" data-reveal>
-            <span class="tag">Preuve n°01</span>
-            <p>Il y a des gens, dès qu'ils arrivent, la journée devient tout de suite plus agréable. C'est exactement ce que tu fais, sans même t'en rendre compte. Et honnêtement, je ne m'en lasserai jamais !</p>
-          </article>
-          <article class="msg-card" data-reveal>
-            <span class="tag">Preuve n°02</span>
-            <p>Je t'ai vue encaisser des choses qui auraient fait plier beaucoup de monde, et continuer à sourire, à prendre soin des autres. Cette force tranquille, c'est ce qui m'impressionne le plus chez toi.</p>
-          </article>
-          <article class="msg-card" data-reveal>
-            <span class="tag">Preuve n°03</span>
-            <p>Avec toi, je n'ai jamais eu à faire semblant. Tu écoutes sans juger, tu trouves les mots justes même quand moi je les cherche, et tu me fais sentir que mes histoires comptent, même les plus petites.</p>
-          </article>
-          <article class="msg-card" data-reveal>
-            <span class="tag">Preuve n°04</span>
-            <p>Notre amitié, c'est des fous rires pour rien, des vocales qui n'en finissent plus et des silences qui ne pèsent jamais. Je ne sais pas ce que je ferais sans ça, et je n'ai pas l'intention de le découvrir.</p>
-          </article>
-        </div>
-
-        <p class="signoff">— toujours dans ton équipe.</p>
-      </div>
-    </section>
-
-    <section class="block" id="family">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Depuis leur galaxie à eux</p>
-          <h2>Ta fratrie a aussi des choses à dire</h2>
-          <span class="lede">ils n'ont pas pu s'empêcher de participer.</span>
-        </div>
+  <!-- Modale Panneau de Chantier -->
+  <div class="modal-overlay" id="terminal-modal">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <span>🚧 CHANTIER_MASTER_CONSOLE // v7.0</span>
+        <button id="close-terminal-btn" style="background:var(--magenta); color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; font-weight:bold;">&times;</button>
       </div>
 
-      <!-- ÉDITABLE : les messages de la fratrie (un <article> par personne) -->
-      <div class="container">
-        <div class="fam-reader" id="fam-reader">
-          <div class="fam-tabs" id="fam-tabs" role="tablist" aria-label="Choisir un message de la fratrie"></div>
-          <div class="fam-stage">
-          <article class="fam-card" role="tabpanel">
-            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
-            <p class="who">Alexis</p>
-            <p>Heyllo ma Sœur d'amour magique a moi que j'aime ! 
-
-Ben voilà, apparemment il y en a un qui souhaitait te faire plaisir alors j'en profite pour te faire rappeler juste par un pur égoïsme d'amour que je suis Fan de toi ! 
-
-On en a traversé des épreuves, depuis qu'on est gamin, les bon et mauvais moment.. mais je suis extrêmement fière de notre parcours car grâce a cela et contre tout. On est plus que jamais proche avec toi Jess et tyty.
-
-Aujourd'hui ont est complice grâce a nos connaissances égale sur toute la cinématographie qu'on nous a inculquer depuis qu'on est pitchou et c'est pas fini ^^
-
-
-On se tape des barres a tout bout de champ et on a actuellement des Xenomorph a buter !!
-
-Loin de moi l'idée de prendre la vedette sur notre chèr et fort sympathique Ice, mais je voulais te faire savoir encore est toujours que tu fais partie des personnes que j'aime par dessus absolument tout au monde ! 
-
-Je t'aime ma soeur, ma Jynx ! 
-Et de la part de Homer Simpson : Ta gueule ! ❤️</p>
-          </article>
-          <article class="fam-card" role="tabpanel">
-            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
-            <p class="who">Tywenn</p>
-            <p>Coucou Sassou 😁 ! Je ne suis pas la meilleur personne pour mettre ce genre de choses par écrit, mais je voulais quand même te laisser quelques mots.
-
-Ce que j’aime chez toi, c’est ta gentillesse et surtout l’humour qu’on peut avoir ensemble et avec notre frère et notre sœur. C’est peut-être des choses simples, mais c’est justement ces petits moments qui comptent beaucoup pour moi.
-
-Je repense notamment de temps en temps à nos parties sur Back 4 Blood. C’est un jeu que j’aime énormément, et le fait d’y avoir joué pour la première fois avec toi en a fait un souvenir que je garde particulièrement. C’était juste des parties de jeu, mais j’ai vraiment passé de très bons moments avec toi.
-
-S’il y a une chose que j’aimerais que tu retiennes, c’est de toujours avoir confiance en toi. N’aie pas peur d’avancer, d’essayer, de te tromper ou de prendre et de reprendre des chemins différents. La vie passe vite, je dis ça alors que j'en est que 19 ans, mais je le vois, alors profite, profite des personnes qui t’entourent et surtout, profite des moments que la vie te donne.
-
-Je ne te le dis peut-être pas souvent, mais tu comptes beaucoup pour moi et je suis content de t’avoir comme sœur ❤️❤️❤️
-
-Des gros bisous moche 3 ❤️🥰😘</p>
-          </article>
-          <article class="fam-card" role="tabpanel">
-            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Sœur</span>
-            <p class="who">Jessica</p>
-            <p>A toi, ma sœur, mais pas seulement, pas juste une sœur mais une âme sœur, une âme jumelle, mon souffle de vie, mon rayon de soleil, ma safe-place, là où naît mon courage, là où se meurent mes doutes, le départ de mes forces, la destination de ma volonté, c'est dans ton existence que j'ai trouvé ma raison d'être, ma détermination à combattre chaque épreuve de la vie, sans toi je serais incomplète, inachevée. Il n’existe aucune définition de l'amour qui puisse poser des mots sur la puissance et la profondeur de celui que je te porte, tant il transcende tout ce qui existe de tangible en notre monde. A toi, ma sœur, je t'aime bien au-delà des mots, bien au-delà des émotions, bien au-delà de chaque réalité qui fût, qui est et qui sera.</p>
-          </article>
-          </div>
-        </div>
+      <div class="terminal-screen" id="terminal-screen">
+        <div>> Poste de commande du chantier initialisé...</div>
+        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir comment modifier ou détruire le chantier en direct.</div><br>
       </div>
-    </section>
 
-    <section class="block">
-      <div class="container">
-        <div class="teaser-grid">
-          <div class="cal-teaser" data-reveal>
-            <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Et ce n'est pas fini</p>
-            <h2>Un mois entier de toi</h2>
-            <p class="sub">septembre, octobre… et novembre en plus</p>
-            <button class="btn-cal" type="button" data-nav="calendar">
-              <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-              Ouvrir le calendrier
-            </button>
-          </div>
-          <div class="cal-teaser letters-teaser" data-reveal>
-            <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
-            <h2>Des lettres pour toi</h2>
-            <p class="sub">à ouvrir seulement quand le moment est venu</p>
-            <button class="btn-cal" type="button" data-nav="letters">
-              <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-              Voir les lettres
-            </button>
-          </div>
-        </div>
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">chantier@master:~#</span>
+        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande (ex: explosion, fond black)..." autofocus>
       </div>
-    </section>
-  </main>
 
-  <footer class="sign-off">
-    <svg class="icon-spark big" aria-hidden="true"><use href="#icon-spark"/></svg>
-    <p class="made">faite avec tout mon cœur, pour toi.</p>
-    <p class="date" id="footer-date">—</p>
-    <button class="btn-replay" id="replay-btn" type="button">revoir la surprise ✦</button>
-  </footer>
-</div>
-
-<!-- ================= ÉCRAN 2 : CALENDRIER ================= -->
-<div class="screen" id="screen-calendar">
-  <div class="cal-screen container">
-    <div class="cal-header">
-      <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Calendrier secret</p>
-      <h2 tabindex="-1" id="cal-heading">Un mois de toi</h2>
-      <span class="lede">une étoile par jour, un peu d'amour à chaque fois</span>
-      <div class="cal-tabs" role="tablist" aria-label="Choisir le mois">
-        <button class="cal-tab is-active" type="button" role="tab" data-cal="calendar" aria-selected="true">Septembre · octobre</button>
-        <button class="cal-tab" type="button" role="tab" data-cal="calendar-nov" aria-selected="false">Novembre</button>
-      </div>
-      <p class="cal-status" id="cal-status">Chargement…</p>
-    </div>
-
-    <div class="cal-grid-wrap">
-      <div class="cal-path" id="cal-grid" aria-label="Chemin d'étoiles : une étoile par jour"></div>
-    </div>
-
-    <div class="cal-legend">
-      <span><span class="legend-dot today"></span>aujourd'hui</span>
-      <span><span class="legend-dot"></span>à ouvrir</span>
-      <span><span class="legend-dot locked"></span>pas encore</span>
-    </div>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 3 : CASE OUVERTE ================= -->
-<div class="screen" id="screen-day">
-  <div class="day-screen">
-    <p class="day-label" id="day-label">JOUR —</p>
-    <h2 class="day-text" id="day-text" tabindex="-1"></h2>
-    <div class="day-nav">
-      <button class="btn-ghost" type="button" id="day-prev">← jour précédent</button>
-      <button class="btn-ghost" type="button" data-nav="calendar">retour au calendrier</button>
-      <button class="btn-ghost" type="button" id="day-next">jour suivant →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 4 : LETTRES ================= -->
-<div class="screen" id="screen-letters">
-  <div class="cal-screen container">
-    <div class="cal-header">
-      <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
-      <h2 tabindex="-1" id="letters-heading">Des lettres pour toi</h2>
-      <span class="lede">à ouvrir seulement quand le moment est venu</span>
-    </div>
-
-    <!-- ÉDITABLE : les lettres viennent du tableau LETTERS dans le script ci-dessous -->
-    <div class="letters-grid" id="letters-grid"></div>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 5 : LETTRE OUVERTE ================= -->
-<div class="screen" id="screen-letter">
-  <div class="day-screen">
-    <p class="day-label" id="letter-trigger">—</p>
-    <h2 class="day-text" id="letter-word" tabindex="-1"></h2>
-    <p class="letter-sub" id="letter-sub"></p>
-    <div class="day-nav">
-      <button class="btn-ghost" type="button" id="letter-prev">← lettre précédente</button>
-      <button class="btn-ghost" type="button" data-nav="letters">retour aux lettres</button>
-      <button class="btn-ghost" type="button" id="letter-next">lettre suivante →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 6 : FENÊTRE ================= -->
-<div class="screen" id="screen-window">
-  <div class="window-screen" id="room-scene">
-    <!-- ÉDITABLE (décor) : chambre gaming RGB autour de la fenêtre, purement visuelle.
-         Le code du digicode est caché sur l'étagère (.sd), de gauche à droite. -->
-    <div class="room-led" aria-hidden="true"></div>
-    <div class="room-ambient" aria-hidden="true"></div>
-    <div class="room-floor" aria-hidden="true"></div>
-    <div class="room-neon" aria-hidden="true">GG</div>
-    <div class="room-hex" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="room-poster" aria-hidden="true"></div>
-    <div class="room-desk" aria-hidden="true">
-      <div class="gm-chair"><i></i></div>
-      <i class="gm-leg l"></i><i class="gm-leg r"></i>
-      <div class="gm-pc"><i class="fan"></i><i class="fan"></i><i class="fan"></i></div>
-      <div class="gm-monitor"><div class="gm-screen"></div><i class="gm-stand"></i></div>
-      <div class="gm-top"></div>
-      <i class="gm-pad"></i><i class="gm-kb"></i><i class="gm-mouse"></i>
-    </div>
-    <div class="room-shelf" aria-hidden="true">
-      <span class="shelf-book book-1"><i class="sd">9</i></span>
-      <span class="shelf-book book-2"><i class="sd">2</i></span>
-      <span class="shelf-book book-3"><i class="sd">0</i></span>
-      <span class="shelf-figure"></span>
-      <span class="shelf-frame"><i class="sd">4</i></span>
-    </div>
-
-    <div class="room-wall" aria-hidden="true"></div>
-    <div class="room-rug" aria-hidden="true"></div>
-    <div class="room-caption">
-      <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Depuis l'intérieur</p>
-      <h2 tabindex="-1" id="window-heading">Regarde par la fenêtre</h2>
-      <p class="lede">le ciel est calme, ce soir. clique sur la vitre pour aller le voir de plus près.</p>
-    </div>
-
-    <div class="window-frame" id="window-frame">
-      <button class="window-glass" id="window-glass" type="button" aria-label="Sortir regarder le ciel">
-        <canvas id="window-stars-canvas"></canvas>
-        <span class="window-hint" aria-hidden="true"><svg class="icon-spark"><use href="#icon-spark"/></svg></span>
-      </button>
-      <div class="window-mullions" aria-hidden="true"></div>
-    </div>
-    <div class="window-sill" aria-hidden="true"></div>
-    <div class="room-curtain l" aria-hidden="true"></div><div class="room-curtain r" aria-hidden="true"></div>
-  </div>
-</div>
-
-<!-- overlay de "traversée" de la fenêtre : effet de vitesse-étoiles plein écran -->
-<div class="warp-overlay" id="warp-overlay" aria-hidden="true">
-  <canvas id="warp-canvas"></canvas>
-</div>
-
-<!-- ================= ÉCRAN 7 : CIEL ================= -->
-<div class="screen" id="screen-sky">
-  <div class="sky-screen">
-    <canvas id="sky-canvas" tabindex="-1"></canvas>
-    <p class="sky-hint" id="sky-hint">bouge la souris pour explorer · clique sur une étoile brillante</p>
-    <button class="sky-back" type="button" data-nav="window">← retour à l'intérieur</button>
-    <div class="sky-dim" id="sky-dim" aria-hidden="true"></div>
-
-    <!-- ÉDITABLE : les 5 constellations viennent du tableau CONSTELLATIONS dans le script -->
-    <div class="constellation-card" id="constellation-card" role="dialog" aria-modal="false" aria-labelledby="card-title">
-      <button class="card-close" id="card-close" type="button" aria-label="Fermer">×</button>
-      <span class="card-date" id="card-date">—</span>
-      <h3 id="card-title" tabindex="-1">—</h3>
-      <p id="card-text"></p>
-      <div class="card-photo">
-        <svg aria-hidden="true"><use href="#icon-camera"/></svg>
-        <span>photo à ajouter ici</span>
+      <div class="terminal-hints">
+        Commandes : <code>aide</code>, <code>titre [texte]</code>, <code>texte [message]</code>, <code>bouton [texte]</code>, <code>badge [texte]</code>, <code>fond [couleur en anglais]</code>, <code>couleur-texte [couleur en anglais]</code>, <code>explosion</code>, <code>danser</code>, <code>stop</code>, <code>police</code>, <code>inverser</code>, <code>matrix</code>, <code>cacher</code>, <code>montrer</code>, <code>reset</code>, <code>clear</code>
       </div>
     </div>
   </div>
-</div>
 
-<div class="screen" id="screen-secret">
-  <div class="secret-screen" id="secret-screen">
-    <!-- décor ambiant "sécurité / hacker", purement visuel -->
-    <canvas class="secret-rain" id="secret-rain-canvas" aria-hidden="true"></canvas>
-    <div class="hud-corner hud-tl" aria-hidden="true"></div>
-    <div class="hud-corner hud-tr" aria-hidden="true"></div>
-    <div class="hud-corner hud-bl" aria-hidden="true"></div>
-    <div class="hud-corner hud-br" aria-hidden="true"></div>
-    <div class="secret-progress" id="secret-progress" aria-hidden="true">
-      <span class="prog-step" data-step="1"><span class="prog-dot"></span>Code</span>
-      <span class="prog-step" data-step="2"><span class="prog-dot"></span>Énigme</span>
-      <span class="prog-step" data-step="3"><span class="prog-dot"></span>Terminal</span>
-      <span class="prog-step" data-step="final"><span class="prog-dot"></span>Accès</span>
-    </div>
-    <p class="secret-console-log" id="secret-console-log" aria-hidden="true"></p>
+  <script>
+    // --- Canvas Étincelles de soudure ---
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let stars = [];
+    let sparks = [];
 
-    <div class="secret-stage" id="secret-stage">
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < 70; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 1.5 + 0.3,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.4 + Math.random() * 0.8
+        });
+      }
+    }
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
 
-      <!-- NIVEAU 1 : digicode. Le code est ÉDITABLE
-           dans la constante SECRET_CODE tout en haut du script secret. -->
-      <section class="secret-level" data-level="1" id="level-1">
-        <div class="glass-card" id="digicode-card">
-          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Accès sécurisé · Niveau 1 / 3</p>
-          <h2>Code d'accès</h2>
-          <svg class="lock-icon" id="lock-icon" aria-hidden="true"><use href="#icon-lock"/></svg>
-          <p class="level-hint">Entre les 4 chiffres du code.</p>
-          <div class="digicode-dots" id="digicode-dots" aria-hidden="true">
-            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          </div>
-          <div class="digicode-pad" id="digicode-pad" role="group" aria-label="Clavier numérique">
-            <button type="button" data-key="1">1</button>
-            <button type="button" data-key="2">2</button>
-            <button type="button" data-key="3">3</button>
-            <button type="button" data-key="4">4</button>
-            <button type="button" data-key="5">5</button>
-            <button type="button" data-key="6">6</button>
-            <button type="button" data-key="7">7</button>
-            <button type="button" data-key="8">8</button>
-            <button type="button" data-key="9">9</button>
-            <button type="button" data-key="clear">Effacer</button>
-            <button type="button" data-key="0">0</button>
-            <button type="button" data-key="submit">Valider</button>
-          </div>
-          <p class="digicode-error" id="digicode-error" role="alert"></p>
-          <p class="digicode-hint" id="digicode-hint" aria-live="polite"></p>
-        </div>
-      </section>
+    window.addEventListener('click', (e) => {
+      if (e.target.closest('.terminal-window')) return;
+      const colors = ['#FF3C8E', '#FF8A3D', '#FFD700', '#C7F13B', '#ffffff'];
+      for (let i = 0; i < 16; i++) {
+        sparks.push({
+          x: e.clientX,
+          y: e.clientY,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          size: Math.random() * 5 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 1.2
+        });
+      }
+    });
 
-      <!-- NIVEAU 2 : énigme. Question et réponse ÉDITABLES via RIDDLE_QUESTION
-           et RIDDLE_ANSWER tout en haut du script secret. -->
-      <section class="secret-level" data-level="2" id="level-2">
-        <div class="glass-card" id="riddle-card">
-          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Accès sécurisé · Niveau 2 / 3</p>
-          <h2>Énigme</h2>
-          <p class="riddle-question" id="riddle-question"></p>
-          <form id="riddle-form" autocomplete="off">
-            <input type="text" id="riddle-input" placeholder="Ta réponse…" aria-label="Réponse à l'énigme">
-            <button type="submit">Valider</button>
-          </form>
-          <div class="spark-burst" id="riddle-spark-burst" aria-hidden="true"></div>
-          <p class="riddle-error" id="riddle-error" role="alert"></p>
-        </div>
-      </section>
+    function renderBackground(t) {
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(s => {
+        const tw = 0.5 + 0.5 * Math.sin(s.phase + t * 0.001 * s.speed);
+        ctx.globalAlpha = 0.2 + tw * 0.6;
+        ctx.fillStyle = '#FF8A3D';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-      <!-- NIVEAU 3 : terminal façon pendu. Phrase mystère ÉDITABLE via
-           SECRET_PHRASE tout en haut du script secret. -->
-      <section class="secret-level" data-level="3" id="level-3">
-        <div class="glass-card terminal-card" id="terminal-card">
-          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Accès sécurisé · Niveau 3 / 3</p>
-          <div class="terminal">
-            <div class="terminal-topbar" aria-hidden="true"><span></span><span></span><span></span></div>
-            <div class="terminal-body">
-              <p class="terminal-line">&gt; déchiffrement de la phrase finale requis_</p>
-              <p class="terminal-phrase" id="terminal-phrase" aria-live="polite"></p>
-              <p class="terminal-scan" id="terminal-scan" aria-hidden="true"></p>
-              <div class="terminal-input-row">
-                <span class="terminal-caret" aria-hidden="true">&gt;</span>
-                <input type="text" id="terminal-input" aria-label="Propose une lettre ou la phrase entière, puis Entrée" autocomplete="off" autocapitalize="characters">
-              </div>
-              <p class="terminal-hint">tape une lettre — ou tente la phrase entière — puis <kbd>Entrée</kbd></p>
-              <p class="terminal-msg" id="terminal-msg" role="alert"></p>
-            </div>
-          </div>
-          <div class="virtual-keyboard" id="virtual-keyboard" role="group" aria-label="Clavier de lettres"></div>
-        </div>
-      </section>
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        let p = sparks[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.025;
+        if (p.life <= 0) {
+          sparks.splice(i, 1);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(renderBackground);
+    }
+    requestAnimationFrame(renderBackground);
 
-      <!-- ÉCRAN FINAL : le coffre secret. Une fois ouvert, il révèle "Le coffre de
-           souvenirs" : une enveloppe, une lettre qui s'écrit toute seule, un mur
-           de polaroïds à retourner, puis un mot de la fin. Tout le contenu
-           est ÉDITABLE via les constantes REWARD_… tout en haut du script secret. -->
-      <section class="secret-level" data-level="final" id="level-final">
-        <div class="vault-scene" id="vault-scene">
-          <div class="vault-door vault-door-left" aria-hidden="true"></div>
-          <div class="vault-door vault-door-right" aria-hidden="true"></div>
-          <div class="vault-glow" aria-hidden="true"></div>
+    // --- Progression vers 15h00 ---
+    const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime();
+    const endTime = new Date(2026, 9, 19, 15, 0, 0).getTime();
+    const progressFill = document.getElementById('progress-fill');
+    const percentLabel = document.getElementById('percent-label');
+    const statusText = document.getElementById('status-text');
+    const timeRemaining = document.getElementById('time-remaining');
 
-          <div class="reward-app" id="reward-app" tabindex="-1">
-            <canvas class="reward-dust" id="reward-dust" aria-hidden="true"></canvas>
+    function updateProgress() {
+      const now = new Date().getTime();
+      const totalDuration = endTime - startTime;
+      const elapsed = now - startTime;
+      let percentage = (elapsed / totalDuration) * 100;
+      if (percentage < 1) percentage = 1;
+      if (percentage >= 100) percentage = 100;
 
-            <nav class="reward-steps" id="reward-steps" aria-label="Étapes du coffre">
-              <button class="reward-step" type="button" data-stage="letter"><span class="reward-step-dot" aria-hidden="true"></span>La lettre</button>
-              <button class="reward-step" type="button" data-stage="gallery" disabled><span class="reward-step-dot" aria-hidden="true"></span>Les souvenirs</button>
-              <button class="reward-step" type="button" data-stage="outro" disabled><span class="reward-step-dot" aria-hidden="true"></span>La fin</button>
-            </nav>
+      percentLabel.innerText = Math.floor(percentage) + "%";
+      progressFill.style.width = percentage + "%";
 
-            <!-- ÉTAPE 1 : l'enveloppe, puis la lettre qui s'écrit toute seule -->
-            <section class="reward-stage" id="reward-letter" data-stage="letter" aria-label="La lettre">
-              <div class="reward-inner">
-                <button class="envelope" id="envelope" type="button" aria-label="Ouvrir l'enveloppe">
-                  <span class="env-back"></span>
-                  <span class="env-flap"></span>
-                  <span class="env-front"></span>
-                  <span class="env-seal"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg></span>
-                  <span class="env-to" id="env-to"></span>
-                </button>
-                <p class="env-hint" id="env-hint">Touche l'enveloppe pour l'ouvrir.</p>
+      const timeLeftMs = endTime - now;
+      if (timeLeftMs > 0) {
+        const hours = Math.floor(timeLeftMs / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
+        timeRemaining.innerText = `Fin du chantier prévue dans : ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        timeRemaining.innerText = "✨ Chantier terminé ! Ouverture des portes...";
+      }
+    }
+    setInterval(updateProgress, 1000);
+    updateProgress();
 
-                <article class="letter-paper" id="letter-paper">
-                  <h2 class="letter-greeting" id="letter-greeting" tabindex="-1"></h2>
-                  <div class="letter-body" id="letter-body" aria-live="off"></div>
-                  <p class="letter-sign" id="letter-sign"></p>
-                </article>
-                <button class="reward-next" id="reward-letter-next" type="button">Voir nos souvenirs</button>
-              </div>
-            </section>
+    // --- Commandes du Chantier ---
+    const modal = document.getElementById('terminal-modal');
+    const openBtn = document.getElementById('open-terminal-btn');
+    const closeBtn = document.getElementById('close-terminal-btn');
+    const terminalScreen = document.getElementById('terminal-screen');
+    const terminalInput = document.getElementById('terminal-input');
+    const mainCard = document.getElementById('main-card');
+    const mainTitle = document.getElementById('main-title');
+    const mainSubtitle = document.getElementById('main-subtitle');
+    const statusDesc = document.getElementById('status-text');
+    const orbContainer = document.getElementById('orb-container');
+    const badgeText = document.getElementById('badge-text');
 
-            <!-- ÉTAPE 2 : le mur de polaroïds à retourner -->
-            <section class="reward-stage" id="reward-gallery" data-stage="gallery" aria-label="Les souvenirs">
-              <div class="reward-inner">
-                <h2 class="reward-title" id="gallery-title" tabindex="-1">Nos souvenirs</h2>
-                <p class="reward-sub" id="gallery-sub">Touche un polaroïd pour le retourner.</p>
-                <div class="polaroid-wall" id="polaroid-wall"></div>
-                <p class="gallery-count" id="gallery-count" aria-live="polite"></p>
-                <button class="reward-next show" id="gallery-next" type="button">Le mot de la fin</button>
-              </div>
-            </section>
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      setTimeout(() => terminalInput.focus(), 100);
+    });
 
-            <!-- ÉTAPE 3 : le mot de la fin -->
-            <section class="reward-stage" id="reward-outro" data-stage="outro" aria-label="Le mot de la fin">
-              <div class="reward-inner reward-outro-inner">
-                <svg class="icon-spark outro-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-                <h2 class="outro-title" id="outro-title" tabindex="-1"></h2>
-                <p class="outro-text" id="outro-text"></p>
-                <div class="outro-actions">
-                  <button class="reward-next show ghost" id="outro-letter" type="button">Relire la lettre</button>
-                  <button class="reward-next show ghost" id="outro-gallery" type="button">Revoir les souvenirs</button>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </section>
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    </div>
+    function log(text, color = 'var(--warning)') {
+      const div = document.createElement('div');
+      div.style.color = color;
+      div.innerHTML = text;
+      terminalScreen.appendChild(div);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
 
-    <!-- overlay de transition rejoué entre chaque niveau -->
-    <div class="scan-overlay" id="scan-overlay" aria-hidden="true">
-      <div class="scan-overlay-inner">
-        <div class="scan-ring"></div>
-        <p id="scan-overlay-text">Analyse en cours…</p>
-      </div>
-    </div>
-  </div>
-</div>
+    terminalInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const fullInput = terminalInput.value.trim();
+        if (!fullInput) return;
+        
+        log(`> ${fullInput}`, '#fff');
+        terminalInput.value = '';
 
-<script src="script.js"></script>
+        const parts = fullInput.split(' ');
+        const cmd = parts[0].toLowerCase();
+        const arg = parts.slice(1).join(' ');
 
+        if (cmd === 'aide') {
+          log('Commandes de chantier :');
+          log(' - <b>titre [texte]</b> : Modifie le titre du chantier.');
+          log(' - <b>texte [message]</b> : Modifie l’état des travaux.');
+          log(' - <b>bouton [texte]</b> : Renomme le bouton.');
+          log(' - <b>badge [texte]</b> : Change l’alerte du haut.');
+          log(' - <b>fond [couleur en anglais]</b> : Change le fond (ex: fond black).');
+          log(' - <b>couleur-texte [couleur en anglais]</b> : Change la couleur du texte.');
+          log(' - <b>explosion</b> : Fait exploser le chantier en direct !');
+          log(' - <b>danser</b> : Fait danser le noyau central.');
+          log(' - <b>stop</b> : Stoppe la danse.');
+          log(' - <b>police</b> : Active la police de chantier.');
+          log(' - <b>matrix</b> : Passe en mode code source vert.');
+          log(' - <b>reset</b> : Réinitialise tout le chantier.');
+          log(' - <b>clear</b> : Efface l’écran.');
+        } 
+        else if (cmd === 'titre') {
+          if (!arg) { log('⚠️ Erreur : écris un texte.', '#ff3c8e'); return; }
+          mainTitle.innerText = arg;
+          log(`✨ Titre mis à jour : "${arg}"`, '#00ff66');
+        }
+        else if (cmd === 'texte') {
+          if (!arg) { log('⚠️ Erreur : écris un message.', '#ff3c8e'); return; }
+          statusDesc.innerText = arg;
+          log(`✨ Statut mis à jour : "${arg}"`, '#00ff66');
+        }
+        else if (cmd === 'bouton') {
+          if (!arg) { log('⚠️ Erreur : écris un texte.', '#ff3c8e'); return; }
+          openBtn.innerText = arg;
+          log(`✨ Bouton renommé : "${arg}"`, '#00ff66');
+        }
+        else if (cmd === 'badge') {
+          if (!arg) { log('⚠️ Erreur : écris un texte.', '#ff3c8e'); return; }
+          badgeText.innerText = arg;
+          log(`✨ Alerte modifiée : "${arg}"`, '#00ff66');
+        }
+        else if (cmd === 'fond') {
+          if (!arg) { log('⚠️ Erreur : précise une couleur (ex: fond black).', '#ff3c8e'); return; }
+          document.body.style.backgroundColor = arg;
+          log(`🎨 Couleur de fond modifiée : ${arg}`, '#00f0ff');
+        }
+        else if (cmd === 'couleur-texte') {
+          if (!arg) { log('⚠️ Erreur : précise une couleur (ex: couleur-texte yellow).', '#ff3c8e'); return; }
+          mainCard.style.color = arg;
+          log(`🔤 Couleur du texte modifiée : ${arg}`, '#00ff66');
+        }
+        else if (cmd === 'explosion') {
+          mainCard.classList.add('explosion-active');
+          for(let i=0; i<70; i++) {
+            sparks.push({
+              x: window.innerWidth / 2,
+              y: window.innerHeight / 2,
+              vx: (Math.random() - 0.5) * 22,
+              vy: (Math.random() - 0.5) * 22,
+              size: Math.random() * 8 + 3,
+              color: ['#FF3C8E', '#FF8A3D', '#FFD700', '#ffffff'][Math.floor(Math.random()*4)],
+              life: 2
+            });
+          }
+          setTimeout(() => mainCard.classList.remove('explosion-active'), 800);
+          log('💥 DÉMOLITION TOTALE ! Le chantier a explosé sous l’impact !', '#ff3c8e');
+        }
+        else if (cmd === 'danser') {
+          orbContainer.classList.add('dance-mode');
+          log('💃 Le noyau du chantier s’est emballé et danse !', '#ff00aa');
+        }
+        else if (cmd === 'stop') {
+          orbContainer.classList.remove('dance-mode');
+          log('🛑 Noyau stabilisé.', '#00ff66');
+        }
+        else if (cmd === 'police') {
+          document.body.classList.toggle('code-font-mode');
+          log('💻 Police de chantier activée.', '#FFD700');
+        }
+        else if (cmd === 'matrix') {
+          document.body.style.backgroundColor = '#020b02';
+          mainCard.style.background = '#021102';
+          mainCard.style.borderColor = '#00ff66';
+          log('🟢 Mode Matrix du BTP activé.', '#00ff66');
+        }
+        else if (cmd === 'cacher') {
+          orbContainer.classList.add('hidden');
+          log('👻 Noyau masqué.', '#ff8a3d');
+        }
+        else if (cmd === 'montrer') {
+          orbContainer.classList.remove('hidden');
+          log('🔮 Noyau rétabli.', '#00ff66');
+        }
+        else if (cmd === 'reset') {
+          document.body.style.backgroundColor = '';
+          document.body.className = '';
+          mainCard.className = 'command-card';
+          mainCard.style.background = '#140b24';
+          mainCard.style.borderColor = 'var(--tangerine)';
+          mainCard.style.color = '';
+          mainTitle.innerText = 'Chantier Spatial Majeur';
+          mainSubtitle.innerText = 'Le Monde de Sarah est en pleine reconstruction...';
+          statusDesc.innerText = 'Pose des fondations galactiques et soudure des structures...';
+          openBtn.innerText = '🏗️ Ouvrir le Panneau de Chantier';
+          badgeText.innerText = '🚧 GROS ŒUVRE EN COURS';
+          orbContainer.classList.remove('hidden', 'dance-mode');
+          log('🔄 RESET CHANTIER : Tout a été remis en ordre.', '#00ff66');
+        }
+        else if (cmd === 'clear') {
+          terminalScreen.innerHTML = '';
+        }
+        else {
+          log(`Commande inconnue : "${cmd}". Tape <b>aide</b>.`, '#ff3c8e');
+        }
+      }
+    });
+  </script>
 </body>
 </html>
