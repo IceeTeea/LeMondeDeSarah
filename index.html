@@ -40,7 +40,7 @@
       padding: 1.5rem;
       overflow-x: hidden;
       position: relative;
-      transition: background-color 0.5s ease, font-family 0.3s ease;
+      transition: background-color 0.5s ease, font-family 0.3s ease, color 0.3s ease;
     }
 
     body.code-font-mode {
@@ -105,14 +105,17 @@
       direction: rtl;
     }
 
-    .command-card.explosion-anim {
-      animation: explodeAnim 0.6s ease forwards;
-    }
-
-    @keyframes explodeAnim {
-      0% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.25) rotate(15deg) translateY(-40px); filter: hue-rotate(180deg); }
+    /* Vraie animation d'explosion spectaculaire */
+    @keyframes realExplosion {
+      0% { transform: scale(1) rotate(0deg); filter: blur(0); }
+      20% { transform: scale(0.85) rotate(-10deg); filter: contrast(200%); }
+      40% { transform: scale(1.4) rotate(20deg) translate(20px, -20px); filter: brightness(3) invert(1); background: #ff0055; }
+      60% { transform: scale(0.9) rotate(-15deg) translate(-20px, 20px); filter: blur(2px); }
+      80% { transform: scale(1.1) rotate(5deg); filter: blur(0); }
       100% { transform: scale(1) rotate(0deg); }
+    }
+    .command-card.explosion-active {
+      animation: realExplosion 0.8s ease-in-out;
     }
 
     .status-badge {
@@ -131,6 +134,7 @@
       text-transform: uppercase;
       margin-bottom: 1.5rem;
       box-shadow: 3px 3px 0 var(--lime);
+      transition: all 0.3s ease;
     }
 
     .pulse-dot {
@@ -164,6 +168,14 @@
       pointer-events: none;
       margin: 0 auto 0 auto;
       height: 0;
+    }
+
+    .orb-container.dance-mode {
+      animation: crazyDance 0.4s infinite alternate ease-in-out;
+    }
+    @keyframes crazyDance {
+      0% { transform: scale(1.1) rotate(-20deg) translateY(-10px); }
+      100% { transform: scale(1.3) rotate(20deg) translateY(10px); }
     }
 
     .orb-ring {
@@ -413,9 +425,9 @@
   </div>
 
   <div class="command-card" id="main-card">
-    <div class="status-badge" id="badge-text">
+    <div class="status-badge" id="badge-container">
       <span class="pulse-dot"></span>
-      Déploiement Orbital
+      <span id="badge-text">Déploiement Orbital</span>
     </div>
 
     <div class="orb-container" id="orb-container">
@@ -451,22 +463,22 @@
   <div class="modal-overlay" id="terminal-modal">
     <div class="terminal-window">
       <div class="terminal-header">
-        <span>⚡ GOD_MODE_CONSOLE // v5.0</span>
+        <span>⚡ GOD_MODE_CONSOLE // v6.0</span>
         <button id="close-terminal-btn" style="background:var(--magenta); color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; font-weight:bold;">&times;</button>
       </div>
 
       <div class="terminal-screen" id="terminal-screen">
         <div>> Console d'administration totale initialisée...</div>
-        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir comment réécrire et pirater la page en direct.</div><br>
+        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir la liste complète des commandes de réécriture.</div><br>
       </div>
 
       <div class="terminal-input-row">
         <span class="terminal-prompt">root@god:~#</span>
-        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande (ex: fond black, explosion)..." autofocus>
+        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande (ex: explosion, fond red)..." autofocus>
       </div>
 
       <div class="terminal-hints">
-        Commandes : <code>aide</code>, <code>titre [texte]</code>, <code>texte [message]</code>, <code>bouton [texte]</code>, <code>fond [couleur en anglais]</code>, <code>police</code>, <code>inverser</code>, <code>explosion</code>, <code>matrix</code>, <code>cacher</code>, <code>montrer</code>, <code>perspective</code>, <code>reset</code>, <code>clear</code>
+        Commandes : <code>aide</code>, <code>titre [texte]</code>, <code>texte [message]</code>, <code>bouton [texte]</code>, <code>badge [texte]</code>, <code>fond [couleur en anglais]</code>, <code>couleur-texte [couleur en anglais]</code>, <code>explosion</code>, <code>danser</code>, <code>stop</code>, <code>police</code>, <code>inverser</code>, <code>matrix</code>, <code>cacher</code>, <code>montrer</code>, <code>reset</code>, <code>clear</code>
       </div>
     </div>
   </div>
@@ -543,9 +555,10 @@
     }
     requestAnimationFrame(renderBackground);
 
-    // --- Progression ---
+    // --- Progression ajustée pour 15h00 ---
+    // Heure de début : 00:50, Heure de fin : 15:00 le même jour
     const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime();
-    const endTime = new Date(2026, 9, 19, 12, 0, 0).getTime();
+    const endTime = new Date(2026, 9, 19, 15, 0, 0).getTime();
     const progressFill = document.getElementById('progress-fill');
     const percentLabel = document.getElementById('percent-label');
     const statusText = document.getElementById('status-text');
@@ -568,12 +581,14 @@
         const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
         timeRemaining.innerText = `Fin prévue dans : ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        timeRemaining.innerText = "✨ Objectif 15h atteint ! Ouverture imminente...";
       }
     }
     setInterval(updateProgress, 1000);
     updateProgress();
 
-    // --- Éléments de la page modifiables en direct ---
+    // --- Éléments du site modifiables en direct ---
     const modal = document.getElementById('terminal-modal');
     const openBtn = document.getElementById('open-terminal-btn');
     const closeBtn = document.getElementById('close-terminal-btn');
@@ -584,6 +599,7 @@
     const mainSubtitle = document.getElementById('main-subtitle');
     const statusDesc = document.getElementById('status-text');
     const orbContainer = document.getElementById('orb-container');
+    const badgeText = document.getElementById('badge-text');
 
     openBtn.addEventListener('click', () => {
       modal.classList.add('active');
@@ -614,52 +630,85 @@
         const arg = parts.slice(1).join(' ');
 
         if (cmd === 'aide') {
-          log('Commandes de piratage global :');
-          log(' - <b>titre [texte]</b> : Change le grand titre de la page.');
-          log(' - <b>texte [message]</b> : Modifie le paragraphe de statut.');
+          log('Commandes disponibles :');
+          log(' - <b>titre [texte]</b> : Change le grand titre.');
+          log(' - <b>texte [message]</b> : Modifie le paragraphe.');
           log(' - <b>bouton [texte]</b> : Renomme le bouton principal.');
-          log(' - <b>fond [couleur en anglais]</b> : Change le fond (ex: fond black, fond purple).');
-          log(' - <b>police</b> : Active une police de code pur rétro.');
-          log(' - <b>inverser</b> : Inverse le sens d’affichage de la carte.');
-          log(' - <b>explosion</b> : Déclenche une onde de choc visuelle animée.');
-          log(' - <b>matrix</b> : Passe le terminal et le site en mode Matrix vert.');
+          log(' - <b>badge [texte]</b> : Change le texte du badge du haut.');
+          log(' - <b>fond [couleur en anglais]</b> : Change le fond (ex: fond black).');
+          log(' - <b>couleur-texte [couleur en anglais]</b> : Change la couleur de tout le texte.');
+          log(' - <b>explosion</b> : Déclenche une VRAIE explosion visuelle animée !');
+          log(' - <b>danser</b> : Fait danser l’orbe de façon folle.');
+          log(' - <b>stop</b> : Stoppe la danse de l’orbe.');
+          log(' - <b>police</b> : Active une police de code pur.');
+          log(' - <b>inverser</b> : Inverse la disposition de la carte.');
+          log(' - <b>matrix</b> : Passe en mode Matrix vert.');
           log(' - <b>cacher / montrer</b> : Masque ou affiche l’orbe.');
-          log(' - <b>perspective</b> : Active une inclinaison 3D.');
-          log(' - <b>reset</b> : Remet absolument tout à zéro !');
-          log(' - <b>clear</b> : Nettoie l’écran du terminal.');
+          log(' - <b>reset</b> : Remet absolument tout à zéro.');
+          log(' - <b>clear</b> : Nettoie l’écran.');
         } 
         else if (cmd === 'titre') {
-          if (!arg) { log('⚠️ Erreur : écris un texte après "titre".', '#ff3c8e'); return; }
+          if (!arg) { log('⚠️ Erreur : écris un texte.', '#ff3c8e'); return; }
           mainTitle.innerText = arg;
-          log(`✨ Titre réécrit en : "${arg}"`, '#00ff66');
+          log(`✨ Titre changé en : "${arg}"`, '#00ff66');
         }
         else if (cmd === 'texte') {
-          if (!arg) { log('⚠️ Erreur : écris un message après "texte".', '#ff3c8e'); return; }
+          if (!arg) { log('⚠️ Erreur : écris un message.', '#ff3c8e'); return; }
           statusDesc.innerText = arg;
-          log(`✨ Paragraphe réécrit en : "${arg}"`, '#00ff66');
+          log(`✨ Paragraphe changé en : "${arg}"`, '#00ff66');
         }
         else if (cmd === 'bouton') {
-          if (!arg) { log('⚠️ Erreur : écris un texte après "bouton".', '#ff3c8e'); return; }
+          if (!arg) { log('⚠️ Erreur : écris un texte.', '#ff3c8e'); return; }
           openBtn.innerText = arg;
-          log(`✨ Bouton modifié en : "${arg}"`, '#00ff66');
+          log(`✨ Bouton renommé en : "${arg}"`, '#00ff66');
+        }
+        else if (cmd === 'badge') {
+          if (!arg) { log('⚠️ Erreur : écris un texte.', '#ff3c8e'); return; }
+          badgeText.innerText = arg;
+          log(`✨ Badge mis à jour en : "${arg}"`, '#00ff66');
         }
         else if (cmd === 'fond') {
-          if (!arg) { log('⚠️ Erreur : précise une couleur en anglais (ex: fond black).', '#ff3c8e'); return; }
+          if (!arg) { log('⚠️ Erreur : précise une couleur en anglais (ex: fond purple).', '#ff3c8e'); return; }
           document.body.style.backgroundColor = arg;
           log(`🎨 Fond de la page changé pour : ${arg}`, '#00f0ff');
         }
+        else if (cmd === 'couleur-texte') {
+          if (!arg) { log('⚠️ Erreur : précise une couleur en anglais (ex: couleur-texte yellow).', '#ff3c8e'); return; }
+          mainCard.style.color = arg;
+          log(`🔤 Couleur du texte modifiée pour : ${arg}`, '#00ff66');
+        }
+        else if (cmd === 'explosion') {
+          mainCard.classList.add('explosion-active');
+          // Envoie une gerbe énorme d'étincelles partout
+          for(let i=0; i<60; i++) {
+            sparks.push({
+              x: window.innerWidth / 2,
+              y: window.innerHeight / 2,
+              vx: (Math.random() - 0.5) * 20,
+              vy: (Math.random() - 0.5) * 20,
+              size: Math.random() * 8 + 3,
+              color: ['#FF3C8E', '#FF8A3D', '#C7F13B', '#00f0ff', '#ffffff'][Math.floor(Math.random()*5)],
+              life: 2
+            });
+          }
+          setTimeout(() => mainCard.classList.remove('explosion-active'), 800);
+          log('💥 BOUM ! Explosion quantique exécutée avec succès !', '#ff3c8e');
+        }
+        else if (cmd === 'danser') {
+          orbContainer.classList.add('dance-mode');
+          log('💃 L’orbe est entré en transe et s’est mis à danser !', '#ff00aa');
+        }
+        else if (cmd === 'stop') {
+          orbContainer.classList.remove('dance-mode');
+          log('🛑 L’orbe s’est calmé.', '#00ff66');
+        }
         else if (cmd === 'police') {
           document.body.classList.toggle('code-font-mode');
-          log('💻 Basculement sur la police de code source effectué.', '#C7F13B');
+          log('💻 Style de police basculé.', '#C7F13B');
         }
         else if (cmd === 'inverser') {
           mainCard.classList.toggle('invert-layout');
-          log('🔄 Inversion de la disposition de la carte effectuée.', '#ff8a3d');
-        }
-        else if (cmd === 'explosion') {
-          mainCard.classList.add('explosion-anim');
-          setTimeout(() => mainCard.classList.remove('explosion-anim'), 600);
-          log('💥 Onde de choc quantique déclenchée sur la page !', '#ff3c8e');
+          log('🔄 Inversion de la disposition effectuée.', '#ff8a3d');
         }
         else if (cmd === 'matrix') {
           document.documentElement.style.setProperty('--ink', '#000000');
@@ -667,35 +716,32 @@
           document.documentElement.style.setProperty('--lime', '#00ff66');
           document.documentElement.style.setProperty('--magenta', '#00ffaa');
           document.body.style.backgroundColor = '#020b02';
-          log('🟢 Mode Matrix activé : code vert total.', '#00ff66');
+          log('🟢 Mode Matrix activé.', '#00ff66');
         }
         else if (cmd === 'cacher') {
           orbContainer.classList.add('hidden');
-          log('👻 Orbe holographique désintégré.', '#ff8a3d');
+          log('👻 Orbe masqué.', '#ff8a3d');
         }
         else if (cmd === 'montrer') {
           orbContainer.classList.remove('hidden');
-          log('🔮 Orbe holographique matérialisé.', '#00ff66');
-        }
-        else if (cmd === 'perspective') {
-          mainCard.classList.toggle('perspective-mode');
-          log('🌀 Mode Perspective 3D basculé.', '#ff00aa');
+          log('🔮 Orbe rétabli.', '#00ff66');
         }
         else if (cmd === 'reset') {
-          // Remet tout à zéro
           document.body.style.backgroundColor = '';
           document.body.className = '';
           mainCard.className = 'command-card';
+          mainCard.style.color = '';
           mainTitle.innerText = 'Mise à jour Système';
           mainSubtitle.innerText = 'Le Monde de Sarah prépare son arrivée...';
           statusDesc.innerText = 'Initialisation du noyau de données...';
           openBtn.innerText = '⚡ Ouvrir le Terminal d’Override';
-          orbContainer.classList.remove('hidden');
+          badgeText.innerText = 'Déploiement Orbital';
+          orbContainer.classList.remove('hidden', 'dance-mode');
           document.documentElement.style.setProperty('--paper', '#FBF3E7');
           document.documentElement.style.setProperty('--ink', '#1C1030');
           document.documentElement.style.setProperty('--lime', '#C7F13B');
           document.documentElement.style.setProperty('--magenta', '#FF3C8E');
-          log('🔄 RESET TOTAL : Le site a retrouvé son état d’origine initial.', '#00ff66');
+          log('🔄 RESET TOTAL : Tout a été réinitialisé à l’état d’origine.', '#00ff66');
         }
         else if (cmd === 'clear') {
           terminalScreen.innerHTML = '';
