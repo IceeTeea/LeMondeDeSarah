@@ -40,7 +40,7 @@
       padding: 1.5rem;
       overflow-x: hidden;
       position: relative;
-      transition: background-color 0.5s ease;
+      transition: background-color 0.5s ease, filter 0.5s ease;
     }
 
     .bg-layer {
@@ -89,7 +89,7 @@
       text-align: center;
       box-shadow: 10px 10px 0 var(--magenta);
       overflow: hidden;
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
     }
 
     .status-badge {
@@ -172,6 +172,15 @@
     @keyframes orbPulse {
       0%, 100% { transform: scale(0.95); }
       50% { transform: scale(1.08); box-shadow: 0 0 40px var(--lime); }
+    }
+
+    /* Animation de danse pour la fête */
+    body.party-mode .orb-container {
+      animation: partyDance 0.5s infinite alternate ease-in-out;
+    }
+    @keyframes partyDance {
+      0% { transform: scale(1) rotate(-10deg); }
+      100% { transform: scale(1.2) rotate(10deg); }
     }
 
     h1 {
@@ -269,7 +278,7 @@
       box-shadow: 6px 6px 0 var(--lime);
     }
 
-    /* Modale Terminal Interactif Réel */
+    /* Modale Terminal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -370,7 +379,7 @@
       margin-top: 1.5rem;
     }
 
-    /* Effets déclenchés par commandes */
+    /* Effets de commandes */
     body.glitch-mode {
       animation: glitchAnim 0.2s infinite alternate;
     }
@@ -388,6 +397,21 @@
       border-color: #0f0;
       box-shadow: 10px 10px 0 #0f0;
       color: #0f0;
+    }
+
+    body.invert-mode {
+      filter: invert(100%) hue-rotate(180deg);
+    }
+
+    body.shake-mode .command-card {
+      animation: shakeAnim 0.3s infinite ease-in-out;
+    }
+    @keyframes shakeAnim {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-6px, 4px) rotate(-1deg); }
+      50% { transform: translate(6px, -4px) rotate(1deg); }
+      75% { transform: translate(-4px, -2px) rotate(0.5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
   </style>
 </head>
@@ -439,22 +463,22 @@
   <div class="modal-overlay" id="terminal-modal">
     <div class="terminal-window">
       <div class="terminal-header">
-        <span>⚡ OVERRIDE_CONSOLE // v2.6.4</span>
+        <span>⚡ OVERRIDE_CONSOLE // v3.0</span>
         <button id="close-terminal-btn" style="background:var(--magenta); color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; font-weight:bold;">&times;</button>
       </div>
 
       <div class="terminal-screen" id="terminal-screen">
         <div>> Connexion au noyau central réussie...</div>
-        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir la liste des commandes qui modifient le site en direct.</div><br>
+        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir la liste complète des commandes interactives.</div><br>
       </div>
 
       <div class="terminal-input-row">
         <span class="terminal-prompt">root@system:~#</span>
-        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande ici (ex: couleur rouge)..." autofocus>
+        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande (ex: matrice, fete)..." autofocus>
       </div>
 
       <div class="terminal-hints">
-        Commandes : <code>aide</code>, <code>couleur [vert/rose/cyan/defaut]</code>, <code>glitch</code>, <code>vitesse max</code>, <code>reset</code>, <code>clear</code>
+        Commandes : <code>aide</code>, <code>couleur [vert/rose/cyan]</code>, <code>glitch</code>, <code>matrice</code>, <code>fete</code>, <code>shake</code>, <code>inverser</code>, <code>vitesse max</code>, <code>credits</code>, <code>reset</code>, <code>clear</code>
       </div>
     </div>
   </div>
@@ -561,13 +585,12 @@
     setInterval(updateProgress, 1000);
     updateProgress();
 
-    // --- Logique Terminal & Effets réels sur le site ---
+    // --- Logique Terminal & Commandes Étendues ---
     const modal = document.getElementById('terminal-modal');
     const openBtn = document.getElementById('open-terminal-btn');
     const closeBtn = document.getElementById('close-terminal-btn');
     const terminalScreen = document.getElementById('terminal-screen');
     const terminalInput = document.getElementById('terminal-input');
-    const mainCard = document.getElementById('main-card');
 
     openBtn.addEventListener('click', () => {
       modal.classList.add('active');
@@ -593,52 +616,88 @@
         terminalInput.value = '';
 
         if (cmdLower === 'aide') {
-          log('Commandes d’impact direct :');
-          log(' - <b>couleur vert</b> / <b>rose</b> / <b>cyan</b> : Change la couleur principale du site en direct.');
-          log(' - <b>glitch</b> : Active un effet de distorsion visuelle de l’écran.');
-          log(' - <b>vitesse max</b> : Force la barre de progression à 100% instantanément.');
-          log(' - <b>reset</b> : Réinitialise tous les effets visuels.');
-          log(' - <b>clear</b> : Efface l’écran du terminal.');
+          log('Commandes disponibles :');
+          log(' - <b>couleur [vert/rose/cyan]</b> : Change la palette du site.');
+          log(' - <b>glitch</b> : Distorsion visuelle de l’écran.');
+          log(' - <b>matrice</b> : Active le mode Matrix (vert sur noir).');
+          log(' - <b>fete</b> : Déclenche une pluie d’étincelles et fait danser l’orbe.');
+          log(' - <b>shake</b> : Fait trembler violemment la carte principale.');
+          log(' - <b>inverser</b> : Inverse les couleurs du site (négatif).');
+          log(' - <b>vitesse max</b> : Force la barre de progression à 100%.');
+          log(' - <b>credits</b> : Affiche les informations de l’auteur.');
+          log(' - <b>reset</b> : Réinitialise tous les effets.');
+          log(' - <b>clear</b> : Efface l’écran.');
         } 
         else if (cmdLower.startsWith('couleur ')) {
           const colorName = cmdLower.split(' ')[1];
           if (colorName === 'vert') {
             document.documentElement.style.setProperty('--lime', '#00ff66');
             document.documentElement.style.setProperty('--magenta', '#00ffaa');
-            log('✨ Succès : Le site est passé en mode Cyber Vert !', '#00ff66');
+            log('✨ Mode Cyber Vert activé !', '#00ff66');
           } else if (colorName === 'rose') {
             document.documentElement.style.setProperty('--lime', '#ff007f');
             document.documentElement.style.setProperty('--magenta', '#ff00aa');
-            log('✨ Succès : Le site est passé en mode Néon Rose !', '#ff007f');
+            log('✨ Mode Néon Rose activé !', '#ff007f');
           } else if (colorName === 'cyan') {
             document.documentElement.style.setProperty('--lime', '#00f0ff');
             document.documentElement.style.setProperty('--magenta', '#0077ff');
-            log('✨ Succès : Le site est passé en mode Glitch Cyan !', '#00f0ff');
+            log('✨ Mode Glitch Cyan activé !', '#00f0ff');
           } else {
-            log('Couleur inconnue. Essaie : vert, rose ou cyan.', '#ff3c8e');
+            log('Couleur inconnue (choisis : vert, rose, cyan).', '#ff3c8e');
           }
         }
         else if (cmdLower === 'glitch') {
           document.body.classList.toggle('glitch-mode');
-          log('⚠️ ALERTE : Distorsion temporelle et glitch visuel activés sur tout l’écran !', '#ff3c8e');
+          log('⚠️ Effet Glitch basculé sur l’écran !', '#ff3c8e');
+        }
+        else if (cmdLower === 'matrice') {
+          document.body.classList.toggle('matrix-mode');
+          log('🟢 Connexion à la Matrice établie avec succès !', '#00ff66');
+        }
+        else if (cmdLower === 'fete') {
+          document.body.classList.toggle('party-mode');
+          // Envoie un feu d' artifice d'étincelles automatique
+          for(let i=0; i<40; i++) {
+            sparks.push({
+              x: window.innerWidth / 2 + (Math.random() - 0.5) * 400,
+              y: window.innerHeight / 2 + (Math.random() - 0.5) * 400,
+              vx: (Math.random() - 0.5) * 12,
+              vy: (Math.random() - 0.5) * 12,
+              size: Math.random() * 6 + 2,
+              color: ['#FF3C8E', '#FF8A3D', '#C7F13B', '#00f0ff'][Math.floor(Math.random()*4)],
+              life: 1.5
+            });
+          }
+          log('🎉 Mode Fête activé ! L’orbe danse et les étincelles fusent !', '#C7F13B');
+        }
+        else if (cmdLower === 'shake') {
+          document.body.classList.toggle('shake-mode');
+          log('💥 Séisme galactique déclenché sur la carte !', '#ff8a3d');
+        }
+        else if (cmdLower === 'inverser') {
+          document.body.classList.toggle('invert-mode');
+          log('🔄 Inversion des spectres lumineux effectuée.', '#00f0ff');
         }
         else if (cmdLower === 'vitesse max') {
           progressFill.style.width = '100%';
           percentLabel.innerText = '100%';
-          statusText.innerText = '🚀 Vitesse maximale atteinte ! Déploiement forcé.';
-          log('🚀 100% atteint en force brute ! Le système a cédé.', '#C7F13B');
+          statusText.innerText = '🚀 Vitesse maximale atteinte !';
+          log('🚀 100% atteint par force brute.', '#C7F13B');
+        }
+        else if (cmdLower === 'credits') {
+          log('👑 Système conçu par Ice pour Sarah. Tous droits réservés dans cette galaxie.', '#ff00aa');
         }
         else if (cmdLower === 'reset') {
-          document.body.classList.remove('glitch-mode', 'matrix-mode');
+          document.body.classList.remove('glitch-mode', 'matrix-mode', 'party-mode', 'shake-mode', 'invert-mode');
           document.documentElement.style.setProperty('--lime', '#C7F13B');
           document.documentElement.style.setProperty('--magenta', '#FF3C8E');
-          log('🔄 Système réinitialisé à son état d’origine.');
+          log('🔄 Tous les systèmes ont été réinitialisés à zéro.');
         }
         else if (cmdLower === 'clear') {
           terminalScreen.innerHTML = '';
         }
         else if (fullCmd === '') {
-          // Rien
+          // Vide
         }
         else {
           log(`Commande inconnue : "${fullCmd}". Tape <b>aide</b>.`, '#ff3c8e');
