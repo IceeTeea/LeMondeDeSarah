@@ -98,21 +98,21 @@
   /* ÉDITABLE : les lettres. Change trigger / word / sub comme tu veux,
      ou ajoute/retire des objets dans ce tableau — tout s'adapte automatiquement. */
   var LETTERS = [
-    { trigger: "À ouvrir quand... tu paniques",       word: "RESPIRE",   sub: "Pose tout ce que tu fais, ferme les yeux et prends trois grandes inspirations. Rien n'est aussi grave ou définitif qu'il n'y paraît sur le moment. Je suis là, et on va régler ça ensemble, pas à pas." },
     { trigger: "À ouvrir quand... ils te manquent",  word: "ÉTOILES",     sub: "Lève les yeux vers le ciel, que ce soit sous la chaleur du Soleil ou la douceur de la Lune. Leur amour ne s'est pas envolé : il vit encore à travers ta force, ton sourire et la personne formidable que tu es. Tu n'es pas seule." },
+    { trigger: "À ouvrir quand... tu veux juste un câlin", word: "CÂLIN", sub: "Voilà un énorme câlin virtuel, serré comme il faut, avec tout ce qu'il faut de chaleur. En attendant le vrai, ferme les yeux et imagine-moi juste à côté de toi." },
     { trigger: "À ouvrir quand... tu doutes de toi",           word: "FORCE",   sub: "Si tu n'arrives pas à croire en toi aujourd'hui, appuie-toi sur la confiance que j'ai en toi. Tu as surmonté des épreuves bien plus lourdes que ce qui se dresse devant toi. Tu es capable de tout, n'en doute jamais." },
-    { trigger: "À ouvrir quand... tu as eu une sale journée",              word: "PAUSE",     sub: "Change-toi les idées, mets ta tenue la plus confortable et oublie le reste du monde pour ce soir. Cette journée est terminée, elle ne définit en rien la suite. Demain est une page vierge." },
-    { trigger: "À ouvrir quand... tu n'arrives pas à dormir",          word: "CALME",   sub: "Éteins ton écran, pose ton téléphone et laisse tes pensées filer sans les retenir. Tu n'as rien à résoudre cette nuit. Accorde à ton esprit le repos qu'il mérite." },
-    { trigger: "À ouvrir quand... tu te sens seule",      word: "PRÉSENCE",    sub: "Même si des kilomètres ou du silence nous séparent en ce moment, mon amitié pour toi ne bouge pas. Tu as un ancrage solide ici, et tu pourras toujours compter sur moi, peu importe l'heure." },
-    { trigger: "À ouvrir quand... tu as réussi un truc",   word: "FIERTÉ",       sub: "Je le savais ! Tu as travaillé dur pour ça et tu mérites amplement cette victoire. Savoure ce moment à 100 %, je suis tellement fier de toi !" },
-    { trigger: "À ouvrir quand... tu as besoin de rigoler",   word: "DÉLIRE",    sub: "Rappelle-toi juste de nos pires moments de honte et de nos vocal à rallonge pour 0 raison. On est complètement folles/fous, mais c'est pour ça que notre duo est imbattable." },
-    { trigger: "À ouvrir quand... tu te sens nostalgique",          word: "SOUVENIRS",  sub: "Regarde tout le chemin qu'on a parcouru depuis le début. On a créé des moments incroyables, et le plus beau dans tout ça, c'est qu'on a encore toute la vie pour en fabriquer d'autres." },
-    { trigger: "À ouvrir quand... tu as peur de demain", word: "CONFIANCE", sub: "Demain, tu n'as pas besoin de tout savoir à l'avance. Avance pas à pas, à ton rythme : tu t'es toujours débrouillée, et ça ne va pas changer. Et si ça devient trop lourd, tu sais où me trouver." },
-    { trigger: "À ouvrir quand... tu as envie de tout lâcher", word: "TIENS BON", sub: "Je sais que certains jours donnent envie de tout arrêter. Ce n'est pas de la faiblesse, c'est de la fatigue. Repose-toi d'abord, on reparlera du reste ensuite. Je suis là, et je ne te lâche pas." },
+    { trigger: "À ouvrir quand... tu es fatiguée de tout", word: "REPOS", sub: "Pas besoin d'être forte aujourd'hui. Pose tout, même les choses importantes, et accorde-toi un vrai repos. Le monde peut attendre un peu, et moi je suis là si tu veux juste qu'on ne dise rien ensemble." },
     { trigger: "À ouvrir quand... c'est ton anniversaire", word: "JOYEUX ANNIV", sub: "Une année de plus, et toujours la même lumière en toi. Merci d'exister, merci d'être dans ma vie. Je te souhaite une journée remplie de rires, de gâteau et de gens qui t'aiment. Tu le mérites tellement." },
-    { trigger: "À ouvrir quand... tu te trouves nulle", word: "FAUX", sub: "Cette petite voix qui te dit que tu es nulle ? Elle ment. Je te vois telle que tu es vraiment : drôle, sensible, loyale, courageuse. Si tu as du mal à le croire aujourd'hui, crois-moi, moi." },
+    { trigger: "À ouvrir quand... tu paniques",       word: "RESPIRE",   sub: "Pose tout ce que tu fais, ferme les yeux et prends trois grandes inspirations. Rien n'est aussi grave ou définitif qu'il n'y paraît sur le moment. Je suis là, et on va régler ça ensemble, pas à pas." },
+    { trigger: "À ouvrir quand... tu te compares aux autres", word: "UNIQUE", sub: "Chacun avance sur son propre chemin, et tu n'as pas à suivre celui des autres. Ce que tu es, personne d'autre ne peut l'être. C'est ça, ta force, et c'est pour ça que je tiens autant à toi." },
+    { trigger: "À ouvrir quand... tu as réussi un truc",   word: "FIERTÉ",       sub: "Je le savais ! Tu as travaillé dur pour ça et tu mérites amplement cette victoire. Savoure ce moment à 100 %, je suis tellement fier de toi !" },
+    { trigger: "À ouvrir quand... tu n'arrives pas à dormir",          word: "CALME",   sub: "Éteins ton écran, pose ton téléphone et laisse tes pensées filer sans les retenir. Tu n'as rien à résoudre cette nuit. Accorde à ton esprit le repos qu'il mérite." },
+    { trigger: "À ouvrir quand... tu t'ennuies", word: "AVENTURE", sub: "Alors on invente quelque chose : un film nul à regarder ensemble, un défi absurde, une chanson à deviner. Écris-moi, et on transforme cet ennui en souvenir." },
     { trigger: "À ouvrir quand... on s'est disputés", word: "PAIX", sub: "Une dispute ne change rien à ce que tu représentes pour moi. On est deux têtes pas toujours d'accord, mais on tient trop l'un à l'autre pour laisser ça durer. Respire, et reviens me parler quand tu veux." },
-    { trigger: "À ouvrir quand... tu veux juste un câlin", word: "CÂLIN", sub: "Voilà un énorme câlin virtuel, serré comme il faut, avec tout ce qu'il faut de chaleur. En attendant le vrai, ferme les yeux et imagine-moi juste à côté de toi." }
+    { trigger: "À ouvrir quand... tu te sens seule",      word: "PRÉSENCE",    sub: "Même si des kilomètres ou du silence nous séparent en ce moment, mon amitié pour toi ne bouge pas. Tu as un ancrage solide ici, et tu pourras toujours compter sur moi, peu importe l'heure." },
+    { trigger: "À ouvrir quand... tu veux te souvenir de nous", word: "NOUS", sub: "Ferme les yeux et repense à un de nos fous rires. Tu l'as ? Garde-le. On en aura encore des centaines, et ils seront tous aussi précieux." },
+    { trigger: "À ouvrir quand... tu as peur de demain", word: "CONFIANCE", sub: "Demain, tu n'as pas besoin de tout savoir à l'avance. Avance pas à pas, à ton rythme : tu t'es toujours débrouillée, et ça ne va pas changer. Et si ça devient trop lourd, tu sais où me trouver." },
+    { trigger: "À ouvrir quand... tu as envie de tout lâcher", word: "TIENS BON", sub: "Je sais que certains jours donnent envie de tout arrêter. Ce n'est pas de la faiblesse, c'est de la fatigue. Repose-toi d'abord, on reparlera du reste ensuite. Je suis là, et je ne te lâche pas." }
   ];
 
   var todayReal = new Date();
@@ -174,9 +174,8 @@
 
     applyTheme(name);
     if(name === 'map'){ window.setTimeout(drawMapLines, 30); }
+    if(name === 'secret'){ if(trialEls.steps && !vaultOpened){ startTrial(trialCur); } }
     if(name === 'sky'){ startSkyLoop(); } else { stopSkyLoop(); }
-    if(name === 'secret' && secretResumeFinal){ secretResumeFinal = false; window.setTimeout(openFinalVault, reduceMotion ? 50 : 400); }
-    else if(name === 'secret' && secretEls.secretScreen && secretEls.secretScreen.classList.contains('vault-fullscreen')){ window.setTimeout(startRewardDust, 100); }
 
     window.scrollTo(0,0);
   }
@@ -427,12 +426,12 @@
 
   /* lettres déjà ouvertes : mémorisées pour qu'elles restent "ouvertes" après un refresh */
   function getOpenedLetters(){
-    try{ var raw = window.localStorage.getItem('sarah-letters-opened'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
+    try{ var raw = window.localStorage.getItem('sarah-letters-opened-v2'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
   }
   function markLetterOpened(i){
     try{
       var list = getOpenedLetters();
-      if(list.indexOf(i) === -1){ list.push(i); window.localStorage.setItem('sarah-letters-opened', JSON.stringify(list)); }
+      if(list.indexOf(i) === -1){ list.push(i); window.localStorage.setItem('sarah-letters-opened-v2', JSON.stringify(list)); }
     }catch(e){}
   }
 
@@ -442,7 +441,7 @@
     LETTERS.forEach(function(item, i){
       var card = document.createElement('button');
       card.type = 'button';
-      var wasRead = openedLetters.indexOf(i) !== -1;
+      var wasRead = openedLetters.indexOf(item.word) !== -1;
       card.className = 'letter-card' + (wasRead ? ' is-opened' : '');
       card.setAttribute('aria-label', item.trigger + (wasRead ? ' — déjà ouverte' : ''));
 
@@ -478,7 +477,7 @@
   function openLetter(i){
     currentLetter = i;
     var item = LETTERS[i];
-    markLetterOpened(i);
+    markLetterOpened(item.word);
     letterTriggerEl.textContent = '« ' + item.trigger + ' »';
     letterWordEl.className = 'day-text ' + (item.word.length <= 8 ? 'len-s' : 'len-m');
     letterWordEl.innerHTML = buildWords(item.word);
@@ -503,6 +502,33 @@
     window.location.hash = 'lettre-' + (i + 1);
   });
 
+  /* ---- ciel de jour / de nuit (suit le bouton soleil/lune) ---- */
+  function isDayTheme(){ return document.documentElement.getAttribute('data-theme') === 'day'; }
+  function makeClouds(count, w, h){
+    var list = [];
+    for(var i = 0; i < count; i++){
+      var puffs = [];
+      var np = 4 + Math.floor(Math.random() * 3);
+      for(var k = 0; k < np; k++){ puffs.push({ dx: (k - np / 2) * (0.55 + Math.random() * 0.2), dy: (Math.random() - 0.5) * 0.35, r: 0.55 + Math.random() * 0.35 }); }
+      list.push({ x: Math.random() * w, y: Math.random() * h, s: 38 + Math.random() * 50, v: 4 + Math.random() * 9, puffs: puffs });
+    }
+    return list;
+  }
+  function paintClouds(ctx, clouds, offX, offY, W, H, t){
+    ctx.fillStyle = 'rgba(255,255,255,0.93)';
+    for(var i = 0; i < clouds.length; i++){
+      var c = clouds[i];
+      var x = (((c.x + (reduceMotion ? 0 : t * 0.001 * c.v) - offX) % (W + 400)) + (W + 400)) % (W + 400) - 200;
+      var y = c.y - offY;
+      for(var k = 0; k < c.puffs.length; k++){
+        var p = c.puffs[k];
+        ctx.beginPath();
+        ctx.arc(x + p.dx * c.s, y + p.dy * c.s, p.r * c.s * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
   /* =========================================================
      FENÊTRE : petit aperçu du ciel, toujours discret
      ========================================================= */
@@ -511,6 +537,7 @@
     if(!wCanvas) return;
     var wctx = wCanvas.getContext('2d');
     var wStars = [];
+    var wClouds = [];
     var wDpr = Math.min(window.devicePixelRatio || 1, 2);
 
     function sizeWindowCanvas(){
@@ -518,6 +545,7 @@
       wCanvas.width = w * wDpr; wCanvas.height = h * wDpr;
       wctx.setTransform(wDpr,0,0,wDpr,0,0);
       wStars = [];
+      wClouds = makeClouds(4, w, h * 0.7);
       var count = Math.round((w*h)/1400);
       for(var i=0;i<count;i++){
         wStars.push({ x: Math.random()*w, y: Math.random()*h*0.85, r: Math.random()*1.3+0.4, phase: Math.random()*Math.PI*2, speed: 0.4+Math.random()*0.8 });
@@ -529,6 +557,18 @@
     function drawWindow(t){
       var w = wCanvas.clientWidth || 200, h = wCanvas.clientHeight || 260;
       wctx.clearRect(0,0,w,h);
+      if(isDayTheme()){
+        var dg = wctx.createLinearGradient(0,0,0,h);
+        dg.addColorStop(0,'#5db6ee'); dg.addColorStop(0.7,'#b6e2fa'); dg.addColorStop(1,'#e8f6ff');
+        wctx.fillStyle = dg; wctx.fillRect(0,0,w,h);
+        var sg = wctx.createRadialGradient(w*0.78, h*0.2, 0, w*0.78, h*0.2, w*0.45);
+        sg.addColorStop(0,'rgba(255,244,190,0.95)'); sg.addColorStop(0.25,'rgba(255,230,140,0.55)'); sg.addColorStop(1,'rgba(255,230,140,0)');
+        wctx.fillStyle = sg; wctx.fillRect(0,0,w,h);
+        wctx.fillStyle = '#fff6c4'; wctx.beginPath(); wctx.arc(w*0.78, h*0.2, w*0.07, 0, Math.PI*2); wctx.fill();
+        paintClouds(wctx, wClouds, 0, 0, w, h, t);
+        requestAnimationFrame(drawWindow);
+        return;
+      }
       for(var i=0;i<wStars.length;i++){
         var s = wStars[i];
         var tw = reduceMotion ? 0.7 : (0.5 + 0.5*Math.sin(s.phase + t*0.0006*s.speed));
@@ -640,39 +680,41 @@
   /* =========================================================
      CIEL : ciel explorable + constellations
      ========================================================= */
+  /* ÉDITABLE : les 5 constellations. name / date / text s'affichent sur la fiche ;
+     ajoute photo: "mon-image.jpg" pour afficher une photo (sinon aucun cadre photo n'apparaît). */
   var CONSTELLATIONS = [
     {
-      name: "Le jour où on s'est rencontrées",
-      date: "XXX",
-      text: "Plus Tard",
+      name: "La rencontre",
+      date: "Là où tout a commencé",
+      text: "Personne ne sait comment ça arrive, mais un jour deux personnes se croisent et plus rien n'est comme avant. Ce jour-là, sans le savoir, on a allumé la première étoile.",
       x: 320, y: 260,
       path: [ {dx:0,dy:0}, {dx:-70,dy:-55}, {dx:30,dy:-95}, {dx:95,dy:-60} ]
     },
     {
-      name: "XXX",
-      date: "XXX",
-      text: "Plus Tard",
+      name: "Le premier fou rire",
+      date: "Impossible de se souvenir de pourquoi",
+      text: "On ne sait déjà plus de quoi on riait, mais on se souvient très bien de ce que ça faisait : le ventre qui fait mal, les larmes, et l'impression que rien d'autre n'existait.",
       x: 980, y: 210,
       path: [ {dx:0,dy:0}, {dx:60,dy:-50}, {dx:130,dy:-30}, {dx:170,dy:30} ]
     },
     {
-      name: "XXX",
-      date: "XXX",
-      text: "Plus Tard",
+      name: "La nuit des confidences",
+      date: "Tard, très tard",
+      text: "Il y a des nuits où on se dit tout, sans filtre, sans peur d'être jugé. Celles-là, je les garde précieusement : c'est là qu'on a compris qu'on pouvait compter l'un sur l'autre.",
       x: 1560, y: 430,
       path: [ {dx:0,dy:0}, {dx:-55,dy:60}, {dx:-40,dy:140}, {dx:30,dy:180} ]
     },
     {
-      name: "XXX",
-      date: "XXX",
-      text: "Plus Tard",
+      name: "Les jours où on a tenu bon",
+      date: "Ensemble, même de loin",
+      text: "Pas besoin d'être au même endroit pour être là. Chaque message, chaque appel, chaque « ça va aller » a compté, et on est toujours debout, plus soudés qu'avant.",
       x: 760, y: 880,
       path: [ {dx:0,dy:0}, {dx:80,dy:-40}, {dx:160,dy:-55}, {dx:210,dy:-10} ]
     },
     {
       name: "Aujourd'hui",
       date: "Ce soir, en ouvrant cette page",
-      text: "Une raison de plus pour la liste : merci d'être exactement qui tu es.",
+      text: "Une raison de plus pour la liste : merci d'être exactement qui tu es.",
       x: 1850, y: 940,
       path: [ {dx:0,dy:0}, {dx:-70,dy:-45}, {dx:-140,dy:-20}, {dx:-190,dy:35} ]
     }
@@ -689,6 +731,7 @@
   var cardClose = document.getElementById('card-close');
 
   var skyStars = [];
+  var skyClouds = makeClouds(16, 2200, 900);
   var skyDpr = Math.min(window.devicePixelRatio || 1, 2);
   var viewW = 0, viewH = 0;
   var camCenter = { x: WORLD_W/2, y: WORLD_H/2 };
@@ -701,6 +744,17 @@
   var constellationAnimStart = null;
   var skyPings = []; /* petits anneaux "ping" affichés brièvement au clic sur une étoile */
   var skyDim = document.getElementById('sky-dim');
+  var skyProgressEl = document.getElementById('sky-progress');
+  var cardImg = document.getElementById('card-img');
+  var skyFound = []; try{ skyFound = JSON.parse(window.localStorage.getItem('sarah:sky-found') || '[]'); }catch(e){ skyFound = []; }
+  function renderSkyProgress(){
+    if(!skyProgressEl) return;
+    var total = CONSTELLATIONS.length;
+    skyProgressEl.textContent = skyFound.length >= total
+      ? 'Tout le ciel est allumé ✦ (' + total + '/' + total + ')'
+      : 'Constellations allumées : ' + skyFound.length + '/' + total;
+    skyProgressEl.classList.toggle('is-complete', skyFound.length >= total);
+  }
 
   function addSkyPing(x, y){
     if(reduceMotion) return;
@@ -760,8 +814,19 @@
     }
 
     skyCtx.clearRect(0,0,viewW,viewH);
+    var day = isDayTheme();
+    var LIME_RGB = day ? '255,196,40' : '199,241,59';
+    var LIME_HEX = day ? '#ffc428' : LIME_HEX;
+    if(day){
+      var skg = skyCtx.createRadialGradient(viewW*0.82, viewH*0.16, 0, viewW*0.82, viewH*0.16, viewW*0.5);
+      skg.addColorStop(0,'rgba(255,246,196,0.95)'); skg.addColorStop(0.18,'rgba(255,236,150,0.55)'); skg.addColorStop(1,'rgba(255,236,150,0)');
+      skyCtx.fillStyle = skg; skyCtx.fillRect(0,0,viewW,viewH);
+      skyCtx.fillStyle = '#fff6c8'; skyCtx.beginPath(); skyCtx.arc(viewW*0.82, viewH*0.16, 34, 0, Math.PI*2); skyCtx.fill();
+      paintClouds(skyCtx, skyClouds, camCenter.x * 0.6 - viewW/2, camCenter.y * 0.6 - viewH/2, viewW, viewH, t);
+    }
 
     for(var i=0;i<skyStars.length;i++){
+      if(day) break;
       var s = skyStars[i];
       var sp = worldToScreen(s);
       if(sp.x < -10 || sp.x > viewW+10 || sp.y < -10 || sp.y > viewH+10) continue;
@@ -780,7 +845,7 @@
       var progress = reduceMotion ? 1 : Math.min(1, (t - constellationAnimStart) / 700);
       var overallT = progress * segCount;
 
-      skyCtx.strokeStyle = 'rgba(245,240,255,0.85)';
+      skyCtx.strokeStyle = day ? 'rgba(255,255,255,0.95)' : 'rgba(245,240,255,0.85)';
       skyCtx.lineWidth = 1.5;
       for(var seg=0; seg<segCount; seg++){
         var segProgress = Math.max(0, Math.min(1, overallT - seg));
@@ -817,15 +882,15 @@
         /* petit halo au moment où le point apparaît */
         if(reveal < 1){
           var popGrad = skyCtx.createRadialGradient(pp.x, pp.y, 0, pp.x, pp.y, 20);
-          popGrad.addColorStop(0, 'rgba(199,241,59,' + (0.55*(1-reveal)) + ')');
-          popGrad.addColorStop(1, 'rgba(199,241,59,0)');
+          popGrad.addColorStop(0, 'rgba(' + LIME_RGB + ',' + (0.55*(1-reveal)) + ')');
+          popGrad.addColorStop(1, 'rgba(' + LIME_RGB + ',0)');
           skyCtx.fillStyle = popGrad;
           skyCtx.beginPath();
           skyCtx.arc(pp.x, pp.y, 20, 0, Math.PI*2);
           skyCtx.fill();
         }
         skyCtx.globalAlpha = reveal;
-        skyCtx.fillStyle = '#C7F13B';
+        skyCtx.fillStyle = LIME_HEX;
         skyCtx.beginPath();
         skyCtx.arc(pp.x, pp.y, pi===0?4:3, 0, Math.PI*2);
         skyCtx.fill();
@@ -843,7 +908,7 @@
       var pgScreen = worldToScreen(pg);
       var pgR = 6 + pgProg * 46;
       skyCtx.globalAlpha = (1 - pgProg) * 0.8;
-      skyCtx.strokeStyle = '#C7F13B';
+      skyCtx.strokeStyle = LIME_HEX;
       skyCtx.lineWidth = 2;
       skyCtx.beginPath();
       skyCtx.arc(pgScreen.x, pgScreen.y, pgR, 0, Math.PI*2);
@@ -860,14 +925,14 @@
       var baseR = (isOpen ? 5.5 : 4.5) * pulse;
 
       var grad = skyCtx.createRadialGradient(ap.x, ap.y, 0, ap.x, ap.y, baseR*4.5);
-      grad.addColorStop(0, isOpen ? 'rgba(199,241,59,0.55)' : 'rgba(199,241,59,0.32)');
-      grad.addColorStop(1, 'rgba(199,241,59,0)');
+      grad.addColorStop(0, isOpen ? 'rgba(' + LIME_RGB + ',0.55)' : 'rgba(' + LIME_RGB + ',0.32)');
+      grad.addColorStop(1, 'rgba(' + LIME_RGB + ',0)');
       skyCtx.fillStyle = grad;
       skyCtx.beginPath();
       skyCtx.arc(ap.x, ap.y, baseR*4.5, 0, Math.PI*2);
       skyCtx.fill();
 
-      skyCtx.fillStyle = '#C7F13B';
+      skyCtx.fillStyle = LIME_HEX;
       skyCtx.beginPath();
       skyCtx.arc(ap.x, ap.y, baseR, 0, Math.PI*2);
       skyCtx.fill();
@@ -898,6 +963,15 @@
     cardTitle.textContent = c.name;
     cardDate.textContent = c.date;
     cardText.textContent = c.text;
+    if(cardImg){
+      if(c.photo){ cardImg.src = c.photo; cardImg.alt = c.name; cardImg.hidden = false; } else { cardImg.hidden = true; cardImg.removeAttribute('src'); }
+    }
+    if(skyFound.indexOf(i) === -1){
+      skyFound.push(i);
+      try{ window.localStorage.setItem('sarah:sky-found', JSON.stringify(skyFound)); }catch(e){}
+      renderSkyProgress();
+      if(skyFound.length >= CONSTELLATIONS.length && !reduceMotion){ window.setTimeout(burstFromCenterScreen, 1500); }
+    }
     cardEl.classList.remove('open');
     if(skyDim){ skyDim.classList.add('active'); }
 
@@ -959,6 +1033,7 @@
   }
 
   function startSkyLoop(){
+    renderSkyProgress();
     if(skyRunning || !skyCanvas) return;
     skyRunning = true;
     sizeSkyCanvas();
@@ -1094,7 +1169,7 @@
      PATCH NOTE : s'ouvre une fois par version, rouvrable depuis la carte
      (change PATCH_VERSION à chaque nouvelle mise à jour pour la réafficher)
      ========================================================= */
-  var PATCH_VERSION = '2026-10-19';
+  var PATCH_VERSION = '2026-10-20b';
   var patchEl = document.getElementById('patch');
   var patchOpenBtn = document.getElementById('patch-open');
   var patchPrevFocus = null;
@@ -1300,20 +1375,6 @@
 
   if(!reduceMotion){ window.setTimeout(burstFromCenterTop, 900); }
 
-  /* =========================================================
-     SECRET : accès sécurisé à 3 niveaux (digicode → énigme → terminal)
-     ========================================================= */
-
-  /* ————— ÉDITABLE : modifie ces constantes pour personnaliser le jeu ————— */
-  var SECRET_CODE = "9204";        /* ÉDITABLE : code du digicode, 4 chiffres */
-  /* ÉDITABLE : indices progressifs du digicode, un nouvel indice tous les SECRET_HINT_EVERY mauvais essais */
-  var SECRET_HINTS = [
-    "Le code n'est pas ici… ouvre l'œil du côté de la fenêtre, dans la chambre. 👀",
-    "Regarde bien l'étagère de la chambre : les chiffres sont minuscules, presque invisibles.",
-    "Quatre objets, quatre chiffres : lis-les de gauche à droite."
-  ];
-  var SECRET_HINT_EVERY = 3;
-
   /* ---- sauvegarde de la progression (localStorage, préfixe "sarah:") ----
      Ajoute ?reset à l'adresse de la page pour tout remettre à zéro. */
   function saveGet(k){ try{ return window.localStorage.getItem('sarah:' + k); }catch(e){ return null; } }
@@ -1321,774 +1382,422 @@
   if(/[?&]reset\b/.test(window.location.search)){
     try{
       Object.keys(window.localStorage).forEach(function(key){
-        if(key.indexOf('sarah:') === 0){ window.localStorage.removeItem(key); }
+        if(key.indexOf('sarah') === 0){ window.localStorage.removeItem(key); }
       });
     }catch(e){}
   }
-  var secretResumeFinal = false; /* vrai si on reprend directement sur le coffre déjà ouvert */
-  var RIDDLE_QUESTION = "On m'ajoute à ton nom une fois par an, pourtant je ne change pas qui tu es. Je mesure le temps qui s'accumule sans ajouter le moindre poids. Qui suis-je ?"; /* ÉDITABLE */
-  var RIDDLE_ANSWER = "anniversaire"; /* ÉDITABLE — comparaison insensible à la casse et aux espaces */
-  var SECRET_PHRASE = "MEILLEURE AMIE POUR LA VIE"; /* ÉDITABLE — lettres A-Z et espaces uniquement, devinable lettre par lettre OU d'un coup en tapant la phrase entière */
-  /* —————————————————————————————————————————————————————————————————
-     ÉDITABLE : la récompense finale ("Le coffre de souvenirs").
-     Tout ce qui s'affiche vient d'ici : change les textes quand tu veux. */
-  var REWARD_TO = "Sarah"; /* ÉDITABLE — prénom écrit sur l'enveloppe */
-  var REWARD_GREETING = "Chère Sarah,"; /* ÉDITABLE — première ligne de la lettre */
-  /* ÉDITABLE : la lettre, un élément du tableau = un paragraphe. Elle s'écrit lettre par lettre. */
-  var REWARD_LETTER = [
-    "Si tu lis ça, c'est que tu as réussi les trois épreuves. Bien sûr que tu as réussi, je n'en attendais pas moins de toi.",
-    "Je voulais te dire quelque chose que je ne dis pas assez : tu comptes énormément pour moi. Tu es de ces personnes qui rendent les bons jours meilleurs et les mauvais jours supportables.",
-    "Merci d'être là, de me comprendre sans que j'aie besoin d'expliquer, et de rire aux mêmes bêtises que moi. Je ne l'ai jamais dit comme ça, alors voilà : tu es ma meilleure amie, pour de vrai.",
-    "Ce coffre n'était qu'un prétexte pour te le dire. Prends ton temps, regarde nos souvenirs, et sache que ce n'est que le début."
-  ];
-  var REWARD_SIGNATURE = "Avec tout mon cœur,"; /* ÉDITABLE — ajoute ton prénom derrière si tu veux */
-  /* ÉDITABLE : les polaroïds. title = légende sous la photo, text = le mot au dos.
-     photo = chemin de ton image (ex. "souvenirs/1.jpg") ; laisse "" pour garder l'emplacement vide. */
-  var REWARD_SOUVENIRS = [
-    { title: "Le début de tout", text: "Le jour où on s'est rencontrées, je ne savais pas encore que tu deviendrais ma personne préférée.", photo: "" },
-    { title: "Notre premier fou rire", text: "Celui qu'on n'arrivait plus à arrêter. Je souris encore rien qu'en y repensant.", photo: "" },
-    { title: "Les soirées sans raison", text: "Celles où il ne se passe rien d'extraordinaire, et qui sont pourtant mes préférées.", photo: "" },
-    { title: "Quand ça n'allait pas", text: "Tu étais là, sans poser de questions. C'est ça, une vraie meilleure amie.", photo: "" },
-    { title: "Nos délires", text: "Personne d'autre ne comprendrait. C'est exactement ce qui les rend parfaits.", photo: "" },
-    { title: "La suite", text: "Il y en aura plein d'autres. Je compte bien tous les collectionner avec toi.", photo: "" }
-  ];
-  var REWARD_OUTRO_TITLE = "Merci d'être toi."; /* ÉDITABLE */
-  var REWARD_OUTRO_TEXT = "Ce coffre n'a pas de fond : il y aura toujours de nouveaux souvenirs à y ranger."; /* ÉDITABLE */
-  /* ——————————————————————————————————————————————————————————————————— */
-  /* ÉDITABLE : lignes défilant discrètement en bas de l'écran, pur habillage */
-  var SECRET_LOG_LINES = [
-    "connexion sécurisée établie…",
-    "chiffrement AES-256 actif",
-    "aucune intrusion détectée",
-    "vérification de l'intégrité…",
-    "canal chiffré stable",
-    "surveillance du périmètre : ok"
-  ];
-  /* ——————————————————————————————————————————————————————————————————— */
-
-  var secretEls = {
-    levels: {
-      1: document.getElementById('level-1'),
-      2: document.getElementById('level-2'),
-      3: document.getElementById('level-3'),
-      final: document.getElementById('level-final')
-    },
-    digicodeCard: document.getElementById('digicode-card'),
-    digicodeDots: document.getElementById('digicode-dots'),
-    digicodePad: document.getElementById('digicode-pad'),
-    digicodeError: document.getElementById('digicode-error'),
-    riddleCard: document.getElementById('riddle-card'),
-    riddleQuestion: document.getElementById('riddle-question'),
-    riddleForm: document.getElementById('riddle-form'),
-    riddleInput: document.getElementById('riddle-input'),
-    riddleError: document.getElementById('riddle-error'),
-    terminalPhrase: document.getElementById('terminal-phrase'),
-    terminalScan: document.getElementById('terminal-scan'),
-    terminalInput: document.getElementById('terminal-input'),
-    terminalMsg: document.getElementById('terminal-msg'),
-    virtualKeyboard: document.getElementById('virtual-keyboard'),
-    vaultScene: document.getElementById('vault-scene'),
-    secretScreen: document.getElementById('secret-screen'),
-    /* ---- écran final : le coffre de souvenirs ---- */
-    rewardApp: document.getElementById('reward-app'),
-    rewardDust: document.getElementById('reward-dust'),
-    rewardStages: document.querySelectorAll('.reward-stage'),
-    rewardSteps: document.querySelectorAll('.reward-step'),
-    envelope: document.getElementById('envelope'),
-    envelopeTo: document.getElementById('env-to'),
-    envelopeHint: document.getElementById('env-hint'),
-    letterPaper: document.getElementById('letter-paper'),
-    letterGreeting: document.getElementById('letter-greeting'),
-    letterBody: document.getElementById('letter-body'),
-    letterSign: document.getElementById('letter-sign'),
-    letterNext: document.getElementById('reward-letter-next'),
-    galleryTitle: document.getElementById('gallery-title'),
-    polaroidWall: document.getElementById('polaroid-wall'),
-    galleryCount: document.getElementById('gallery-count'),
-    galleryNext: document.getElementById('gallery-next'),
-    outroTitle: document.getElementById('outro-title'),
-    outroText: document.getElementById('outro-text'),
-    outroLetter: document.getElementById('outro-letter'),
-    outroGallery: document.getElementById('outro-gallery'),
-    scanOverlay: document.getElementById('scan-overlay'),
-    scanOverlayText: document.getElementById('scan-overlay-text'),
-    lockIcon: document.getElementById('lock-icon'),
-    sparkBurst: document.getElementById('riddle-spark-burst'),
-    terminal: document.querySelector('#level-3 .terminal'),
-    progressSteps: document.querySelectorAll('#secret-progress .prog-step'),
-    consoleLog: document.getElementById('secret-console-log')
-  };
-
-  /* ---- décor ambiant : pluie de caractères façon "matrix", discrète ---- */
-  (function(){
-    var rainCanvas = document.getElementById('secret-rain-canvas');
-    if(!rainCanvas || reduceMotion) return;
-    var rctx = rainCanvas.getContext('2d');
-    var rDpr = Math.min(window.devicePixelRatio || 1, 2);
-    var glyphs = "01アイウエオカキク+×#$".split('');
-    var columns = [];
-
-    function sizeRain(){
-      var w = rainCanvas.clientWidth, h = rainCanvas.clientHeight;
-      rainCanvas.width = w * rDpr; rainCanvas.height = h * rDpr;
-      rctx.setTransform(rDpr, 0, 0, rDpr, 0, 0);
-      var colCount = Math.max(6, Math.round(w / 26));
-      columns = [];
-      for(var i=0; i<colCount; i++){
-        columns.push({ x: i * (w / colCount) + 10, y: Math.random() * -h, speed: 0.6 + Math.random() * 1.1 });
-      }
-    }
-    sizeRain();
-    window.addEventListener('resize', sizeRain);
-
-    function drawRain(){
-      var w = rainCanvas.clientWidth, h = rainCanvas.clientHeight;
-      rctx.clearRect(0, 0, w, h);
-      rctx.font = '13px ' + "'JetBrains Mono', monospace";
-      for(var i=0; i<columns.length; i++){
-        var col = columns[i];
-        col.y += col.speed;
-        if(col.y > h + 20){ col.y = -20; }
-        var glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
-        rctx.fillStyle = 'rgba(76,255,160,0.5)';
-        rctx.fillText(glyph, col.x, col.y);
-      }
-      requestAnimationFrame(drawRain);
-    }
-    requestAnimationFrame(drawRain);
-  })();
-
-  /* ---- décor ambiant : petit journal système qui défile en bas de l'écran ---- */
-  (function(){
-    if(!secretEls.consoleLog || !SECRET_LOG_LINES.length) return;
-    var idx = 0;
-    function showLine(){
-      secretEls.consoleLog.style.opacity = '0';
-      window.setTimeout(function(){
-        secretEls.consoleLog.textContent = '> ' + SECRET_LOG_LINES[idx % SECRET_LOG_LINES.length];
-        secretEls.consoleLog.style.opacity = '1';
-        idx++;
-      }, reduceMotion ? 0 : 350);
-    }
-    showLine();
-    if(!reduceMotion){ window.setInterval(showLine, 3200); }
-  })();
-
-  /* ---- décor : petit indicateur de progression (Code → Énigme → Terminal → Accès) ---- */
-  function updateSecretProgress(currentLevel){
-    var order = ['1', '2', '3', 'final'];
-    var currentIdx = order.indexOf(String(currentLevel));
-    secretEls.progressSteps.forEach(function(step){
-      var stepIdx = order.indexOf(step.getAttribute('data-step'));
-      step.classList.toggle('done', stepIdx < currentIdx);
-      step.classList.toggle('current', stepIdx === currentIdx);
-    });
-  }
-
-  /* petites étincelles qui s'envolent au-dessus d'un élément (utilisé au niveau 2) */
-  function spawnSparks(container){
-    if(!container || reduceMotion) return;
-    for(var i=0; i<10; i++){
-      var s = document.createElement('span');
-      s.className = 'spark';
-      var dx = (Math.random() - 0.5) * 90;
-      var dy = -(50 + Math.random() * 60);
-      s.style.setProperty('--sx', dx.toFixed(1) + 'px');
-      s.style.setProperty('--sy', dy.toFixed(1) + 'px');
-      s.style.left = (48 + Math.random() * 4) + '%';
-      container.appendChild(s);
-      (function(el){ window.setTimeout(function(){ el.remove(); }, 750); })(s);
-    }
-  }
-
-  function showSecretLevel(name){
-    saveSet('secret-level', String(name));
-    updateSecretProgress(name);
-    Object.keys(secretEls.levels).forEach(function(key){
-      var el = secretEls.levels[key];
-      el.classList.remove('enter');
-      if(String(key) === String(name)){ el.classList.add('active'); }
-      else { el.classList.remove('active'); }
-    });
-    void secretEls.levels[name].offsetWidth;
-    secretEls.levels[name].classList.add('enter');
-  }
-
-  function openFinalVault(){
-    secretEls.vaultScene.classList.add('opened');
-    if(secretEls.secretScreen){ secretEls.secretScreen.classList.add('vault-fullscreen'); }
-    startReward();
-  }
-
-  /* ---- overlay "Analyse en cours..." rejoué entre chaque niveau ---- */
-  function playScanTransition(nextLevel, label){
-    secretEls.scanOverlayText.textContent = label || "Analyse en cours…";
-    secretEls.scanOverlay.classList.add('active');
-    var delay = reduceMotion ? 150 : 1100;
-    window.setTimeout(function(){
-      showSecretLevel(nextLevel);
-      secretEls.scanOverlay.classList.remove('active');
-      if(nextLevel === 2){ secretEls.riddleInput.focus(); }
-      if(nextLevel === 3){ secretEls.terminalInput.focus(); }
-      if(nextLevel === 'final'){
-        /* la porte du coffre s'ouvre juste après l'arrivée sur l'écran final,
-           puis la récompense (enveloppe + lettre) démarre depuis le début */
-        window.setTimeout(openFinalVault, reduceMotion ? 50 : 300);
-      }
-    }, delay);
-  }
-
-  /* ---- NIVEAU 1 : digicode ---- */
-  var digicodeValue = "";
-  var digicodeSolved = false;
-  var digicodeFails = parseInt(saveGet('digicode-fails') || '0', 10) || 0;
-
-  function renderDigicodeHint(){
-    var el = document.getElementById('digicode-hint');
-    if(!el) return;
-    var idx = Math.min(SECRET_HINTS.length, Math.floor(digicodeFails / SECRET_HINT_EVERY)) - 1;
-    el.textContent = idx >= 0 ? ('Indice : ' + SECRET_HINTS[idx]) : '';
-  }
-
-  function renderDigicodeDots(){
-    var dots = secretEls.digicodeDots.querySelectorAll('.dot');
-    dots.forEach(function(dot, i){ dot.classList.toggle('filled', i < digicodeValue.length); });
-  }
-
-  function digicodeShakeError(msg){
-    secretEls.digicodeError.textContent = msg;
-    secretEls.digicodeCard.classList.remove('shake');
-    void secretEls.digicodeCard.offsetWidth;
-    secretEls.digicodeCard.classList.add('shake');
-    digicodeValue = "";
-    renderDigicodeDots();
-  }
-
-  function submitDigicode(){
-    if(digicodeSolved) return; /* évite de rejouer la célébration si on reclique pendant la transition */
-    if(digicodeValue.length !== 4){ digicodeShakeError("Entre les 4 chiffres avant de valider."); return; }
-    if(digicodeValue === SECRET_CODE){
-      digicodeSolved = true;
-      secretEls.digicodeError.textContent = "";
-      /* petite célébration : le cadenas se déverrouille, les points s'illuminent en vague —
-         on laisse le temps de la voir avant de lancer l'écran de transition */
-      if(secretEls.lockIcon){ secretEls.lockIcon.classList.add('unlocking'); }
-      secretEls.digicodeDots.classList.add('success');
-      secretEls.digicodeCard.classList.add('success-pulse');
-      window.setTimeout(function(){
-        playScanTransition(2, "Analyse en cours…");
-      }, reduceMotion ? 150 : 900);
-    } else {
-      digicodeFails++;
-      saveSet('digicode-fails', String(digicodeFails));
-      digicodeShakeError("Code incorrect. Réessaie.");
-      renderDigicodeHint();
-    }
-  }
-
-  secretEls.digicodePad.addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
-    if(!btn) return;
-    var key = btn.getAttribute('data-key');
-    btn.classList.add('pressed');
-    window.setTimeout(function(){ btn.classList.remove('pressed'); }, 120);
-
-    if(key === 'clear'){ digicodeValue = ""; renderDigicodeDots(); secretEls.digicodeError.textContent = ""; return; }
-    if(key === 'submit'){ submitDigicode(); return; }
-    if(digicodeValue.length < 4){ digicodeValue += key; renderDigicodeDots(); }
-  });
-
-  secretEls.levels[1].addEventListener('keydown', function(e){
-    if(e.key >= '0' && e.key <= '9'){ if(digicodeValue.length < 4){ digicodeValue += e.key; renderDigicodeDots(); } }
-    else if(e.key === 'Backspace'){ digicodeValue = digicodeValue.slice(0,-1); renderDigicodeDots(); }
-    else if(e.key === 'Enter'){ submitDigicode(); }
-  });
-
-  /* ---- NIVEAU 2 : énigme ---- */
-  function normalizeAnswer(str){ return str.toLowerCase().trim().replace(/\s+/g,' '); }
-
-  secretEls.riddleQuestion.textContent = RIDDLE_QUESTION;
-  var riddleSolved = false;
-
-  secretEls.riddleForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    if(riddleSolved) return; /* évite de rejouer la célébration si on revalide pendant la transition */
-    var given = normalizeAnswer(secretEls.riddleInput.value);
-    if(given.length && given === normalizeAnswer(RIDDLE_ANSWER)){
-      riddleSolved = true;
-      secretEls.riddleError.textContent = "";
-      /* petite célébration : étincelles qui s'envolent + halo sur la carte —
-         on laisse le temps de la voir avant de lancer l'écran de transition */
-      spawnSparks(secretEls.sparkBurst);
-      secretEls.riddleCard.classList.add('success-pulse');
-      window.setTimeout(function(){
-        playScanTransition(3, "Analyse en cours…");
-      }, reduceMotion ? 150 : 900);
-    } else {
-      secretEls.riddleError.textContent = "Ce n'est pas ça… essaie encore.";
-      secretEls.riddleCard.classList.remove('shake');
-      void secretEls.riddleCard.offsetWidth;
-      secretEls.riddleCard.classList.add('shake');
-    }
-  });
-
-  /* ---- NIVEAU 3 : terminal façon pendu ---- */
-  var phraseLetters = SECRET_PHRASE.toUpperCase().split('');
-  var guessedLetters = [];
-  var terminalBusy = false;
-
-  function renderPhrase(){
-    /* chaque lettre (revelee ou "_") est separee par un espace simple ;
-       chaque espace du mot d'origine devient un triple espace, ce qui cree
-       une vraie coupure visuelle entre les mots. Ca ne marche que parce que
-       .terminal-phrase a "white-space: pre-wrap" (les espaces multiples
-       sont donc bien conserves au lieu d'etre fusionnes en un seul). */
-    var cells = phraseLetters.map(function(ch){
-      if(ch === ' ') return '   ';
-      return guessedLetters.indexOf(ch) !== -1 ? ch : '_';
-    });
-    secretEls.terminalPhrase.textContent = cells.join(' ');
-  }
-
-  function isPhraseComplete(){
-    return phraseLetters.every(function(ch){ return ch === ' ' || guessedLetters.indexOf(ch) !== -1; });
-  }
-
-  function buildVirtualKeyboard(){
-    var letters = "AZERTYUIOPQSDFGHJKLMWXCVBN".split(''); /* ordre clavier FR, purement esthétique */
-    secretEls.virtualKeyboard.innerHTML = '';
-    letters.forEach(function(letter){
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = letter;
-      btn.setAttribute('data-letter', letter);
-      btn.addEventListener('click', function(){ guessLetter(letter); });
-      secretEls.virtualKeyboard.appendChild(btn);
-    });
-  }
-
-  function setKeyState(letter, state){
-    var btn = secretEls.virtualKeyboard.querySelector('[data-letter="' + letter + '"]');
-    if(btn){ btn.classList.add(state); btn.disabled = true; }
-  }
-
-  /* petite animation "lignes de code qui défilent" jouée avant chaque résultat (~0.5s) */
-  function playHackScan(callback){
-    if(terminalBusy) return;
-    terminalBusy = true;
-    if(reduceMotion){ terminalBusy = false; callback(); return; }
-    var chars = "01<>/#{}[]ABCDEF$%&";
-    var frame = 0;
-    var totalFrames = 8;
-    var timer = window.setInterval(function(){
-      var line = "";
-      for(var i=0;i<28;i++){ line += chars[Math.floor(Math.random()*chars.length)]; }
-      secretEls.terminalScan.textContent = line;
-      frame++;
-      if(frame >= totalFrames){
-        window.clearInterval(timer);
-        secretEls.terminalScan.textContent = "";
-        terminalBusy = false;
-        callback();
-      }
-    }, 500 / totalFrames);
-  }
-
-  /* déclenchée une fois que toutes les lettres de la phrase sont trouvées,
-     que ce soit lettre par lettre ou en tapant la phrase entière d'un coup */
-  var terminalSolved = false;
-  function finishTerminal(){
-    if(terminalSolved) return; /* évite de rejouer la célébration si un niveau appelle deux fois */
-    terminalSolved = true;
-    secretEls.terminalMsg.textContent = "Décryptage terminé.";
-    secretEls.terminalMsg.className = 'terminal-msg is-ok';
-    /* petite célébration : glitch de l'écran façon "piratage réussi" — on laisse le
-       temps de la voir en entier avant de lancer l'écran de transition */
-    if(secretEls.terminal){ secretEls.terminal.classList.add('glitching'); }
-    window.setTimeout(function(){
-      playScanTransition('final', "Ouverture du coffre…");
-      if(!reduceMotion){ window.setTimeout(burstFromCenterScreen, 1300); }
-    }, reduceMotion ? 150 : 1050);
-  }
-
-  function guessLetter(letter){
-    if(terminalBusy) return;
-    letter = (letter || '').toUpperCase();
-    if(!/^[A-Z]$/.test(letter)) return;
-    if(guessedLetters.indexOf(letter) !== -1) return;
-
-    playHackScan(function(){
-      guessedLetters.push(letter);
-      saveSet('secret-letters', guessedLetters.join(''));
-      if(phraseLetters.indexOf(letter) !== -1){
-        setKeyState(letter, 'correct');
-        secretEls.terminalMsg.textContent = "Lettre correcte : " + letter;
-        secretEls.terminalMsg.className = 'terminal-msg is-ok';
-      } else {
-        setKeyState(letter, 'incorrect');
-        secretEls.terminalMsg.textContent = "Accès refusé pour ce caractère : " + letter;
-        secretEls.terminalMsg.className = 'terminal-msg is-err';
-      }
-      renderPhrase();
-      if(isPhraseComplete()){ finishTerminal(); }
-    });
-  }
-
-  /* tentative d'une phrase entière tapée directement dans le terminal */
-  function guessWholePhrase(value){
-    playHackScan(function(){
-      if(normalizeAnswer(value) === normalizeAnswer(SECRET_PHRASE)){
-        var uniqueLetters = phraseLetters.filter(function(ch){ return ch !== ' '; });
-        uniqueLetters.forEach(function(letter){
-          if(guessedLetters.indexOf(letter) === -1){ guessedLetters.push(letter); }
-          setKeyState(letter, 'correct');
-        });
-        saveSet('secret-letters', guessedLetters.join(''));
-        renderPhrase();
-        secretEls.terminalMsg.textContent = "Phrase reconnue.";
-        secretEls.terminalMsg.className = 'terminal-msg is-ok';
-        if(isPhraseComplete()){ finishTerminal(); }
-      } else {
-        secretEls.terminalMsg.textContent = "Accès refusé : combinaison invalide.";
-        secretEls.terminalMsg.className = 'terminal-msg is-err';
-      }
-    });
-  }
-
-  /* Entrée valide ce qui a été tapé : une seule lettre → devinette lettre par
-     lettre ; plusieurs caractères → tentative de la phrase entière. */
-  function submitTerminalGuess(){
-    if(terminalBusy) return;
-    var value = secretEls.terminalInput.value.trim();
-    if(!value) return;
-    secretEls.terminalInput.value = "";
-    if(value.length === 1){ guessLetter(value); }
-    else { guessWholePhrase(value); }
-  }
-
-  secretEls.terminalInput.addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){ e.preventDefault(); submitTerminalGuess(); }
-  });
 
   /* =========================================================
-     ÉCRAN FINAL : "Le coffre de souvenirs"
-     1) une enveloppe qui s'ouvre sur une lettre qui s'écrit toute seule,
-     2) un mur de polaroïds à retourner, 3) un mot de la fin.
-     Tous les textes viennent des constantes REWARD_… tout en haut
-     du script secret.
+     LE COFFRE (section Secret)
+     Il ne s'ouvre qu'après avoir passé les 4 épreuves.
      ========================================================= */
-  var REWARD_STAGES = ['letter', 'gallery', 'outro'];
-  var rewardStage = 'letter';
-  var rewardMaxStage = 0;       /* étape la plus loin atteinte : les suivantes restent verrouillées */
-  var rewardTypingToken = 0;    /* change à chaque (re)lancement ou saut : coupe l'ancienne frappe */
-  var rewardLetterDone = false;
-  var rewardLetterParas = [];
-  var rewardFlipped = {};
-  var rewardDustOn = false;
 
-  function rewardSetText(el, text){ if(el){ el.textContent = text; } }
+  /* ÉDITABLE : les 7 raisons (une par étoile) */
+  var VAULT_REASONS = [
+    { title: "Ta façon d'écouter", text: "Tu écoutes pour comprendre, pas pour répondre. Peu de gens savent faire ça, et toi tu le fais sans même y penser." },
+    { title: "Ton rire", text: "Il est contagieux. Il y a des jours où il suffit que je l'entende pour que tout aille mieux." },
+    { title: "Ta loyauté", text: "Quand tu es là, tu es là pour de bon, dans les bons moments comme dans les moins bons." },
+    { title: "Ta sensibilité", text: "Elle te fait parfois douter, mais c'est aussi ce qui te rend si humaine et si attentionnée." },
+    { title: "Tes folies", text: "Les idées improbables, les vocaux de vingt minutes, les fous rires à des heures impossibles. Merci d'être aussi dingue que moi." },
+    { title: "Ta force", text: "Tu avances même quand c'est dur, et tu ne le montres pas toujours. Moi, je le vois, et je suis fier de toi." },
+    { title: "Ta présence", text: "Juste le fait que tu existes et que tu sois dans ma vie. Le reste n'est que du bonus." }
+  ];
+  /* ÉDITABLE : la lettre finale */
+  var VAULT_GREETING = "Chère Sarah,";
+  var VAULT_LETTER = [
+    "Si tu lis ces lignes, c'est que tu as exploré tout l'univers jusqu'au bout. Bravo, et surtout merci d'avoir pris le temps.",
+    "Ce site, je l'ai construit pour te dire, autrement qu'avec un simple message, à quel point tu comptes pour moi. Chaque étoile, chaque lettre, chaque petite surprise est là pour une seule raison : te faire sourire.",
+    "Quoi qu'il arrive, je serai toujours dans ton équipe. Ne l'oublie jamais."
+  ];
+  var VAULT_SIGNATURE = "Avec tout mon cœur,";
 
-  /* ---- étincelles dorées qui montent doucement derrière tout (arrêtées quand l'écran n'est plus visible) ---- */
-  function startRewardDust(tries){
-    var canvas = secretEls.rewardDust;
-    if(!canvas || reduceMotion || rewardDustOn) return;
-    var ctx = canvas.getContext('2d');
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var specks = [];
-    function size(){
-      var w = canvas.clientWidth, h = canvas.clientHeight;
-      if(!w || !h) return false;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var count = Math.max(24, Math.round((w * h) / 22000));
-      specks = [];
-      for(var i = 0; i < count; i++){ specks.push(make(w, h, true)); }
-      return true;
+  var vaultEls = {
+    locked: document.getElementById('vault-locked'),
+    open: document.getElementById('vault-open'),
+    sky: document.getElementById('vault-stars'),
+    lines: document.getElementById('vault-sky-lines'),
+    reason: document.getElementById('vault-reason'),
+    reasonCount: document.getElementById('vault-reason-count'),
+    reasonTitle: document.getElementById('vault-reason-title'),
+    reasonText: document.getElementById('vault-reason-text'),
+    lede: document.getElementById('vault-open-lede'),
+    letterBtn: document.getElementById('vault-letter-btn'),
+    letter: document.getElementById('vault-letter')
+  };
+  var vaultOpened = saveGet('vault') === '1';
+  var vaultSeen = []; try{ vaultSeen = JSON.parse(saveGet('vault-seen') || '[]'); }catch(e){ vaultSeen = []; }
+  /* positions des 7 étoiles (en % de la scène) : une petite constellation en forme de sourire */
+  var VAULT_STAR_POS = [ [10,30], [24,62], [40,80], [58,86], [74,70], [88,44], [50,24] ];
+
+  function sanctuaryFoundCount(){
+    try{
+      var d = JSON.parse(window.localStorage.getItem('sarah:sanctuary') || 'null');
+      return d && d.found ? d.found.length : 0;
+    }catch(e){ return 0; }
+  }
+  function unlockVault(){
+    vaultOpened = true;
+    saveSet('vault', '1');
+    saveSet('trials', '4'); trialDone = 4;
+    window.setTimeout(showVaultOpen, reduceMotion ? 50 : 1300);
+  }
+
+  function renderVaultSky(){
+    vaultEls.sky.innerHTML = '';
+    VAULT_REASONS.forEach(function(r, i){
+      var pos = VAULT_STAR_POS[i % VAULT_STAR_POS.length];
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'vault-star' + (vaultSeen.indexOf(i) !== -1 ? ' is-seen' : '');
+      b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%';
+      b.setAttribute('aria-label', 'Raison ' + (i + 1) + ' sur ' + VAULT_REASONS.length + (vaultSeen.indexOf(i) !== -1 ? ' (déjà lue)' : ''));
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg><span>' + (i + 1) + '</span>';
+      b.addEventListener('click', function(){ showReason(i, b); });
+      vaultEls.sky.appendChild(b);
+    });
+    drawVaultLines();
+    updateVaultProgress();
+  }
+  function drawVaultLines(){
+    var NS = 'http://www.w3.org/2000/svg';
+    vaultEls.lines.innerHTML = '';
+    for(var k = 0; k < VAULT_REASONS.length - 1; k++){
+      var a = VAULT_STAR_POS[k], b = VAULT_STAR_POS[k + 1];
+      var p = document.createElementNS(NS, 'line');
+      p.setAttribute('x1', a[0] * 10); p.setAttribute('y1', a[1] * 5.2);
+      p.setAttribute('x2', b[0] * 10); p.setAttribute('y2', b[1] * 5.2);
+      p.setAttribute('class', (vaultSeen.indexOf(k) !== -1 && vaultSeen.indexOf(k + 1) !== -1) ? 'lit' : '');
+      vaultEls.lines.appendChild(p);
     }
-    function make(w, h, anywhere){
-      return {
-        x: Math.random() * w,
-        y: anywhere ? Math.random() * h : h + 10,
-        r: 0.6 + Math.random() * 1.6,
-        v: 0.15 + Math.random() * 0.4,
-        d: (Math.random() - 0.5) * 0.25,
-        t: Math.random() * Math.PI * 2
-      };
+  }
+  function updateVaultProgress(){
+    var total = VAULT_REASONS.length;
+    var done = vaultSeen.length;
+    if(done >= total){
+      vaultEls.lede.textContent = "Toutes les étoiles sont allumées. Il reste une dernière chose…";
+      vaultEls.letterBtn.hidden = false;
+    } else {
+      vaultEls.lede.textContent = "Touche chaque étoile pour lire une raison (" + done + "/" + total + ").";
+      vaultEls.letterBtn.hidden = true;
     }
-    if(!size()){ if((tries || 0) < 15){ window.setTimeout(function(){ startRewardDust((tries || 0) + 1); }, 200); } return; }
-    rewardDustOn = true;
-    window.addEventListener('resize', size);
-    function frame(){
-      if(!rewardDustOn || !secretEls.secretScreen || !secretEls.secretScreen.classList.contains('vault-fullscreen')){
-        rewardDustOn = false;
-        window.removeEventListener('resize', size);
+  }
+  function showReason(i, btn){
+    var r = VAULT_REASONS[i];
+    vaultEls.reasonCount.textContent = 'Raison ' + (i + 1) + ' sur ' + VAULT_REASONS.length;
+    vaultEls.reasonTitle.textContent = r.title;
+    vaultEls.reasonText.textContent = r.text;
+    vaultEls.reason.classList.remove('show'); void vaultEls.reason.offsetWidth; vaultEls.reason.classList.add('show');
+    vaultEls.sky.querySelectorAll('.vault-star').forEach(function(s){ s.classList.remove('is-current'); });
+    btn.classList.add('is-current', 'is-seen');
+    if(vaultSeen.indexOf(i) === -1){
+      vaultSeen.push(i);
+      saveSet('vault-seen', JSON.stringify(vaultSeen));
+      drawVaultLines();
+      updateVaultProgress();
+      if(!reduceMotion){
+        var rc = btn.getBoundingClientRect();
+        burst(rc.left + rc.width / 2, rc.top + rc.height / 2);
+      }
+    }
+  }
+  function showVaultOpen(){
+    vaultEls.locked.hidden = true;
+    vaultEls.open.hidden = false;
+    renderVaultSky();
+    if(screens.secret.classList.contains('active')){
+      var hd = document.getElementById('vault-open-heading'); if(hd){ hd.focus(); }
+    }
+  }
+  function openLetter2(){
+    var g = document.getElementById('vault-letter-greeting');
+    var body = document.getElementById('vault-letter-body');
+    var sign = document.getElementById('vault-letter-sign');
+    g.textContent = VAULT_GREETING;
+    body.innerHTML = '';
+    VAULT_LETTER.forEach(function(p){ var el = document.createElement('p'); el.textContent = p; body.appendChild(el); });
+    sign.textContent = VAULT_SIGNATURE;
+    vaultEls.letter.hidden = false;
+    void vaultEls.letter.offsetWidth;
+    vaultEls.letter.classList.add('is-open');
+    var cl = vaultEls.letter.querySelector('.vault-letter-close'); if(cl){ cl.focus(); }
+    if(!reduceMotion){ window.setTimeout(burstFromCenterScreen, 500); }
+  }
+  function closeLetter2(){
+    vaultEls.letter.classList.remove('is-open');
+    window.setTimeout(function(){ vaultEls.letter.hidden = true; }, reduceMotion ? 10 : 300);
+  }
+  /* =========================================================
+     LES 4 ÉPREUVES (gardent le coffre)
+     1 le message codé · 2 la constellation à rejouer
+     3 les étoiles à éteindre · 4 le puzzle du ciel
+     ========================================================= */
+  var TRIAL_RIDDLE = "JE BRILLE SANS FLAMME ET LA NUIT JE TE GUIDE. QUI SUIS-JE ?"; /* ÉDITABLE (majuscules, sans accents) */
+  var TRIAL_KEY = "CIEL";                     /* clé du chiffre de Vigenère (ÉDITABLE) */
+  var TRIAL_ANSWERS = ['etoile', 'une etoile', 'une etoile filante'];
+  var TRIAL_DEFS = [
+    { name: 'Le message codé', kind: 'Décryptage', text: "Le message est chiffré avec une clé secrète : chaque lettre est décalée selon une lettre du mot-clé, qui se répète. Indice : la clé est l’endroit où vivent les étoiles (4 lettres). Trouve-la pour lire l’énigme, puis réponds." },
+    { name: 'La constellation', kind: 'Mémoire', text: "Les étoiles s’allument dans un certain ordre. Rejoue la suite sans te tromper : elle s’allonge à chaque tour (7 étoiles)." },
+    { name: 'Extinction', kind: 'Logique', text: "Toucher une étoile change aussi ses quatre voisines. Éteins-les toutes." },
+    { name: 'Le puzzle du ciel', kind: 'Puzzle', text: "Les morceaux du ciel sont mélangés. Fais glisser les pièces pour les remettre de 1 à 8, la case vide en bas à droite." }
+  ];
+  var trialEls = {
+    steps: document.getElementById('trial-steps'),
+    title: document.getElementById('trial-title'),
+    text: document.getElementById('trial-text'),
+    board: document.getElementById('trial-board'),
+    msg: document.getElementById('trial-msg'),
+    reset: document.getElementById('trial-reset'),
+    next: document.getElementById('trial-next')
+  };
+  var trialDone = parseInt(saveGet('trials') || '0', 10) || 0;
+  if(vaultOpened) trialDone = 4;
+  var trialCur = Math.min(trialDone, 3);
+  var trialSolved = false;
+  var trialToken = 0;
+  var trialTimers = [];
+
+  function trialLater(fn, ms){ var t = window.setTimeout(fn, ms); trialTimers.push(t); return t; }
+  function trialClear(){ trialToken++; trialTimers.forEach(clearTimeout); trialTimers = []; }
+  function caesar(s, k){
+    return s.replace(/[A-Z]/g, function(c){ return String.fromCharCode((c.charCodeAt(0) - 65 + k + 26 * 4) % 26 + 65); });
+  }
+  function plain(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+
+  function renderTrialSteps(){
+    trialEls.steps.innerHTML = '';
+    TRIAL_DEFS.forEach(function(d, i){
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button';
+      var state = i < trialDone ? 'done' : (i === trialCur ? 'cur' : 'lock');
+      b.className = 'trial-step is-' + state + (i === trialCur ? ' is-active' : '');
+      b.disabled = i > trialDone;
+      b.setAttribute('aria-label', 'Épreuve ' + (i + 1) + ' : ' + d.name + (i < trialDone ? ' (réussie)' : (i > trialDone ? ' (verrouillée)' : '')));
+      if(i === trialCur) b.setAttribute('aria-current', 'step');
+      b.innerHTML = '<span class="ts-n">' + (i < trialDone ? '✓' : (i > trialDone ? '🔒' : (i + 1))) + '</span><span class="ts-name">' + d.name + '</span><span class="ts-kind">' + d.kind + '</span>';
+      b.addEventListener('click', function(){ startTrial(i); });
+      li.appendChild(b);
+      trialEls.steps.appendChild(li);
+    });
+  }
+  function trialSay(msg, kind){
+    trialEls.msg.textContent = msg || '';
+    trialEls.msg.className = 'trial-msg' + (kind ? ' is-' + kind : '');
+  }
+  function startTrial(i){
+    trialClear();
+    trialCur = i; trialSolved = false;
+    trialEls.next.hidden = true;
+    trialEls.title.textContent = TRIAL_DEFS[i].name;
+    document.getElementById('trial-num').textContent = i + 1;
+    document.getElementById('trial-kind').textContent = 'Épreuve ' + (i + 1) + ' sur 4 · ' + TRIAL_DEFS[i].kind;
+    trialEls.text.textContent = TRIAL_DEFS[i].text;
+    trialEls.board.innerHTML = '';
+    trialEls.board.className = 'trial-board tb-' + (i + 1);
+    trialEls.reset.onclick = function(){ if(!trialSolved) startTrial(trialCur); };
+    trialSay('');
+    renderTrialSteps();
+    [trialCipher, trialSimon, trialLights, trialSlide][i]();
+  }
+  function trialWin(){
+    if(trialSolved) return;
+    trialSolved = true;
+    trialClear();
+    trialDone = Math.max(trialDone, trialCur + 1);
+    saveSet('trials', String(trialDone));
+    renderTrialSteps();
+    if(!reduceMotion){ burstFromCenterScreen(); }
+    if(trialCur < 3){
+      trialSay('Réussi ! L’épreuve suivante est ouverte.', 'ok');
+      trialEls.next.hidden = false;
+      trialEls.next.focus();
+    } else {
+      trialSay('Les quatre épreuves sont passées. Le coffre s’ouvre…', 'ok');
+      trialLater(unlockVault, reduceMotion ? 50 : 1200);
+    }
+  }
+
+  /* 1 · message codé (Vigenère, clé à deviner) */
+  function vigenere(text, key, dir){
+    var j = 0;
+    return text.replace(/[A-Z]/g, function(c){
+      var k = key.charCodeAt(j % key.length) - 65; j++;
+      return String.fromCharCode((c.charCodeAt(0) - 65 + dir * k + 26) % 26 + 65);
+    });
+  }
+  function trialCipher(){
+    var enc = vigenere(TRIAL_RIDDLE, TRIAL_KEY, 1);
+    var wrap = trialEls.board;
+    wrap.innerHTML =
+      '<p class="tc-cipher" aria-label="Message codé">' + enc + '</p>' +
+      '<form class="tc-form" id="tc-key" autocomplete="off"><label for="tc-keyin">Clé</label><input id="tc-keyin" type="text" maxlength="' + TRIAL_KEY.length + '" placeholder="' + TRIAL_KEY.replace(/./g, '_') + '" aria-label="Clé de ' + TRIAL_KEY.length + ' lettres"></form>' +
+      '<p class="tc-plain" id="tc-plain" aria-live="off"></p>' +
+      '<form class="tc-form" id="tc-form" autocomplete="off"><input id="tc-ans" type="text" placeholder="Réponse à l’énigme" aria-label="Ta réponse à l’énigme"><button type="submit" class="trial-btn">Valider</button></form>';
+    var kin = wrap.querySelector('#tc-keyin'), pl = wrap.querySelector('#tc-plain');
+    function upd(){
+      var k = kin.value.toUpperCase().replace(/[^A-Z]/g, '');
+      pl.textContent = k.length === TRIAL_KEY.length ? vigenere(enc, k, -1) : 'Entre les ' + TRIAL_KEY.length + ' lettres de la clé pour déchiffrer.';
+      pl.classList.toggle('is-ready', k.length === TRIAL_KEY.length);
+    }
+    kin.addEventListener('input', upd); wrap.querySelector('#tc-key').addEventListener('submit', function(e){ e.preventDefault(); });
+    upd();
+    wrap.querySelector('#tc-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      var a = plain(wrap.querySelector('#tc-ans').value);
+      if(a && TRIAL_ANSWERS.indexOf(a) !== -1){ trialWin(); }
+      else { trialSay(kin.value.toUpperCase() === TRIAL_KEY ? 'Le message est lisible, mais ce n’est pas la bonne réponse.' : 'Pas encore. Il faut d’abord trouver la bonne clé.', 'bad'); }
+    });
+  }
+
+  /* 2 · constellation à rejouer */
+  function trialSimon(){
+    var COLORS = ['#ff8a3d', '#ff4fa3', '#c7f13b', '#58c8ff', '#b79bff'];
+    var LEN = 7;
+    var seq = [], pos = 0, busy = true, myToken = trialToken;
+    var wrap = trialEls.board;
+    wrap.innerHTML = '<div class="ts-info" id="ts-info" aria-live="polite"></div><div class="ts-pads" id="ts-pads"></div><button type="button" class="trial-btn" id="ts-go">Lancer</button>';
+    var info = wrap.querySelector('#ts-info'), padsEl = wrap.querySelector('#ts-pads'), go = wrap.querySelector('#ts-go');
+    var pads = COLORS.map(function(c, i){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'ts-pad'; b.style.setProperty('--pc', c);
+      b.setAttribute('aria-label', 'Étoile ' + (i + 1));
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
+      b.addEventListener('click', function(){ press(i); });
+      padsEl.appendChild(b);
+      return b;
+    });
+    function flash(i, ms){ pads[i].classList.add('lit'); trialLater(function(){ pads[i].classList.remove('lit'); }, ms); }
+    function play(n){
+      busy = true; pos = 0; info.textContent = 'Regarde bien… (' + n + '/' + LEN + ')';
+      var t = reduceMotion ? 700 : 600;
+      for(var k = 0; k < n; k++){ (function(k){ trialLater(function(){ flash(seq[k], t * 0.6); }, 700 + k * t); })(k); }
+      trialLater(function(){ busy = false; info.textContent = 'À toi ! (0/' + n + ')'; }, 700 + n * t);
+    }
+    function press(i){
+      if(busy || trialSolved) return;
+      flash(i, 220);
+      var n = seqLen;
+      if(i !== seq[pos]){
+        busy = true; trialSay('Raté, la constellation se rallume depuis le début.', 'bad');
+        seqLen = 1; seq = []; for(var k = 0; k < LEN; k++){ seq.push(Math.floor(Math.random() * COLORS.length)); }
+        trialLater(function(){ trialSay(''); play(1); }, 1100);
         return;
       }
-      var w = canvas.clientWidth, h = canvas.clientHeight;
-      if(!w || !h){ rewardDustOn = false; window.removeEventListener('resize', size); return; } /* écran masqué : on s'arrête */
-      ctx.clearRect(0, 0, w, h);
-      for(var i = 0; i < specks.length; i++){
-        var s = specks[i];
-        s.y -= s.v; s.x += s.d; s.t += 0.04;
-        if(s.y < -10){ specks[i] = make(w, h, false); continue; }
-        ctx.globalAlpha = 0.25 + (Math.sin(s.t) * 0.5 + 0.5) * 0.55;
-        ctx.fillStyle = '#FFD27A';
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
-
-  /* ---- navigation entre les 3 étapes ---- */
-  function updateRewardSteps(){
-    secretEls.rewardSteps.forEach(function(btn){
-      var name = btn.getAttribute('data-stage');
-      var idx = REWARD_STAGES.indexOf(name);
-      btn.disabled = idx > rewardMaxStage;
-      btn.classList.toggle('current', name === rewardStage);
-      btn.classList.toggle('done', idx < REWARD_STAGES.indexOf(rewardStage));
-      if(name === rewardStage){ btn.setAttribute('aria-current', 'step'); } else { btn.removeAttribute('aria-current'); }
-    });
-  }
-
-  function unlockRewardStage(idx){
-    if(idx > rewardMaxStage){ rewardMaxStage = idx; }
-    updateRewardSteps();
-  }
-
-  function goRewardStage(name){
-    var idx = REWARD_STAGES.indexOf(name);
-    if(idx === -1 || idx > rewardMaxStage) return;
-    rewardStage = name;
-    secretEls.rewardStages.forEach(function(el){
-      el.classList.toggle('active', el.getAttribute('data-stage') === name);
-      el.scrollTop = 0;
-    });
-    updateRewardSteps();
-    if(name === 'gallery'){
-      /* les polaroïds sont "distribués" à chaque arrivée sur le mur */
-      secretEls.polaroidWall.classList.remove('dealt');
-      void secretEls.polaroidWall.offsetWidth;
-      secretEls.polaroidWall.classList.add('dealt');
-      window.setTimeout(function(){ if(secretEls.galleryTitle){ secretEls.galleryTitle.focus({ preventScroll: true }); } }, 60);
-    } else if(name === 'outro'){
-      if(!reduceMotion){ window.setTimeout(burstFromCenterScreen, 350); }
-      window.setTimeout(function(){ if(secretEls.outroTitle){ secretEls.outroTitle.focus({ preventScroll: true }); } }, 60);
-    } else if(secretEls.rewardApp){
-      secretEls.rewardApp.focus({ preventScroll: true });
-    }
-  }
-
-  /* ---- ÉTAPE 1 : la lettre qui s'écrit toute seule ---- */
-  function finishRewardLetter(){
-    rewardLetterDone = true;
-    saveSet('reward-letter-read', '1');
-    rewardLetterParas.forEach(function(p){ p.classList.remove('is-typing'); });
-    secretEls.letterSign.classList.add('show');
-    secretEls.letterNext.classList.add('show', 'ready');
-    unlockRewardStage(1);
-  }
-
-  function fillRewardLetter(){
-    rewardTypingToken++;
-    rewardLetterParas.forEach(function(p, i){ p.textContent = REWARD_LETTER[i]; });
-    finishRewardLetter();
-  }
-
-  function typeRewardLetter(){
-    var body = secretEls.letterBody;
-    body.innerHTML = '';
-    secretEls.letterSign.classList.remove('show');
-    secretEls.letterNext.classList.remove('show', 'ready');
-    rewardLetterParas = REWARD_LETTER.map(function(){
-      var p = document.createElement('p');
-      body.appendChild(p);
-      return p;
-    });
-    var token = ++rewardTypingToken;
-    if(reduceMotion || rewardLetterDone){ fillRewardLetter(); return; }
-    var pi = 0, ci = 0;
-    function step(){
-      if(token !== rewardTypingToken) return;
-      if(pi >= REWARD_LETTER.length){ finishRewardLetter(); return; }
-      var text = REWARD_LETTER[pi];
-      var p = rewardLetterParas[pi];
-      if(ci === 0){ p.classList.add('is-typing'); }
-      if(ci < text.length){
-        ci++;
-        p.textContent = text.slice(0, ci);
-        var ch = text.charAt(ci - 1);
-        var wait = /[.!?…]/.test(ch) ? 280 : (/[,;:]/.test(ch) ? 140 : 26);
-        var stage = document.getElementById('reward-letter');
-        if(stage){ stage.scrollTop = stage.scrollHeight; }
-        window.setTimeout(step, wait);
-      } else {
-        p.classList.remove('is-typing');
-        pi++; ci = 0;
-        window.setTimeout(step, 450);
+      pos++;
+      info.textContent = 'À toi ! (' + pos + '/' + n + ')';
+      if(pos === n){
+        if(n === LEN){ info.textContent = 'Parfait !'; trialWin(); }
+        else { busy = true; seqLen++; trialSay(''); trialLater(function(){ play(seqLen); }, 800); }
       }
     }
-    step();
+    var seqLen = 1;
+    go.addEventListener('click', function(){
+      seq = []; for(var k = 0; k < LEN; k++){ seq.push(Math.floor(Math.random() * COLORS.length)); }
+      seqLen = 1; trialSay(''); go.textContent = 'Recommencer'; trialClear(); play(1);
+    });
+    info.textContent = 'Appuie sur Lancer pour voir la première étoile.';
   }
 
-  function openRewardEnvelope(){
-    var env = secretEls.envelope;
-    if(!env || env.classList.contains('open')) return;
-    env.classList.add('open');
-    if(secretEls.envelopeHint){ secretEls.envelopeHint.classList.add('is-hidden'); }
-    window.setTimeout(function(){
-      env.classList.add('gone');
-      window.setTimeout(function(){
-        env.classList.add('is-hidden');
-        showRewardLetter();
-      }, reduceMotion ? 0 : 450);
-    }, reduceMotion ? 0 : 750);
-  }
-
-  function showRewardLetter(){
-    secretEls.letterPaper.classList.add('show');
-    typeRewardLetter();
-  }
-
-  /* ---- ÉTAPE 2 : le mur de polaroïds ---- */
-  function updateGalleryCount(){
-    var n = Object.keys(rewardFlipped).length, total = REWARD_SOUVENIRS.length;
-    rewardSetText(secretEls.galleryCount, n >= total ? 'Tu les as tous retournés.' : (n + ' / ' + total + ' retournés'));
-    secretEls.galleryNext.classList.toggle('ready', n >= total);
-  }
-
-  function buildPolaroids(){
-    var wall = secretEls.polaroidWall;
-    wall.innerHTML = '';
-    var tilts = [-3.5, 2.5, -1.5, 3, -2.5, 1.5];
-    REWARD_SOUVENIRS.forEach(function(item, i){
-      var card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'polaroid';
-      card.setAttribute('aria-pressed', 'false');
-      card.setAttribute('aria-label', item.title + ' — toucher pour retourner');
-      card.style.setProperty('--tilt', tilts[i % tilts.length] + 'deg');
-      card.style.setProperty('--deal', (i * 0.11).toFixed(2) + 's');
-
-      var inner = document.createElement('span'); inner.className = 'polaroid-inner';
-      var front = document.createElement('span'); front.className = 'polaroid-face polaroid-front';
-      var photo = document.createElement('span'); photo.className = 'polaroid-photo';
-      function showEmpty(){
-        photo.classList.add('is-empty');
-        photo.innerHTML = '<svg aria-hidden="true"><use href="#icon-camera"/></svg><span>photo à ajouter</span>';
-      }
-      if(item.photo){
-        var img = new Image();
-        img.alt = '';
-        img.addEventListener('error', showEmpty);
-        img.src = item.photo;
-        photo.appendChild(img);
-      } else { showEmpty(); }
-      var cap = document.createElement('span'); cap.className = 'polaroid-cap'; cap.textContent = item.title;
-      front.appendChild(photo); front.appendChild(cap);
-
-      var back = document.createElement('span'); back.className = 'polaroid-face polaroid-back';
-      var txt = document.createElement('span'); txt.textContent = item.text;
-      back.appendChild(txt);
-
-      inner.appendChild(front); inner.appendChild(back);
-      card.appendChild(inner);
-      card.addEventListener('click', function(){
-        var on = !card.classList.contains('flipped');
-        card.classList.toggle('flipped', on);
-        card.setAttribute('aria-pressed', on ? 'true' : 'false');
-        if(on){ rewardFlipped[i] = true; }
-        updateGalleryCount();
-        if(on && Object.keys(rewardFlipped).length === REWARD_SOUVENIRS.length && !reduceMotion){
-          burstFromElement(secretEls.galleryNext);
-        }
+  /* 3 · extinction (lights out 5×5, solvable par construction) */
+  function trialLights(){
+    var N = 5, grid = [], moves = 0;
+    var wrap = trialEls.board;
+    wrap.innerHTML = '<p class="tl-count" id="tl-count" aria-live="polite"></p><div class="tl-grid" id="tl-grid" role="group" aria-label="Grille d’étoiles"></div>';
+    var gridEl = wrap.querySelector('#tl-grid'), count = wrap.querySelector('#tl-count');
+    function toggle(i){
+      var r = Math.floor(i / N), c = i % N;
+      [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){
+        var rr = r + d[0], cc = c + d[1];
+        if(rr >= 0 && rr < N && cc >= 0 && cc < N){ grid[rr * N + cc] = !grid[rr * N + cc]; }
       });
-      wall.appendChild(card);
-    });
-    updateGalleryCount();
-  }
-
-  /* ---- contenu statique (textes éditables) ---- */
-  function renderReward(){
-    rewardSetText(secretEls.envelopeTo, 'Pour ' + REWARD_TO);
-    rewardSetText(secretEls.letterGreeting, REWARD_GREETING);
-    rewardSetText(secretEls.letterSign, REWARD_SIGNATURE);
-    rewardSetText(secretEls.outroTitle, REWARD_OUTRO_TITLE);
-    rewardSetText(secretEls.outroText, REWARD_OUTRO_TEXT);
-    buildPolaroids();
-    updateRewardSteps();
-  }
-
-  /* (re)lance la récompense depuis le début : appelée quand le coffre s'ouvre */
-  function startReward(){
-    rewardLetterDone = saveGet('reward-letter-read') === '1';
-    rewardMaxStage = rewardLetterDone ? 2 : 0;
-    rewardFlipped = {};
-    rewardTypingToken++;
-    buildPolaroids();
-    var env = secretEls.envelope;
-    env.classList.remove('open', 'gone', 'is-hidden');
-    secretEls.envelopeHint.classList.remove('is-hidden');
-    secretEls.letterPaper.classList.remove('show');
-    secretEls.letterBody.innerHTML = '';
-    secretEls.letterSign.classList.remove('show');
-    secretEls.letterNext.classList.remove('show', 'ready');
-    rewardStage = 'letter';
-    secretEls.rewardStages.forEach(function(el){ el.classList.toggle('active', el.getAttribute('data-stage') === 'letter'); });
-    updateRewardSteps();
-    if(rewardLetterDone){
-      /* déjà lue une fois : on affiche directement la lettre complète, sans refaire l'enveloppe */
-      env.classList.add('open', 'gone', 'is-hidden');
-      secretEls.envelopeHint.classList.add('is-hidden');
-      showRewardLetter();
     }
-    startRewardDust();
-    if(secretEls.rewardApp){ secretEls.rewardApp.focus({ preventScroll: true }); }
+    function fresh(){
+      grid = []; for(var i = 0; i < N * N; i++) grid.push(false);
+      [2, 6, 8, 10, 14, 17, 21, 23].forEach(toggle);
+      moves = 0; draw();
+    }
+    function draw(){
+      var cells = gridEl.children;
+      for(var i = 0; i < N * N; i++){ cells[i].classList.toggle('on', grid[i]); cells[i].setAttribute('aria-pressed', grid[i] ? 'true' : 'false'); }
+      var left = grid.filter(Boolean).length;
+      count.textContent = left + ' étoile' + (left > 1 ? 's' : '') + ' allumée' + (left > 1 ? 's' : '') + ' · ' + moves + ' coup' + (moves > 1 ? 's' : '');
+    }
+    for(var i = 0; i < N * N; i++){
+      (function(i){
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'tl-cell';
+        b.setAttribute('aria-label', 'Étoile ligne ' + (Math.floor(i / N) + 1) + ', colonne ' + (i % N + 1));
+        b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
+        b.addEventListener('click', function(){
+          if(trialSolved) return;
+          toggle(i); moves++; draw();
+          if(!grid.some(Boolean)){ trialWin(); }
+        });
+        gridEl.appendChild(b);
+      })(i);
+    }
+    trialEls.reset.onclick = function(){ if(!trialSolved) fresh(); };
+    fresh();
   }
 
-  if(secretEls.envelope){ secretEls.envelope.addEventListener('click', openRewardEnvelope); }
-  if(secretEls.letterPaper){
-    /* un clic sur la lettre pendant qu'elle s'écrit = tout afficher d'un coup */
-    secretEls.letterPaper.addEventListener('click', function(){ if(!rewardLetterDone && secretEls.letterPaper.classList.contains('show')){ fillRewardLetter(); } });
-  }
-  if(secretEls.letterNext){ secretEls.letterNext.addEventListener('click', function(){ goRewardStage('gallery'); }); }
-  if(secretEls.galleryNext){ secretEls.galleryNext.addEventListener('click', function(){ unlockRewardStage(2); goRewardStage('outro'); }); }
-  if(secretEls.outroLetter){ secretEls.outroLetter.addEventListener('click', function(){ goRewardStage('letter'); }); }
-  if(secretEls.outroGallery){ secretEls.outroGallery.addEventListener('click', function(){ goRewardStage('gallery'); }); }
-  secretEls.rewardSteps.forEach(function(btn){
-    btn.addEventListener('click', function(){ goRewardStage(btn.getAttribute('data-stage')); });
-  });
-  if(secretEls.rewardApp){
-    secretEls.rewardApp.addEventListener('keydown', function(e){
-      if(e.target && e.target.tagName === 'INPUT') return;
-      var idx = REWARD_STAGES.indexOf(rewardStage);
-      if(e.key === 'ArrowRight' && idx < rewardMaxStage){ goRewardStage(REWARD_STAGES[idx + 1]); }
-      else if(e.key === 'ArrowLeft' && idx > 0){ goRewardStage(REWARD_STAGES[idx - 1]); }
-    });
-  }
-
-  function initSecret(){
-    renderDigicodeDots();
-    buildVirtualKeyboard();
-    renderPhrase();
-    renderReward();
-    renderDigicodeHint();
-    /* reprise de la progression : on revient au niveau où elle s'était arrêtée */
-    var savedLevel = saveGet('secret-level');
-    if(savedLevel === '3'){
-      (saveGet('secret-letters') || '').split('').forEach(function(l){
-        if(/^[A-Z]$/.test(l) && guessedLetters.indexOf(l) === -1){
-          guessedLetters.push(l);
-          setKeyState(l, phraseLetters.indexOf(l) !== -1 ? 'correct' : 'incorrect');
+  /* 4 · puzzle coulissant 3×3 */
+  function trialSlide(){
+    var tiles = [1,2,3,4,5,6,7,8,0], moves = 0;
+    var wrap = trialEls.board;
+    wrap.innerHTML = '<p class="tl-count" id="tp-count" aria-live="polite"></p><div class="tp-grid" id="tp-grid" role="group" aria-label="Puzzle coulissant"></div>';
+    var gridEl = wrap.querySelector('#tp-grid'), count = wrap.querySelector('#tp-count');
+    function neighbors(z){
+      var r = Math.floor(z / 3), c = z % 3, out = [];
+      if(r > 0) out.push(z - 3); if(r < 2) out.push(z + 3); if(c > 0) out.push(z - 1); if(c < 2) out.push(z + 1);
+      return out;
+    }
+    function shuffle(){
+      tiles = [1,2,3,4,5,6,7,8,0]; var z = 8, last = -1;
+      for(var k = 0; k < 90; k++){
+        var opts = neighbors(z).filter(function(x){ return x !== last; });
+        var n = opts[Math.floor(Math.random() * opts.length)];
+        tiles[z] = tiles[n]; tiles[n] = 0; last = z; z = n;
+      }
+      if(tiles.join() === '1,2,3,4,5,6,7,8,0'){ shuffle(); return; }
+      moves = 0; draw();
+    }
+    function draw(){
+      gridEl.innerHTML = '';
+      tiles.forEach(function(t, i){
+        var b = document.createElement('button');
+        b.type = 'button';
+        if(t === 0){ b.className = 'tp-tile tp-empty'; b.disabled = true; b.setAttribute('aria-label', 'Case vide'); }
+        else {
+          b.className = 'tp-tile' + (t === i + 1 ? ' ok' : '');
+          b.textContent = t;
+          b.setAttribute('aria-label', 'Pièce ' + t);
+          b.addEventListener('click', function(){ slide(i); });
         }
+        gridEl.appendChild(b);
       });
-      renderPhrase();
+      count.textContent = moves + ' coup' + (moves > 1 ? 's' : '');
     }
-    if(savedLevel === '2' || savedLevel === '3'){ showSecretLevel(savedLevel); }
-    else if(savedLevel === 'final'){ secretResumeFinal = true; showSecretLevel('final'); }
-    else { showSecretLevel(1); }
+    function slide(i){
+      if(trialSolved) return;
+      var z = tiles.indexOf(0);
+      if(neighbors(z).indexOf(i) === -1) return;
+      tiles[z] = tiles[i]; tiles[i] = 0; moves++; draw();
+      if(tiles.join() === '1,2,3,4,5,6,7,8,0'){ trialWin(); }
+    }
+    trialEls.reset.onclick = function(){ if(!trialSolved) shuffle(); };
+    shuffle();
+  }
+
+  function initVault(){
+    if(!vaultEls.locked) return;
+    renderTrialSteps();
+    if(trialDone >= 4 && !vaultOpened){ unlockVault(); }
+    else if(!vaultOpened){ startTrial(trialCur); }
+    trialEls.next.addEventListener('click', function(){ startTrial(Math.min(trialCur + 1, 3)); });
+    vaultEls.letterBtn.addEventListener('click', openLetter2);
+    vaultEls.letter.querySelectorAll('[data-letter-close]').forEach(function(el){ el.addEventListener('click', closeLetter2); });
+    vaultEls.letter.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ e.stopPropagation(); closeLetter2(); } });
+    if(vaultOpened){ showVaultOpen(); }
   }
 
   /* =========================================================
@@ -2096,6 +1805,6 @@
      ========================================================= */
   renderCalendar();
   renderLetters();
-  initSecret();
+  initVault();
   route();
 })();
