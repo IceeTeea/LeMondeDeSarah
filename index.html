@@ -40,7 +40,11 @@
       padding: 1.5rem;
       overflow-x: hidden;
       position: relative;
-      transition: background-color 0.5s ease;
+      transition: background-color 0.5s ease, font-family 0.3s ease;
+    }
+
+    body.code-font-mode {
+      font-family: var(--f-mono) !important;
     }
 
     .bg-layer {
@@ -95,6 +99,20 @@
     .command-card.perspective-mode {
       transform: perspective(1000px) rotateX(15deg) rotateY(-15deg) rotateZ(3deg);
       box-shadow: -20px 20px 0 var(--lime), 20px -20px 0 var(--magenta);
+    }
+
+    .command-card.invert-layout {
+      direction: rtl;
+    }
+
+    .command-card.explosion-anim {
+      animation: explodeAnim 0.6s ease forwards;
+    }
+
+    @keyframes explodeAnim {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.25) rotate(15deg) translateY(-40px); filter: hue-rotate(180deg); }
+      100% { transform: scale(1) rotate(0deg); }
     }
 
     .status-badge {
@@ -433,22 +451,22 @@
   <div class="modal-overlay" id="terminal-modal">
     <div class="terminal-window">
       <div class="terminal-header">
-        <span>⚡ GOD_MODE_CONSOLE // v4.0</span>
+        <span>⚡ GOD_MODE_CONSOLE // v5.0</span>
         <button id="close-terminal-btn" style="background:var(--magenta); color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer; font-weight:bold;">&times;</button>
       </div>
 
       <div class="terminal-screen" id="terminal-screen">
         <div>> Console d'administration totale initialisée...</div>
-        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir comment réécrire la page en direct.</div><br>
+        <div>> Tape <span style="color:var(--magenta);">aide</span> pour voir comment réécrire et pirater la page en direct.</div><br>
       </div>
 
       <div class="terminal-input-row">
         <span class="terminal-prompt">root@god:~#</span>
-        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande (ex: titre Salut Sarah)..." autofocus>
+        <input type="text" class="terminal-input" id="terminal-input" placeholder="Tape une commande (ex: fond black, explosion)..." autofocus>
       </div>
 
       <div class="terminal-hints">
-        Commandes : <code>aide</code>, <code>titre [texte]</code>, <code>texte [message]</code>, <code>bouton [texte]</code>, <code>fond [couleur]</code>, <code>cacher</code>, <code>montrer</code>, <code>perspective</code>, <code>normal</code>, <code>clear</code>
+        Commandes : <code>aide</code>, <code>titre [texte]</code>, <code>texte [message]</code>, <code>bouton [texte]</code>, <code>fond [couleur en anglais]</code>, <code>police</code>, <code>inverser</code>, <code>explosion</code>, <code>matrix</code>, <code>cacher</code>, <code>montrer</code>, <code>perspective</code>, <code>reset</code>, <code>clear</code>
       </div>
     </div>
   </div>
@@ -596,52 +614,88 @@
         const arg = parts.slice(1).join(' ');
 
         if (cmd === 'aide') {
-          log('Commandes de modification globale :');
+          log('Commandes de piratage global :');
           log(' - <b>titre [texte]</b> : Change le grand titre de la page.');
           log(' - <b>texte [message]</b> : Modifie le paragraphe de statut.');
           log(' - <b>bouton [texte]</b> : Renomme le bouton principal.');
-          log(' - <b>fond [couleur]</b> : Change la couleur de fond globale (ex: fond black).');
-          log(' - <b>cacher</b> : Fait disparaître l’orbe holographique.');
-          log(' - <b>montrer</b> : Fait réapparaître l’orbe.');
-          log(' - <b>perspective</b> : Applique une inclinaison 3D folle à la carte.');
-          log(' - <b>normal</b> : Remet la carte bien à plat.');
+          log(' - <b>fond [couleur en anglais]</b> : Change le fond (ex: fond black, fond purple).');
+          log(' - <b>police</b> : Active une police de code pur rétro.');
+          log(' - <b>inverser</b> : Inverse le sens d’affichage de la carte.');
+          log(' - <b>explosion</b> : Déclenche une onde de choc visuelle animée.');
+          log(' - <b>matrix</b> : Passe le terminal et le site en mode Matrix vert.');
+          log(' - <b>cacher / montrer</b> : Masque ou affiche l’orbe.');
+          log(' - <b>perspective</b> : Active une inclinaison 3D.');
+          log(' - <b>reset</b> : Remet absolument tout à zéro !');
           log(' - <b>clear</b> : Nettoie l’écran du terminal.');
         } 
         else if (cmd === 'titre') {
           if (!arg) { log('⚠️ Erreur : écris un texte après "titre".', '#ff3c8e'); return; }
           mainTitle.innerText = arg;
-          log(`✨ Titre mis à jour en : "${arg}"`, '#00ff66');
+          log(`✨ Titre réécrit en : "${arg}"`, '#00ff66');
         }
         else if (cmd === 'texte') {
           if (!arg) { log('⚠️ Erreur : écris un message après "texte".', '#ff3c8e'); return; }
           statusDesc.innerText = arg;
-          log(`✨ Paragraphe mis à jour en : "${arg}"`, '#00ff66');
+          log(`✨ Paragraphe réécrit en : "${arg}"`, '#00ff66');
         }
         else if (cmd === 'bouton') {
           if (!arg) { log('⚠️ Erreur : écris un texte après "bouton".', '#ff3c8e'); return; }
           openBtn.innerText = arg;
-          log(`✨ Bouton renommé en : "${arg}"`, '#00ff66');
+          log(`✨ Bouton modifié en : "${arg}"`, '#00ff66');
         }
         else if (cmd === 'fond') {
-          if (!arg) { log('⚠️ Erreur : précise une couleur (ex: fond red).', '#ff3c8e'); return; }
+          if (!arg) { log('⚠️ Erreur : précise une couleur en anglais (ex: fond black).', '#ff3c8e'); return; }
           document.body.style.backgroundColor = arg;
-          log(`🎨 Couleur de fond modifiée en : ${arg}`, '#00f0ff');
+          log(`🎨 Fond de la page changé pour : ${arg}`, '#00f0ff');
+        }
+        else if (cmd === 'police') {
+          document.body.classList.toggle('code-font-mode');
+          log('💻 Basculement sur la police de code source effectué.', '#C7F13B');
+        }
+        else if (cmd === 'inverser') {
+          mainCard.classList.toggle('invert-layout');
+          log('🔄 Inversion de la disposition de la carte effectuée.', '#ff8a3d');
+        }
+        else if (cmd === 'explosion') {
+          mainCard.classList.add('explosion-anim');
+          setTimeout(() => mainCard.classList.remove('explosion-anim'), 600);
+          log('💥 Onde de choc quantique déclenchée sur la page !', '#ff3c8e');
+        }
+        else if (cmd === 'matrix') {
+          document.documentElement.style.setProperty('--ink', '#000000');
+          document.documentElement.style.setProperty('--paper', '#0a1a0a');
+          document.documentElement.style.setProperty('--lime', '#00ff66');
+          document.documentElement.style.setProperty('--magenta', '#00ffaa');
+          document.body.style.backgroundColor = '#020b02';
+          log('🟢 Mode Matrix activé : code vert total.', '#00ff66');
         }
         else if (cmd === 'cacher') {
           orbContainer.classList.add('hidden');
-          log('👻 Orbe holographique masqué du site.', '#ff8a3d');
+          log('👻 Orbe holographique désintégré.', '#ff8a3d');
         }
         else if (cmd === 'montrer') {
           orbContainer.classList.remove('hidden');
-          log('🔮 Orbe holographique rétabli.', '#00ff66');
+          log('🔮 Orbe holographique matérialisé.', '#00ff66');
         }
         else if (cmd === 'perspective') {
-          mainCard.classList.add('perspective-mode');
-          log('🌀 Mode Perspective 3D activé sur la carte !', '#ff00aa');
+          mainCard.classList.toggle('perspective-mode');
+          log('🌀 Mode Perspective 3D basculé.', '#ff00aa');
         }
-        else if (cmd === 'normal') {
-          mainCard.classList.remove('perspective-mode');
-          log('📐 Remise à plat de la carte effectuée.', '#00ff66');
+        else if (cmd === 'reset') {
+          // Remet tout à zéro
+          document.body.style.backgroundColor = '';
+          document.body.className = '';
+          mainCard.className = 'command-card';
+          mainTitle.innerText = 'Mise à jour Système';
+          mainSubtitle.innerText = 'Le Monde de Sarah prépare son arrivée...';
+          statusDesc.innerText = 'Initialisation du noyau de données...';
+          openBtn.innerText = '⚡ Ouvrir le Terminal d’Override';
+          orbContainer.classList.remove('hidden');
+          document.documentElement.style.setProperty('--paper', '#FBF3E7');
+          document.documentElement.style.setProperty('--ink', '#1C1030');
+          document.documentElement.style.setProperty('--lime', '#C7F13B');
+          document.documentElement.style.setProperty('--magenta', '#FF3C8E');
+          log('🔄 RESET TOTAL : Le site a retrouvé son état d’origine initial.', '#00ff66');
         }
         else if (cmd === 'clear') {
           terminalScreen.innerHTML = '';
