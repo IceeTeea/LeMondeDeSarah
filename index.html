@@ -43,7 +43,6 @@
       position: relative;
     }
 
-    /* Rayures de chantier de fond */
     .bg-layer {
       position: fixed;
       inset: 0;
@@ -130,7 +129,6 @@
       50% { opacity: 0.2; transform: scale(0.7); }
     }
 
-    /* Noyau de chantier interactif */
     .orb-container {
       position: relative;
       width: 110px;
@@ -139,12 +137,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .orb-container:hover {
-      transform: scale(1.08);
     }
 
     .orb-ring {
@@ -259,7 +251,6 @@
       opacity: 0.85;
     }
 
-    /* Bouton pour ouvrir l'Atelier d'Outils */
     .action-btn {
       font-family: var(--f-display);
       font-weight: 700;
@@ -283,7 +274,7 @@
       box-shadow: 6px 6px 0 var(--magenta);
     }
 
-    /* Modale Atelier d'Outils (Pas de terminal !) */
+    /* Modale des Énigmes */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -304,7 +295,7 @@
       pointer-events: auto;
     }
 
-    .workshop-card {
+    .puzzle-card {
       width: 100%;
       max-width: 540px;
       background: #140b24;
@@ -318,89 +309,72 @@
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .modal-overlay.active .workshop-card {
+    .modal-overlay.active .puzzle-card {
       transform: scale(1);
     }
 
-    .workshop-title {
-      font-family: var(--f-display);
-      font-size: 1.2rem;
-      color: var(--warning);
-      margin-bottom: 0.5rem;
-    }
-
-    .workshop-sub {
-      font-size: 0.88rem;
-      opacity: 0.8;
-      margin-bottom: 1.5rem;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .tool-btn {
-      background: #1c1030;
-      border: 2px solid var(--tangerine);
-      color: var(--paper);
-      padding: 1rem;
-      border-radius: 16px;
-      font-family: var(--f-body);
-      font-weight: 600;
-      font-size: 0.88rem;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 4px 4px 0 var(--magenta);
-      transition: all 0.2s ease;
-    }
-
-    .tool-btn span {
-      font-size: 1.5rem;
-    }
-
-    .tool-btn:hover {
-      background: var(--tangerine);
-      color: var(--ink);
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 var(--warning);
-    }
-
-    .workshop-feedback {
+    .puzzle-header {
       font-family: var(--f-mono);
-      font-size: 0.82rem;
-      background: #0d0617;
-      border: 1px dashed var(--warning);
-      padding: 0.8rem;
-      border-radius: 12px;
-      color: var(--lime);
-      min-height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.25rem;
+      font-size: 0.8rem;
+      color: var(--warning);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
-    .close-workshop-btn {
-      background: var(--paper);
+    .puzzle-question {
+      font-family: var(--f-display);
+      font-size: 1.05rem;
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+      color: var(--paper);
+    }
+
+    .puzzle-input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .puzzle-input {
+      flex: 1;
+      background: #0d0617;
+      border: 2px solid var(--tangerine);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      color: #fff;
+      font-family: var(--f-body);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .puzzle-submit-btn {
+      background: var(--warning);
       color: var(--ink);
       border: none;
-      padding: 0.7rem 1.6rem;
-      border-radius: 999px;
-      font-family: var(--f-mono);
+      padding: 0 1.2rem;
+      border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s ease;
+      font-family: var(--f-mono);
     }
 
-    .close-workshop-btn:hover {
-      transform: scale(1.05);
-      background: var(--warning);
+    .puzzle-feedback {
+      font-family: var(--f-mono);
+      font-size: 0.82rem;
+      min-height: 25px;
+      margin-bottom: 1rem;
+    }
+
+    .close-puzzle-btn {
+      background: transparent;
+      color: rgba(251, 243, 231, 0.6);
+      border: 1px solid rgba(251, 243, 231, 0.2);
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      cursor: pointer;
     }
 
     .interactive-hint {
@@ -422,70 +396,57 @@
   <div class="command-card" id="main-card">
     <div class="status-badge" id="badge-container">
       <span class="pulse-dot"></span>
-      <span id="badge-text">🚧 GROS ŒUVRE EN COURS</span>
+      <span id="badge-text">🚧 ENIGMES DU CHANTIER</span>
     </div>
 
-    <!-- Cliquer sur l'orbe déclenche aussi des étincelles -->
-    <div class="orb-container" id="orb-container" title="Clique-moi !">
+    <div class="orb-container" id="orb-container">
       <div class="orb-ring"></div>
       <div class="orb-ring-reverse"></div>
       <div class="orb-core"></div>
     </div>
 
     <h1 id="main-title">Chantier Spatial Majeur</h1>
-    <span class="subtitle" id="main-subtitle">Le Monde de Sarah est en pleine reconstruction...</span>
+    <span class="subtitle" id="main-subtitle">Résous les énigmes pour débloquer le site...</span>
     
-    <p class="status-text" id="status-text">Pose des fondations galactiques et soudure des structures...</p>
+    <p class="status-text" id="status-text">Énigmes résolues : <span id="solved-count">0</span> / 10</p>
 
     <div class="progress-section">
       <div class="progress-header">
-        <span>Avancée du Chantier</span>
-        <span id="percent-label" style="color: var(--warning); font-weight: 700;">1%</span>
+        <span>Progression des Énigmes</span>
+        <span id="percent-label" style="color: var(--warning); font-weight: 700;">0%</span>
       </div>
       <div class="progress-bar-container">
-        <div class="progress-fill" id="progress-fill"></div>
+        <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
       </div>
-      <div class="time-remaining" id="time-remaining">Fin des travaux prévue à 15h00...</div>
+      <div class="time-remaining" id="time-remaining">Objectif : Résoudre les 10 énigmes !</div>
     </div>
 
-    <button class="action-btn" id="open-workshop-btn">
-      🛠️ Ouvrir l'Atelier des Outils
+    <button class="action-btn" id="open-puzzle-btn">
+      🧩 Résoudre les Énigmes
     </button>
 
-    <div class="interactive-hint">✨ Clique n'importe où pour faire jaillir des étincelles de soudure</div>
+    <div class="interactive-hint">✨ Clique n'importe où pour faire jaillir des étincelles</div>
   </div>
 
-  <!-- Modale Atelier d'Outils (Interactif & Visuel) -->
-  <div class="modal-overlay" id="workshop-modal">
-    <div class="workshop-card">
-      <div class="workshop-title">🛠️ L'Atelier de Construction</div>
-      <div class="workshop-sub">Choisis un outil magique pour avancer sur le chantier :</div>
+  <!-- Modale des Énigmes -->
+  <div class="modal-overlay" id="puzzle-modal">
+    <div class="puzzle-card">
+      <div class="puzzle-header" id="puzzle-counter">Énigme 1 sur 10</div>
+      <div class="puzzle-question" id="puzzle-text">Chargement de l'énigme...</div>
 
-      <div class="tools-grid">
-        <button class="tool-btn" id="tool-welder">
-          <span>🔥</span> Chalumeau Plasma
-        </button>
-        <button class="tool-btn" id="tool-paint">
-          <span>🎨</span> Pistolet Peinture Néon
-        </button>
-        <button class="tool-btn" id="tool-crane">
-          <span>🏗️</span> Grue Quantique
-        </button>
-        <button class="tool-btn" id="tool-coffee">
-          <span>☕</span> Machine à Café Supreme
-        </button>
+      <div class="puzzle-input-row">
+        <input type="text" class="puzzle-input" id="puzzle-input" placeholder="Ta réponse ici..." autofocus>
+        <button class="puzzle-submit-btn" id="puzzle-submit">Valider</button>
       </div>
 
-      <div class="workshop-feedback" id="workshop-feedback">
-        En attente d'action sur le chantier...
-      </div>
+      <div class="puzzle-feedback" id="puzzle-feedback"></div>
 
-      <button class="close-workshop-btn" id="close-workshop-btn">Fermer l'atelier</button>
+      <button class="close-puzzle-btn" id="close-puzzle-btn">Fermer pour l'instant</button>
     </div>
   </div>
 
   <script>
-    // --- Canvas Étincelles de soudure ---
+    // --- Canvas Étincelles ---
     const canvas = document.getElementById('stars-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -510,24 +471,20 @@
     initCanvas();
 
     window.addEventListener('click', (e) => {
-      if (e.target.closest('.workshop-card')) return;
-      triggerSparks(e.clientX, e.clientY);
-    });
-
-    function triggerSparks(x, y) {
+      if (e.target.closest('.puzzle-card')) return;
       const colors = ['#FF3C8E', '#FF8A3D', '#FFD700', '#C7F13B', '#ffffff'];
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 14; i++) {
         sparks.push({
-          x: x,
-          y: y,
-          vx: (Math.random() - 0.5) * 10,
-          vy: (Math.random() - 0.5) * 10,
+          x: e.clientX,
+          y: e.clientY,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
           size: Math.random() * 5 + 2,
           color: colors[Math.floor(Math.random() * colors.length)],
           life: 1.2
         });
       }
-    }
+    });
 
     function renderBackground(t) {
       ctx.clearRect(0, 0, width, height);
@@ -560,84 +517,86 @@
     }
     requestAnimationFrame(renderBackground);
 
-    // --- Compteur vers 15h00 ---
-    const startTime = new Date(2026, 9, 19, 0, 50, 0).getTime();
-    const endTime = new Date(2026, 9, 19, 15, 0, 0).getTime();
-    const progressFill = document.getElementById('progress-fill');
+    // --- Liste des 10 Énigmes ---
+    const riddles = [
+      { q: "Je n'ai pas de voix, mais je réponds quand on m'appelle. Qui suis-je ?", a: ["l'echo", "echo"] },
+      { q: "Plus j'en prends, plus j'en laisse derrière moi. Que suis-je ?", a: ["les pas", "pas", "empreintes"] },
+      { q: "Qu'est-ce qui a des dents mais ne mord pas ?", a: ["un peigne", "peigne"] },
+      { q: "Je suis plein de trous, mais je retiens pourtant l'eau. Que suis-je ?", a: ["une eponge", "eponge"] },
+      { q: "Qu'est-ce qui commence par un E, se termine par un E, et ne contient qu'une seule lettre ?", a: ["une enveloppe", "enveloppe"] },
+      { q: "Je tombe de haut, mais je ne me blesse jamais. Qui suis-je ?", a: ["la pluie", "pluie", "la neige", "neige"] },
+      { q: "Qu'est-ce qui grandit en vieillissant et rajeunit en mourant ?", a: ["une bougie", "bougie"] },
+      { q: "Je peux faire le tour du monde en restant toujours dans mon coin. Qui suis-je ?", a: ["un timbre", "timbre", "un timbre poste"] },
+      { q: "Qu'est-ce qui a quatre pattes le matin, deux à midi, et trois le soir ?", a: ["l'homme", "homme", "humain"] },
+      { q: "Quel est le métal le plus précieux dans l'univers de Sarah ?", a: ["l'amitie", "amitie", "l'amour", "amour", "sarah", "ice"] }
+    ];
+
+    let currentRiddleIndex = 0;
+    let solvedCount = 0;
+
+    const modal = document.getElementById('puzzle-modal');
+    const openBtn = document.getElementById('open-puzzle-btn');
+    const closeBtn = document.getElementById('close-puzzle-btn');
+    const submitBtn = document.getElementById('puzzle-submit');
+    const puzzleInput = document.getElementById('puzzle-input');
+    const puzzleText = document.getElementById('puzzle-text');
+    const puzzleCounter = document.getElementById('puzzle-counter');
+    const puzzleFeedback = document.getElementById('puzzle-feedback');
+    const solvedCountSpan = document.getElementById('solved-count');
     const percentLabel = document.getElementById('percent-label');
+    const progressFill = document.getElementById('progress-fill');
     const statusText = document.getElementById('status-text');
-    const timeRemaining = document.getElementById('time-remaining');
 
-    function updateProgress() {
-      const now = new Date().getTime();
-      const totalDuration = endTime - startTime;
-      const elapsed = now - startTime;
-      let percentage = (elapsed / totalDuration) * 100;
-      if (percentage < 1) percentage = 1;
-      if (percentage >= 100) percentage = 100;
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      loadRiddle();
+      setTimeout(() => puzzleInput.focus(), 100);
+    });
 
-      percentLabel.innerText = Math.floor(percentage) + "%";
-      progressFill.style.width = percentage + "%";
-
-      const timeLeftMs = endTime - now;
-      if (timeLeftMs > 0) {
-        const hours = Math.floor(timeLeftMs / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
-        timeRemaining.innerText = `Fin du chantier prévue dans : ${hours}h ${minutes}m ${seconds}s`;
-      } else {
-        timeRemaining.innerText = "✨ Chantier terminé ! Ouverture des portes...";
-      }
-    }
-    setInterval(updateProgress, 1000);
-    updateProgress();
-
-    // --- Logique de l'Atelier Interactif ---
-    const modal = document.getElementById('workshop-modal');
-    const openBtn = document.getElementById('open-workshop-btn');
-    const closeBtn = document.getElementById('close-workshop-btn');
-    const feedbackBox = document.getElementById('workshop-feedback');
-    const mainCard = document.getElementById('main-card');
-    const orbContainer = document.getElementById('orb-container');
-
-    openBtn.addEventListener('click', () => modal.classList.add('active'));
     closeBtn.addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    // Actions des outils magiques
-    document.getElementById('tool-welder').addEventListener('click', () => {
-      feedbackBox.innerHTML = "🔥 Chalumeau activé ! Soudure ultra-résistante posée sur les structures.";
-      triggerSparks(window.innerWidth / 2, window.innerHeight / 2);
-    });
-
-    document.getElementById('tool-paint').addEventListener('click', () => {
-      const colors = ['#FF3C8E', '#6C2BD9', '#00f0ff', '#C7F13B', '#FF8A3D'];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      mainCard.style.borderColor = randomColor;
-      feedbackBox.innerHTML = `🎨 Coup de pistolet appliqué ! Bordure repeinte en <span style="color:${randomColor}">${randomColor}</span>.`;
-    });
-
-    document.getElementById('tool-crane').addEventListener('click', () => {
-      mainCard.style.transform = "translateY(-10px) rotate(2deg)";
-      setTimeout(() => mainCard.style.transform = "none", 400);
-      feedbackBox.innerHTML = "🏗️ La grue quantique a soulevé et replacé la carte avec succès !";
-    });
-
-    document.getElementById('tool-coffee').addEventListener('click', () => {
-      feedbackBox.innerHTML = "☕ Café ingurgité ! Vitesse d'exécution des ouvriers augmentée de 300% !";
-      // Donne un petit boost visuel à la barre de progression
-      let currentVal = parseInt(percentLabel.innerText);
-      if (currentVal < 95) {
-        percentLabel.innerText = (currentVal + 5) + "%";
-        progressFill.style.width = (currentVal + 5) + "%";
+    function loadRiddle() {
+      if (solvedCount >= riddles.length) {
+        puzzleCounter.innerText = "✨ TOUTES LES ÉNIGMES RÉSOLUES !";
+        puzzleText.innerText = "Félicitations ! Le chantier cosmique est entièrement validé.";
+        puzzleInput.style.display = 'none';
+        submitBtn.style.display = 'none';
+        puzzleFeedback.innerHTML = "<span style='color:var(--lime); font-weight:bold;'>Ouverture des portes imminente... 🚀</span>";
+        return;
       }
-    });
+      puzzleCounter.innerText = `Énigme ${solvedCount + 1} sur 10`;
+      puzzleText.innerText = riddles[solvedCount].q;
+      puzzleInput.value = '';
+      puzzleFeedback.innerText = '';
+    }
 
-    // Clic direct sur l'orbe central
-    orbContainer.addEventListener('click', (e) => {
-      e.stopPropagation();
-      triggerSparks(e.clientX, e.clientY);
-      feedbackBox.innerHTML = "✨ Le noyau central a réagi à ton touché !";
+    function checkAnswer() {
+      if (solvedCount >= riddles.length) return;
+      const userAns = puzzleInput.value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const validAnswers = riddles[solvedCount].a;
+
+      if (validAnswers.some(ans => userAns.includes(ans))) {
+        solvedCount++;
+        solvedCountSpan.innerText = solvedCount;
+        
+        const pct = (solvedCount / 10) * 100;
+        percentLabel.innerText = pct + "%";
+        progressFill.style.width = pct + "%";
+
+        puzzleFeedback.innerHTML = "<span style='color:var(--lime);'>🎉 Bonne réponse ! Passage à l'énigme suivante...</span>";
+        
+        setTimeout(() => {
+          loadRiddle();
+        }, 1200);
+      } else {
+        puzzleFeedback.innerHTML = "<span style='color:#FF3C8E;'>❌ Mauvaise réponse, essaie encore !</span>";
+      }
+    }
+
+    submitBtn.addEventListener('click', checkAnswer);
+    puzzleInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkAnswer();
     });
   </script>
 </body>
