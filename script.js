@@ -1091,6 +1091,52 @@
   })();
 
   /* =========================================================
+     PATCH NOTE : s'ouvre une fois par version, rouvrable depuis la carte
+     (change PATCH_VERSION à chaque nouvelle mise à jour pour la réafficher)
+     ========================================================= */
+  var PATCH_VERSION = '2026-10-19';
+  var patchEl = document.getElementById('patch');
+  var patchOpenBtn = document.getElementById('patch-open');
+  var patchPrevFocus = null;
+  function openPatch(){
+    if(!patchEl) return;
+    patchPrevFocus = document.activeElement;
+    patchEl.hidden = false;
+    void patchEl.offsetWidth;
+    patchEl.classList.add('is-open');
+    document.body.classList.add('patch-lock');
+    var body = patchEl.querySelector('.patch-body'); if(body){ body.scrollTop = 0; }
+    window.setTimeout(function(){ var x = patchEl.querySelector('.patch-close'); if(x){ x.focus(); } }, 60);
+  }
+  function closePatch(){
+    if(!patchEl || patchEl.hidden) return;
+    lsSet('patch', PATCH_VERSION);
+    patchEl.classList.remove('is-open');
+    document.body.classList.remove('patch-lock');
+    window.setTimeout(function(){ patchEl.hidden = true; }, reduceMotion ? 10 : 320);
+    if(patchPrevFocus && patchPrevFocus.focus){ try{ patchPrevFocus.focus(); }catch(e){} }
+  }
+  function showPatchIfNew(){
+    var hsh = window.location.hash.replace('#', '');
+    if(lsGet('patch') === PATCH_VERSION && !/[?&]reset\b/.test(window.location.search)) return;
+    if(hsh !== '' && hsh !== 'map' && hsh !== 'home') return;
+    openPatch();
+  }
+  if(patchEl){
+    patchEl.querySelectorAll('[data-patch-close]').forEach(function(el){ el.addEventListener('click', closePatch); });
+    patchEl.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){ e.stopPropagation(); closePatch(); return; }
+      if(e.key !== 'Tab') return;
+      var f = patchEl.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
+      if(!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    });
+  }
+  if(patchOpenBtn){ patchOpenBtn.addEventListener('click', openPatch); }
+
+  /* =========================================================
      ÉCRAN D'INTRO "Pour Sarah" (première visite seulement)
      ========================================================= */
   var introEl = document.getElementById('intro');
@@ -1130,8 +1176,11 @@
         window.setTimeout(function(){
           introEl.hidden = true;
           if(iraf){ cancelAnimationFrame(iraf); }
+          showPatchIfNew();
         }, reduceMotion ? 10 : 900);
       });
+    } else {
+      window.setTimeout(showPatchIfNew, 500);
     }
   }
 

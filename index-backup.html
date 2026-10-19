@@ -108,12 +108,94 @@
   </div>
 </div>
 
+<!-- ================= PATCH NOTE (à l'ouverture, une fois par version) ================= -->
+<div class="patch" id="patch" role="dialog" aria-modal="true" aria-labelledby="patch-title" hidden>
+  <div class="patch-backdrop" data-patch-close></div>
+  <div class="patch-panel">
+    <button class="patch-close" type="button" data-patch-close aria-label="Fermer la page des nouveautés">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+    <header class="patch-head">
+      <p class="patch-badge"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Mise à jour · octobre 2026</p>
+      <h2 id="patch-title">Quoi de neuf dans l'univers&nbsp;?</h2>
+      <p class="patch-lede">Voici tout ce qui a changé pour toi.</p>
+    </header>
+    <div class="patch-body">
+      <div class="patch-grid">
+          <section class="patch-card" style="--a:#ff8fc3">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Une nouvelle façon d'entrer</h3>
+            <ul>
+              <li>Un écran d'intro « Pour Sarah » à la première visite.</li>
+              <li>L'accueil devient la <strong>carte de l'univers</strong> : une planète par section, il suffit de cliquer.</li>
+              <li>Les polices du site sont enfin chargées pour un rendu plus soigné.</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#b9a3ff">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Jour et nuit</h3>
+            <ul>
+              <li>Un bouton soleil/lune change l'ambiance du site.</li>
+              <li>Le mode nuit s'active tout seul près de la carte, du calendrier, de la chambre et du ciel.</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#e4ff8a">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Calendrier</h3>
+            <ul>
+              <li>Un <strong>chemin de 30 étoiles</strong> reliées entre elles remplace la grille.</li>
+              <li>Nouveau mois : <strong>novembre 2026</strong>, avec 30 nouveaux mots.</li>
+              <li>Septembre et octobre restent accessibles, via des onglets.</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#ffd0a0">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Lettres</h3>
+            <ul>
+              <li><strong>6 nouvelles lettres</strong> à ouvrir selon l'humeur.</li>
+              <li>Les lettres déjà ouvertes le restent, même après avoir rechargé le site.</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#ff9a9a">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Messages</h3>
+            <ul>
+              <li>Les 4 preuves ont été réécrites.</li>
+              <li>La fratrie se lit dans un <strong>lecteur à onglets</strong> : un message à la fois, en grand, sur ordinateur comme sur téléphone.</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#8fe9ff">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>La chambre</h3>
+            <ul>
+              <li>La fenêtre sur le ciel devient une vraie chambre gaming RGB : bureau, étagère, rideaux, le tout sans défilement.</li>
+              <li>Dans L'Échappée, la chambre en 3D a été refaite, avec un vrai setup gaming et un PC à explorer.</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#9dffd0">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Section Secret</h3>
+            <ul>
+              <li>Une toute nouvelle récompense pour celles qui vont jusqu'au bout. Pas de spoiler. 🤫</li>
+            </ul>
+          </section>
+          <section class="patch-card" style="--a:#ffe08a">
+            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Petits plus</h3>
+            <ul>
+              <li>Ta progression est sauvegardée.</li>
+              <li>Le site s'adapte aux petits écrans.</li>
+              <li>Les animations se désactivent si tu préfères.</li>
+            </ul>
+          </section>
+      </div>
+    </div>
+    <footer class="patch-foot">
+      <p>Tu pourras rouvrir cette page depuis la carte, avec « Voir les nouveautés ».</p>
+      <button class="patch-go" type="button" data-patch-close>C'est parti</button>
+    </footer>
+  </div>
+</div>
+
 <!-- ================= ÉCRAN 0 : CARTE DE L'UNIVERS ================= -->
 <div class="screen" id="screen-map">
   <div class="map-screen">
     <div class="map-head">
       <h2 id="map-heading" tabindex="-1">Ton univers</h2>
       <p class="map-lede">choisis une planète</p>
+      <button class="patch-open" id="patch-open" type="button">Voir les nouveautés</button>
     </div>
     <div class="map-stage" id="map-stage">
       <svg class="map-lines" id="map-lines" aria-hidden="true"></svg>
