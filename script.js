@@ -1169,7 +1169,7 @@
      PATCH NOTE : s'ouvre une fois par version, rouvrable depuis la carte
      (change PATCH_VERSION à chaque nouvelle mise à jour pour la réafficher)
      ========================================================= */
-  var PATCH_VERSION = '2026-10-20b';
+  var PATCH_VERSION = '2026-11-15';
   var patchEl = document.getElementById('patch');
   var patchOpenBtn = document.getElementById('patch-open');
   var patchPrevFocus = null;
@@ -1308,7 +1308,7 @@
   var cctx = confettiCanvas ? confettiCanvas.getContext('2d') : null;
   var particles = [];
   var confettiRunning = false;
-  var colors = ['#FF3C8E','#FF8A3D','#6C2BD9','#C7F13B','#1C1030'];
+  var colors = ['#C98E8B','#C98B63','#8C5E3F','#AEB78F','#E8CFA4'];
 
   function sizeConfetti(){
     if(!confettiCanvas) return;

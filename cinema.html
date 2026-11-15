@@ -6,12 +6,12 @@
 <meta name="color-scheme" content="dark">
 <title>Salle de ciné · Sarah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --room:#0d0a12; --room2:#171020; --velvet:#7a1530; --velvet2:#4d0c1f; --amber:#ffb347; --amber2:#ff8a3d;
-    --screen:#dfe9f7; --ink:#f1ecf5; --dim:rgba(241,236,245,.68); --faint:rgba(241,236,245,.4); --line:rgba(241,236,245,.14);
-    --f-disp:"Big Shoulders Display","Arial Narrow",Impact,sans-serif; --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --room:#17100c; --room2:#231913; --velvet:#7a3036; --velvet2:#4d1d22; --amber:#e8c27a; --amber2:#c98b63;
+    --screen:#dfe9f7; --ink:#f4eadb; --dim:rgba(244,234,219,.7); --faint:rgba(244,234,219,.42); --line:rgba(244,234,219,.14);
+    --f-disp:"Fraunces","Iowan Old Style",Georgia,serif; --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
     --ease:cubic-bezier(.22,.9,.3,1);
   }
   *,*::before,*::after{ box-sizing:border-box; }
@@ -28,7 +28,7 @@
   main,nav,footer{ position:relative; z-index:2; }
 
   /* ---------- barre du haut ---------- */
-  nav{ position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:1.2rem; padding:.7rem clamp(1rem,4vw,2.4rem); background:rgba(13,10,18,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  nav{ position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:1.2rem; padding:.7rem clamp(1rem,4vw,2.4rem); background:rgba(23,16,12,.84); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
   nav .back{ text-decoration:none; font-size:.86rem; color:var(--dim); padding:.4em .9em; border:1px solid var(--line); border-radius:999px; white-space:nowrap; }
   nav .back:hover{ color:var(--ink); border-color:var(--faint); }
   nav .links{ display:flex; gap:1.3rem; margin-left:auto; overflow-x:auto; scrollbar-width:none; }
@@ -165,6 +165,15 @@
     nav .links a{ font-size:.82rem; }
   }
   @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } .curtain{ transition:none; } .poster,.btn{ transition:none; } .cf{ animation-duration:.01s; } }
+
+  /* ---- refonte « salon » : la salle devient chaleureuse ---- */
+  .screen h1{ font-weight:400; letter-spacing:-.03em; line-height:.9; font-variation-settings:"SOFT" 100,"WONK" 1; }
+  .screen h1 span{ font-style:italic; }
+  .tonight b{ font-weight:500; letter-spacing:0; }
+  .screen{ background:radial-gradient(120% 90% at 50% 20%, #fbf3e4 0%, #eadfcb 40%, #c9b79a 100%); color:#2e2219; }
+  .screen h1{ color:#2e2219; } .screen p.sub, .tonight, .stats{ color:#4a3a2c; }
+  .curtain{ background:repeating-linear-gradient(90deg,#6b2b31 0 28px,#823640 28px 56px,#56212a 56px 84px); }
+  .pelmet{ background:linear-gradient(180deg,#3a1418,#6b2b31); }
 </style>
 </head>
 <body>
