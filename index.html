@@ -1,24 +1,276 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site en maintenance</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            text-align: center;
-            padding: 100px 20px;
-            margin: 0;
-        }
-        h1 { font-size: 2.5em; color: #2c3e50; }
-        p { font-size: 1.2em; color: #7f8c8d; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mise à jour majeure en cours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #05050a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      perspective: 1000px;
+    }
+
+    /* Grille de fond subtile */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+      z-index: 0;
+    }
+
+    /* Orbes lumineux animés */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: 0;
+      opacity: 0.65;
+      animation: float 10s infinite ease-in-out alternate;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: #6366f1;
+      top: -10%;
+      left: 15%;
+    }
+
+    .orb-2 {
+      width: 350px;
+      height: 350px;
+      background: #ec4899;
+      bottom: -10%;
+      right: 15%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #06b6d4;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-duration: 14s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(40px, 60px) scale(1.15); }
+    }
+
+    /* Carte centrale Glassmorphism avec effet 3D */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: rgba(20, 20, 32, 0.45);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 28px;
+      padding: 3.5rem 3rem;
+      max-width: 580px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.03);
+      transition: transform 0.1s ease-out;
+      transform-style: preserve-3d;
+    }
+
+    /* Badge pulsant */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      margin-bottom: 1.8rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background-color: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #38bdf8;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.4; }
+    }
+
+    /* Titre principal */
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      letter-spacing: -1px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: shine 4s linear infinite;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Barre de progression futuriste */
+    .progress-wrapper {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 78%;
+      background: linear-gradient(90deg, #38bdf8, #818cf8, #f472b6);
+      border-radius: 999px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.7);
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      animation: sweep 2s infinite;
+    }
+
+    @keyframes sweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Bouton de contact / réseau */
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #05050a;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    }
+  </style>
 </head>
 <body>
-    <h1>Site en cours de mise à jour</h1>
-    <p>Nous faisons peau neuve. Nous serons de retour très bientôt !</p>
+
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <main class="card" id="tilt-card">
+    <div class="badge">
+      <span class="dot"></span>
+      Mise à jour système
+    </div>
+
+    <h1>Quelque chose <br><span class="gradient-text">d'incroyable</span> arrive.</h1>
+    
+    <p>Nous reconstruisons l'expérience de zéro pour vous offrir un site plus rapide, plus beau et plein de nouveautés. Revenez très vite !</p>
+
+    <div class="progress-wrapper">
+      <div class="progress-header">
+        <span>Déploiement de la v2.0</span>
+        <span>78%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Remplace le lien mailto par ton email ou ton Instagram/Discord -->
+    <a href="mailto:contact@tonsite.com" class="btn">Nous contacter</a>
+  </main>
+
+  <!-- Script pour l'effet 3D au survol de la souris -->
+  <script>
+    const card = document.getElementById('tilt-card');
+
+    document.addEventListener('mousemove', (e) => {
+      const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
+      const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
+      card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+  </script>
+
 </body>
 </html>
