@@ -59,7 +59,6 @@
     <div class="som-group">
       <p class="som-title">Ton coin</p>
       <button class="som-link nav-link" type="button" data-nav="home" style="--c1:#F0D79A;--c2:#B9823A"><span class="som-orb"></span><span class="som-name">Accueil</span><span class="som-tag">là où tout commence</span></button>
-      <button class="som-link nav-link" type="button" data-nav="map" style="--c1:#E9B4AE;--c2:#A8585A"><span class="som-orb"></span><span class="som-name">La carte</span><span class="som-tag">toutes les planètes d'un coup d'œil</span></button>
       <button class="som-link nav-link" type="button" data-nav="letters" style="--c1:#F1CFA8;--c2:#B8693F"><span class="som-orb"></span><span class="som-name">Lettres</span><span class="som-tag">à ouvrir selon l'humeur</span></button>
       <button class="som-link nav-link" type="button" data-nav="calendar" style="--c1:#D6DDAE;--c2:#6F8148"><span class="som-orb"></span><span class="som-name">Calendrier</span><span class="som-tag">un chemin d'étoiles</span></button>
     </div>
@@ -74,6 +73,7 @@
       <button class="som-link nav-link" type="button" data-nav="secret" style="--c1:#BFD8C2;--c2:#4F7A5E"><span class="som-orb"></span><span class="som-name">Le Coffre</span><span class="som-tag">quatre épreuves</span></button>
       <a class="som-link" href="soleil-lune.html" style="--c1:#F6E8C2;--c2:#9A7F9C"><span class="som-orb"></span><span class="som-name">Soleil / Lune</span><span class="som-tag">un coin à part</span></a>
       <a class="som-link is-mourn" href="sanctuary.html" style="--c1:#B5C3C8;--c2:#4A5A63"><span class="som-orb"></span><span class="som-name">L'Échappée</span><span class="som-tag">une pièce à explorer</span></a>
+      <button class="patch-open" id="patch-open" type="button">Voir les nouveautés</button>
     </div>
   </nav>
 </div>
@@ -81,151 +81,56 @@
 
 
 
-<!-- ================= PATCH NOTE (à l'ouverture, une fois par version) ================= -->
-<div class="patch" id="patch" role="dialog" aria-modal="true" aria-labelledby="patch-title" hidden>
-  <div class="patch-backdrop" data-patch-close></div>
-  <div class="patch-panel">
-    <button class="patch-close" type="button" data-patch-close aria-label="Fermer la page des nouveautés">
+<!-- ================= NOUVEAUTÉS : page de lecture à l'arrivée (une fois par version) ================= -->
+<div class="nw" id="news" role="dialog" aria-modal="true" aria-labelledby="nw-t0" hidden>
+  <div class="nw-card">
+    <button class="nw-x" id="nw-x" type="button" aria-label="Fermer les nouveautés" hidden>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
     </button>
-    <header class="patch-head">
-      <p class="patch-badge"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Mise à jour · 15 novembre 2026</p>
-      <h2 id="patch-title">Quoi de neuf dans l'univers&nbsp;?</h2>
-      <p class="patch-lede">Des nouveautés fraîches, à découvrir en premier.</p>
-    </header>
-    <div class="patch-body">
-      <h3 class="patch-sec is-new"><span class="patch-new">Nouveau</span>Ajouté le 15 novembre</h3>
-      <div class="patch-grid">
-          <section class="patch-card is-new" style="--a:#E9B4AE">
-            <span class="patch-tag">Nouveau</span>
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Un nouveau décor, plus chaleureux</h3>
-            <ul>
-              <li>Tout le site a changé d'ambiance : <strong>crème, bois et tons poudrés</strong> le jour, une <strong>veillée aux braises</strong> la nuit.</li>
-              <li>Nouveaux titres en <strong>serif élégant</strong>, cartes plus douces, survols délicats et lecture plus aérée sur téléphone.</li>
-              <li>La carte, les messages, les lettres, le calendrier et le Coffre portent la même lumière.</li>
-            </ul>
-          </section>
-          <section class="patch-card is-new" style="--a:#E2BF86">
-            <span class="patch-tag">Nouveau</span>
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Étoiles, Ciné, Soleil / Lune</h3>
-            <ul>
-              <li>La <strong>Fabrique d'étoiles</strong> garde ses 8 paliers, avec des fonds plus doux (ta partie est conservée).</li>
-              <li>La <strong>salle de Ciné</strong> passe en velours chaud et en papier crème.</li>
-              <li><strong>Soleil / Lune</strong> retrouve une nuit chaude, avec de nouveaux caractères d'écriture.</li>
-              <li>Tes sauvegardes, lettres ouvertes et épreuves réussies sont toutes restées en place.</li>
-            </ul>
-          </section>
-      </div>
-      <h3 class="patch-sec">Déjà annoncé le 20 octobre</h3>
-      <div class="patch-grid">
-          <section class="patch-card" style="--a:#BFD8C2">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Le Coffre : 4 épreuves</h3>
-            <ul>
-              <li>Les anciens niveaux sont remplacés par <strong>4 épreuves toutes différentes</strong> et plus difficiles.</li>
-              <li>Un message à déchiffrer, une constellation à rejouer de mémoire, des étoiles à éteindre et un puzzle du ciel.</li>
-              <li>Il faut les réussir dans l'ordre pour atteindre la surprise. Ta progression est sauvegardée.</li>
-              <li>Nouvelle présentation avec une piste d'étapes, de jour comme de nuit.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#D6DDAE">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Fabrique d'étoiles, version complète</h3>
-            <ul>
-              <li>Le clicker a été <strong>entièrement refait</strong> sur le modèle des vrais jeux de clicker : 12 bâtiments, achat et vente par 1, 10 ou 100.</li>
-              <li><strong>Des boosts à débloquer</strong> pour chaque bâtiment, des chatons, des étoiles dorées aux effets variés et plus de 80 succès.</li>
-              <li><strong>8 paliers visuels</strong> : le fond du jeu et l'étoile elle-même changent à chaque grand cap, jusqu'à un cosmos doré.</li>
-              <li>Une <strong>ascension</strong> pour tout recommencer plus fort, avec des bonus permanents. Nouvelle sauvegarde : la partie repart de zéro.</li>
-            </ul>
-          </section>
-      </div>
-      <h3 class="patch-sec">Déjà annoncé le 19 octobre</h3>
-      <div class="patch-grid">
-          <section class="patch-card" style="--a:#CDB8D9">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Jour et nuit, pour de vrai</h3>
-            <ul>
-              <li>Le bouton soleil/lune change maintenant <strong>les couleurs de tout le site</strong> : carte, chambre, lettres, coffre.</li>
-              <li>Dehors, le ciel devient un <strong>ciel de jour avec des nuages</strong> et un soleil.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#F1CFA8">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Lettres</h3>
-            <ul>
-              <li>Les lettres ont changé de place, et <strong>4 nouvelles</strong> sont arrivées.</li>
-              <li>Blanches le jour, sombres la nuit.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#B5D3D6">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Le ciel</h3>
-            <ul>
-              <li>L'étagère a été dégagée.</li>
-              <li><strong>5 constellations</strong> complètes à allumer en cliquant sur les étoiles, avec un compteur.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#BFD8C2">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Section Secret</h3>
-            <ul>
-              <li>Entièrement refaite à zéro. Une nouvelle surprise attend celles qui vont jusqu'au bout. Pas de spoiler. 🤫</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#D6DDAE">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Fabrique d'étoiles</h3>
-            <ul>
-              <li><strong>Un vrai jeu de clicker</strong> : clique, achète des usines, des boosts, attrape les étoiles dorées.</li>
-              <li>Des succès, un Big Bang pour recommencer plus fort, et ta partie est sauvegardée.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#9CC4CC">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>L'Échappée</h3>
-            <ul>
-              <li>Refaite de zéro : <strong>un phare, un grenier et un PC</strong> avec de vraies énigmes.</li>
-              <li>Tout tient sur un écran, sans défilement, et ta progression est sauvegardée.</li>
-              <li>Sur le PC, un cadenas réagit à ta progression.</li>
-            </ul>
-          </section>
-          <section class="patch-card" style="--a:#E2BF86">
-            <h3><span class="patch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>Ciné</h3>
-            <ul>
-              <li>Roulette « quel film ce soir ? », notes pop-corn, quiz.</li>
-              <li><strong>La prochaine séance</strong> : propose tes idées et vote pour celles des autres.</li>
-            </ul>
-          </section>
-      </div>
+    <div class="nw-top"><span class="nw-stamp">Nouveau</span><span class="nw-count" id="nw-count" aria-live="polite"></span></div>
+    <div class="nw-slides" id="nw-slides">
+      <section class="nw-slide" data-i="0" aria-labelledby="nw-t0">
+        <p class="nw-sub">Prends une minute pour lire</p>
+        <h2 class="nw-title" id="nw-t0">Tout est nouveau</h2>
+        <p class="nw-intro">Depuis ta dernière visite, j'ai refait une bonne partie du site. Les anciennes annonces ont disparu : <strong>tout ce que tu vas lire maintenant est neuf</strong>. Lis chaque page, je t'ai laissé de quoi découvrir.</p>
+      </section>
+      <section class="nw-slide" data-i="1" aria-labelledby="nw-t1" hidden>
+        <p class="nw-sub">Accueil et menu</p>
+        <h2 class="nw-title" id="nw-t1">Une arrivée plus simple</h2>
+        <ul class="nw-list"><li>Tu arrives <strong>directement sur ta page</strong>, sans écran d'introduction.</li><li>Un <strong>nouveau menu</strong> te permet d'aller partout : lettres, calendrier, jeux, chambre, coffre.</li><li>L'ancienne page « Ton univers » n'existe plus : <strong>le bouton retour te ramène toujours à l'accueil</strong>.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="2" aria-labelledby="nw-t2" hidden>
+        <p class="nw-sub">Un jour après l'autre</p>
+        <h2 class="nw-title" id="nw-t2">Un nouveau calendrier</h2>
+        <ul class="nw-list"><li>Le calendrier a été <strong>entièrement refait</strong>.</li><li>Il s'ouvre <strong>directement sur novembre</strong>.</li><li>Ouvre la case du jour, une surprise t'attend chaque fois.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="3" aria-labelledby="nw-t3" hidden>
+        <p class="nw-sub">À ouvrir une par une</p>
+        <h2 class="nw-title" id="nw-t3">Des lettres redessinées</h2>
+        <ul class="nw-list"><li>Chaque lettre est maintenant une <strong>enveloppe en couleur</strong>, claire et facile à repérer.</li><li>Elles s'ouvrent d'un clic, et celles que tu as déjà lues restent marquées.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="4" aria-labelledby="nw-t4" hidden>
+        <p class="nw-sub">Un vrai jeu de galaxie</p>
+        <h2 class="nw-title" id="nw-t4">La Fabrique d'étoiles, refaite</h2>
+        <ul class="nw-list"><li>Une <strong>galaxie en 3D</strong> : zoome avec la molette, maintiens le clic gauche pour la faire tourner. Elle reste toujours au centre.</li><li>Des <strong>orbiteurs</strong> à acheter, des améliorations, des comètes : <strong>plus une comète est rare, plus elle met de temps à arriver</strong>.</li><li>La <strong>Supernova</strong> te fait renaître : barre de progression, bonus gagné et ce que tu perds, tout est affiché avant de confirmer.</li><li>Nouvelle sauvegarde : la partie repart de zéro.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="5" aria-labelledby="nw-t5" hidden>
+        <p class="nw-sub">Quatre épreuves</p>
+        <h2 class="nw-title" id="nw-t5">Le Coffre, réécrit</h2>
+        <ul class="nw-list"><li>Quatre épreuves différentes : un message à déchiffrer, une constellation à rejouer, des étoiles à éteindre, un puzzle du ciel.</li><li>Il faut les réussir <strong>dans l'ordre</strong> pour ouvrir le coffre.</li><li>Ta progression est gardée sur cet appareil.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="6" aria-labelledby="nw-t6" hidden>
+        <p class="nw-sub">C'est à toi</p>
+        <h2 class="nw-title" id="nw-t6">Voilà, tu as tout lu</h2>
+        <ul class="nw-list"><li>Tu peux <strong>rouvrir cette page</strong> quand tu veux depuis le menu, avec « Voir les nouveautés ».</li><li>Maintenant, va explorer.</li></ul>
+      </section>
     </div>
-    <footer class="patch-foot">
-      <p>Tu pourras rouvrir cette page depuis la carte, avec « Voir les nouveautés ».</p>
-      <button class="patch-go" type="button" data-patch-close>C'est parti</button>
-    </footer>
-  </div>
-</div>
-
-<!-- ================= ÉCRAN 0 : CARTE DE L'UNIVERS ================= -->
-<div class="screen" id="screen-map">
-  <div class="map-screen">
-    <div class="map-head">
-      <h2 id="map-heading" tabindex="-1">Ton univers</h2>
-      <p class="map-lede">choisis une planète</p>
-      <button class="patch-open" id="patch-open" type="button">Voir les nouveautés</button>
+    <div class="nw-dots" id="nw-dots" aria-hidden="true"></div>
+    <div class="nw-foot">
+      <button class="nw-btn nw-prev" id="nw-prev" type="button">Retour</button>
+      <button class="nw-btn nw-next" id="nw-next" type="button"><i class="nw-fill" aria-hidden="true"></i><span id="nw-next-label">Suivant</span></button>
     </div>
-    <div class="map-stage" id="map-stage">
-      <svg class="map-lines" id="map-lines" aria-hidden="true"></svg>
-      <a class="planet p-messages" href="#home" style="--c1:#E9B4AE;--c2:#A8585A;--x:11%;--y:30%;--mx:30%;--my:8%">
-        <span class="orb"></span><span class="p-name">Messages</span><span class="p-sub">ce que je pense de toi</span></a>
-      <a class="planet p-letters" href="#letters" style="--c1:#F1CFA8;--c2:#B8693F;--x:25%;--y:58%;--mx:70%;--my:19%">
-        <span class="orb"></span><span class="p-name">Lettres</span><span class="p-sub">à ouvrir selon l'humeur</span></a>
-      <a class="planet p-calendar" href="#calendar" style="--c1:#D6DDAE;--c2:#6F8148;--x:37%;--y:24%;--mx:30%;--my:30%">
-        <span class="orb"></span><span class="p-name">Calendrier</span><span class="p-sub">un chemin d'étoiles</span></a>
-      <a class="planet p-window" href="#window" style="--c1:#CDB8D9;--c2:#7B5A86;--x:51%;--y:57%;--mx:70%;--my:41%">
-        <span class="orb"></span><span class="p-name">La chambre</span><span class="p-sub">et sa fenêtre sur le ciel</span></a>
-      <a class="planet p-secret" href="#secret" style="--c1:#BFD8C2;--c2:#4F7A5E;--x:63%;--y:22%;--mx:30%;--my:52%">
-        <span class="orb"></span><span class="p-name">Secret</span><span class="p-sub">il faut un code</span></a>
-      <a class="planet p-sanctuary" href="sanctuary.html" style="--c1:#B5D3D6;--c2:#45707B;--x:79%;--y:58%;--mx:70%;--my:63%">
-        <span class="orb"></span><span class="p-name">L'Échappée</span><span class="p-sub">une pièce à explorer</span></a>
-      <a class="planet p-clicker" href="clicker.html" style="--c1:#F0D79A;--c2:#B9823A;--x:91%;--y:26%;--mx:30%;--my:74%">
-        <span class="orb"></span><span class="p-name">Étoiles</span><span class="p-sub">la fabrique à clics</span></a>
-      <a class="planet p-cinema" href="cinema.html" style="--c1:#EAD29B;--c2:#9B7432;--x:72%;--y:86%;--mx:70%;--my:85%">
-        <span class="orb"></span><span class="p-name">Ciné</span><span class="p-sub">la salle obscure</span></a>
-      <a class="planet p-sunmoon" href="soleil-lune.html" style="--c1:#F6E8C2;--c2:#9A7F9C;--x:32%;--y:88%;--mx:30%;--my:95%">
-        <span class="orb"></span><span class="p-name">Soleil / Lune</span><span class="p-sub">choisis ton astre</span></a>
-    </div>
+    <p class="nw-hint" id="nw-hint">Lis la page : le bouton se débloque dans quelques secondes.</p>
   </div>
 </div>
 
@@ -636,6 +541,415 @@ Des gros bisous moche 3 ❤️🥰😘</p>
 </div>
 
 <script src="script.js"></script>
+<script>
+/* =========================================================
+   LE COFFRE : code autonome (ne dépend pas de script.js)
+   Il est volontairement séparé : si autre chose plante sur la
+   page, le coffre et ses 4 épreuves marchent quand même.
+   ========================================================= */
+(function(){
+  'use strict';
+  try{
+
+  /* ---------- ÉDITABLE : textes ---------- */
+  var REASONS = [
+    { title: "Ta façon d'écouter", text: "Tu écoutes pour comprendre, pas pour répondre. Peu de gens savent faire ça, et toi tu le fais sans même y penser." },
+    { title: "Ton rire", text: "Il est contagieux. Il y a des jours où il suffit que je l'entende pour que tout aille mieux." },
+    { title: "Ta loyauté", text: "Quand tu es là, tu es là pour de bon, dans les bons moments comme dans les moins bons." },
+    { title: "Ta sensibilité", text: "Elle te fait parfois douter, mais c'est aussi ce qui te rend si humaine et si attentionnée." },
+    { title: "Tes folies", text: "Les idées improbables, les vocaux de vingt minutes, les fous rires à des heures impossibles. Merci d'être aussi dingue que moi." },
+    { title: "Ta force", text: "Tu avances même quand c'est dur, et tu ne le montres pas toujours. Moi, je le vois, et je suis fier de toi." },
+    { title: "Ta présence", text: "Juste le fait que tu existes et que tu sois dans ma vie. Le reste n'est que du bonus." }
+  ];
+  var GREETING = "Chère Sarah,";
+  var LETTER = [
+    "Si tu lis ces lignes, c'est que tu as exploré tout l'univers jusqu'au bout. Bravo, et surtout merci d'avoir pris le temps.",
+    "Ce site, je l'ai construit pour te dire, autrement qu'avec un simple message, à quel point tu comptes pour moi. Chaque étoile, chaque lettre, chaque petite surprise est là pour une seule raison : te faire sourire.",
+    "Quoi qu'il arrive, je serai toujours dans ton équipe. Ne l'oublie jamais."
+  ];
+  var SIGNATURE = "Avec tout mon cœur,";
+  var RIDDLE = "JE BRILLE SANS FLAMME ET LA NUIT JE TE GUIDE. QUI SUIS-JE ?"; /* majuscules, sans accents */
+  var KEY = "CIEL";                                                          /* clé du chiffre */
+  var ANSWERS = ['etoile', 'une etoile', 'une etoile filante', 'etoiles', 'les etoiles'];
+  var STAR_POS = [ [10,30], [24,62], [40,80], [58,86], [74,70], [88,44], [50,24] ];
+  var DEFS = [
+    { name: 'Le message codé', kind: 'Décryptage', text: "Le message est chiffré avec une clé secrète : chaque lettre est décalée selon une lettre du mot-clé, qui se répète. Indice : la clé est l’endroit où vivent les étoiles (4 lettres). Trouve-la pour lire l’énigme, puis réponds." },
+    { name: 'La constellation', kind: 'Mémoire', text: "Les étoiles s’allument dans un certain ordre. Rejoue la suite sans te tromper : elle s’allonge à chaque tour (7 étoiles)." },
+    { name: 'Extinction', kind: 'Logique', text: "Toucher une étoile change aussi ses quatre voisines. Éteins-les toutes." },
+    { name: 'Le puzzle du ciel', kind: 'Puzzle', text: "Les morceaux du ciel sont mélangés. Fais glisser les pièces pour les remettre de 1 à 8, la case vide en bas à droite." }
+  ];
+
+  /* ---------- éléments ---------- */
+  function $(id){ return document.getElementById(id); }
+  var E = {
+    locked: $('vault-locked'), open: $('vault-open'),
+    steps: $('trial-steps'), num: $('trial-num'), kind: $('trial-kind'), title: $('trial-title'),
+    text: $('trial-text'), board: $('trial-board'), msg: $('trial-msg'),
+    reset: $('trial-reset'), next: $('trial-next'),
+    stars: $('vault-stars'), lines: $('vault-sky-lines'), lede: $('vault-open-lede'),
+    rCount: $('vault-reason-count'), rTitle: $('vault-reason-title'), rText: $('vault-reason-text'), reason: $('vault-reason'),
+    letterBtn: $('vault-letter-btn'), letter: $('vault-letter')
+  };
+  if(!E.locked || !E.steps || !E.board){ return; }
+
+  /* On repart de boutons « propres » (retire d'éventuels anciens écouteurs) */
+  ['reset', 'next', 'letterBtn'].forEach(function(k){
+    var n = E[k]; if(!n) return;
+    var c = n.cloneNode(true); n.parentNode.replaceChild(c, n); E[k] = c;
+  });
+  var reduce = false;
+  try{ reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+  /* ---------- sauvegarde (localStorage, sinon mémoire) ---------- */
+  var KEYNAME = 'sarah:coffre', mem = null;
+  function readRaw(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
+  function load(){
+    var s = null;
+    try{ s = JSON.parse(readRaw(KEYNAME) || 'null'); }catch(e){ s = null; }
+    if(!s || typeof s !== 'object'){
+      /* ancienne version : on récupère la progression si elle existe */
+      s = { t: parseInt(readRaw('sarah:trials') || '0', 10) || 0, open: readRaw('sarah:vault') === '1', seen: [] };
+      try{ s.seen = JSON.parse(readRaw('sarah:vault-seen') || '[]'); }catch(e){ s.seen = []; }
+    }
+    s.t = Math.max(0, Math.min(4, s.t | 0));
+    s.open = !!s.open; if(s.open) s.t = 4;
+    if(!Array.isArray(s.seen)) s.seen = [];
+    return s;
+  }
+  function save(){
+    mem = S;
+    try{ window.localStorage.setItem(KEYNAME, JSON.stringify(S)); }catch(e){}
+  }
+  if(/[?&]reset\b/.test(window.location.search)){
+    try{ window.localStorage.removeItem(KEYNAME); window.localStorage.removeItem('sarah:trials'); window.localStorage.removeItem('sarah:vault'); window.localStorage.removeItem('sarah:vault-seen'); }catch(e){}
+  }
+  var S = load();
+
+  /* ---------- petits utilitaires ---------- */
+  var timers = [], token = 0;
+  function later(fn, ms){ var t = setTimeout(fn, ms); timers.push(t); return t; }
+  function clearAll(){ token++; timers.forEach(clearTimeout); timers = []; }
+  function plain(s){ return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function vig(text, key, dir){
+    var j = 0;
+    return text.replace(/[A-Z]/g, function(c){
+      var k = key.charCodeAt(j % key.length) - 65; j++;
+      return String.fromCharCode((c.charCodeAt(0) - 65 + dir * k + 26) % 26 + 65);
+    });
+  }
+  function say(msg, kind){ E.msg.textContent = msg || ''; E.msg.className = 'trial-msg' + (kind ? ' is-' + kind : ''); }
+  var COLORS = ['#ff8a3d', '#ff4fa3', '#c7f13b', '#58c8ff', '#b79bff', '#F0D79A'];
+  function pop(x, y, n){
+    if(reduce || !document.body.animate) return;
+    for(var i = 0; i < (n || 22); i++){
+      var p = document.createElement('i');
+      p.setAttribute('aria-hidden', 'true');
+      p.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:9999;background:' + COLORS[i % COLORS.length];
+      document.body.appendChild(p);
+      var a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 130;
+      var an = p.animate([
+        { transform: 'translate(0,0) rotate(0)', opacity: 1 },
+        { transform: 'translate(' + Math.cos(a) * d + 'px,' + (Math.sin(a) * d + 70) + 'px) rotate(' + (Math.random() * 540) + 'deg)', opacity: 0 }
+      ], { duration: 900 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.3,1)' });
+      an.onfinish = (function(el){ return function(){ el.remove(); }; })(p);
+    }
+  }
+  function popCenter(){ pop(window.innerWidth / 2, window.innerHeight * 0.42, 40); }
+
+  /* ---------- épreuves : navigation ---------- */
+  var cur = Math.min(S.t, 3), solved = false;
+
+  function renderSteps(){
+    E.steps.innerHTML = '';
+    DEFS.forEach(function(d, i){
+      var li = document.createElement('li'), b = document.createElement('button');
+      var st = i < S.t ? 'done' : (i === cur ? 'cur' : 'lock');
+      b.type = 'button';
+      b.className = 'trial-step is-' + st + (i === cur ? ' is-active' : '');
+      b.disabled = i > S.t;
+      b.setAttribute('aria-label', 'Épreuve ' + (i + 1) + ' : ' + d.name + (i < S.t ? ' (réussie)' : (i > S.t ? ' (verrouillée)' : '')));
+      if(i === cur) b.setAttribute('aria-current', 'step');
+      b.innerHTML = '<span class="ts-n">' + (i < S.t ? '✓' : (i > S.t ? '🔒' : (i + 1))) + '</span><span class="ts-name">' + d.name + '</span><span class="ts-kind">' + d.kind + '</span>';
+      b.addEventListener('click', function(){ start(i); });
+      li.appendChild(b); E.steps.appendChild(li);
+    });
+  }
+  function start(i){
+    clearAll();
+    cur = i; solved = false;
+    E.next.hidden = true;
+    E.title.textContent = DEFS[i].name;
+    E.num.textContent = i + 1;
+    E.kind.textContent = 'Épreuve ' + (i + 1) + ' sur 4 · ' + DEFS[i].kind;
+    E.text.textContent = DEFS[i].text;
+    E.board.innerHTML = '';
+    E.board.className = 'trial-board tb-' + (i + 1);
+    E.reset.onclick = function(){ if(!solved) start(cur); };
+    say('');
+    renderSteps();
+    [gameCipher, gameSimon, gameLights, gameSlide][i]();
+  }
+  function win(){
+    if(solved) return;
+    solved = true; clearAll();
+    S.t = Math.max(S.t, cur + 1); save();
+    renderSteps(); popCenter();
+    if(cur < 3){
+      say('Réussi ! L’épreuve suivante est ouverte.', 'ok');
+      E.next.hidden = false;
+      try{ E.next.focus({ preventScroll: true }); }catch(e){}
+    } else {
+      say('Les quatre épreuves sont passées. Le coffre s’ouvre…', 'ok');
+      later(unlock, reduce ? 50 : 1200);
+    }
+  }
+  E.next.addEventListener('click', function(){ start(Math.min(cur + 1, 3)); });
+
+  /* ---------- 1 · message codé ---------- */
+  function gameCipher(){
+    var enc = vig(RIDDLE, KEY, 1), w = E.board;
+    w.innerHTML =
+      '<p class="tc-cipher" aria-label="Message codé">' + enc + '</p>' +
+      '<form class="tc-form" id="tc-key" autocomplete="off"><label for="tc-keyin">Clé</label><input id="tc-keyin" type="text" maxlength="' + KEY.length + '" placeholder="' + KEY.replace(/./g, '_') + '" aria-label="Clé de ' + KEY.length + ' lettres" autocapitalize="characters" spellcheck="false"></form>' +
+      '<p class="tc-plain" id="tc-plain"></p>' +
+      '<form class="tc-form" id="tc-form" autocomplete="off"><input id="tc-ans" type="text" placeholder="Réponse à l’énigme" aria-label="Ta réponse à l’énigme" spellcheck="false"><button type="submit" class="trial-btn">Valider</button></form>';
+    var kin = w.querySelector('#tc-keyin'), pl = w.querySelector('#tc-plain');
+    function k(){ return kin.value.toUpperCase().replace(/[^A-Z]/g, ''); }
+    function upd(){
+      var v = k(), ok = v.length === KEY.length;
+      pl.textContent = ok ? vig(enc, v, -1) : 'Entre les ' + KEY.length + ' lettres de la clé pour déchiffrer.';
+      pl.classList.toggle('is-ready', ok);
+    }
+    kin.addEventListener('input', upd);
+    w.querySelector('#tc-key').addEventListener('submit', function(e){ e.preventDefault(); });
+    upd();
+    w.querySelector('#tc-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      var a = plain(w.querySelector('#tc-ans').value);
+      if(a && ANSWERS.indexOf(a) !== -1){ win(); }
+      else { say(k() === KEY ? 'Le message est lisible, mais ce n’est pas la bonne réponse.' : 'Pas encore. Il faut d’abord trouver la bonne clé.', 'bad'); }
+    });
+  }
+
+  /* ---------- 2 · constellation à rejouer ---------- */
+  function gameSimon(){
+    var LEN = 7, seq = [], n = 1, pos = 0, busy = true, my = token, w = E.board;
+    w.innerHTML = '<div class="ts-info" id="ts-info" aria-live="polite"></div><div class="ts-pads" id="ts-pads"></div><button type="button" class="trial-btn" id="ts-go">Lancer</button>';
+    var info = w.querySelector('#ts-info'), padsEl = w.querySelector('#ts-pads'), go = w.querySelector('#ts-go');
+    var pads = [0, 1, 2, 3, 4].map(function(i){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'ts-pad'; b.style.setProperty('--pc', COLORS[i]);
+      b.setAttribute('aria-label', 'Étoile ' + (i + 1));
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
+      b.addEventListener('click', function(){ press(i); });
+      padsEl.appendChild(b); return b;
+    });
+    function newSeq(){ seq = []; for(var k = 0; k < LEN; k++) seq.push(Math.floor(Math.random() * 5)); n = 1; }
+    function flash(i, ms){ pads[i].classList.add('lit'); later(function(){ pads[i].classList.remove('lit'); }, ms); }
+    function play(){
+      busy = true; pos = 0; info.textContent = 'Regarde bien… (' + n + '/' + LEN + ')';
+      var t = reduce ? 700 : 600;
+      for(var k = 0; k < n; k++){ (function(k){ later(function(){ flash(seq[k], t * 0.6); }, 700 + k * t); })(k); }
+      later(function(){ busy = false; info.textContent = 'À toi ! (0/' + n + ')'; }, 700 + n * t);
+    }
+    function press(i){
+      if(busy || solved || my !== token) return;
+      flash(i, 220);
+      if(i !== seq[pos]){
+        busy = true; say('Raté, la constellation se rallume depuis le début.', 'bad');
+        newSeq(); later(function(){ say(''); play(); }, 1100); return;
+      }
+      pos++; info.textContent = 'À toi ! (' + pos + '/' + n + ')';
+      if(pos === n){
+        if(n === LEN){ info.textContent = 'Parfait !'; win(); }
+        else { busy = true; n++; say(''); later(play, 800); }
+      }
+    }
+    go.addEventListener('click', function(){ clearAll(); my = token; newSeq(); say(''); go.textContent = 'Recommencer'; play(); });
+    info.textContent = 'Appuie sur Lancer pour voir la première étoile.';
+  }
+
+  /* ---------- 3 · extinction (5×5, toujours résoluble) ---------- */
+  function gameLights(){
+    var N = 5, grid = [], moves = 0, w = E.board;
+    w.innerHTML = '<p class="tl-count" id="tl-count" aria-live="polite"></p><div class="tl-grid" id="tl-grid" role="group" aria-label="Grille d’étoiles"></div>';
+    var gridEl = w.querySelector('#tl-grid'), count = w.querySelector('#tl-count');
+    function toggle(i){
+      var r = Math.floor(i / N), c = i % N;
+      [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){
+        var rr = r + d[0], cc = c + d[1];
+        if(rr >= 0 && rr < N && cc >= 0 && cc < N) grid[rr * N + cc] = !grid[rr * N + cc];
+      });
+    }
+    function draw(){
+      var cells = gridEl.children;
+      for(var i = 0; i < N * N; i++){ cells[i].classList.toggle('on', grid[i]); cells[i].setAttribute('aria-pressed', grid[i] ? 'true' : 'false'); }
+      var left = grid.filter(Boolean).length;
+      count.textContent = left + ' étoile' + (left > 1 ? 's' : '') + ' allumée' + (left > 1 ? 's' : '') + ' · ' + moves + ' coup' + (moves > 1 ? 's' : '');
+    }
+    function fresh(){
+      var tries = 0;
+      do{
+        grid = []; for(var i = 0; i < N * N; i++) grid.push(false);
+        var picks = 6 + Math.floor(Math.random() * 4);
+        for(var p = 0; p < picks; p++) toggle(Math.floor(Math.random() * N * N));
+        tries++;
+        if(tries > 20){ grid = []; for(var j = 0; j < N * N; j++) grid.push(false); [2, 6, 8, 10, 14, 17, 21, 23].forEach(toggle); }
+      } while(!grid.some(Boolean));
+      moves = 0; draw();
+    }
+    for(var i = 0; i < N * N; i++){
+      (function(i){
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'tl-cell';
+        b.setAttribute('aria-label', 'Étoile ligne ' + (Math.floor(i / N) + 1) + ', colonne ' + (i % N + 1));
+        b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
+        b.addEventListener('click', function(){
+          if(solved) return;
+          toggle(i); moves++; draw();
+          if(!grid.some(Boolean)) win();
+        });
+        gridEl.appendChild(b);
+      })(i);
+    }
+    E.reset.onclick = function(){ if(!solved) fresh(); };
+    fresh();
+  }
+
+  /* ---------- 4 · puzzle coulissant 3×3 ---------- */
+  function gameSlide(){
+    var tiles = [], moves = 0, w = E.board, GOAL = '1,2,3,4,5,6,7,8,0';
+    w.innerHTML = '<p class="tl-count" id="tp-count" aria-live="polite"></p><div class="tp-grid" id="tp-grid" role="group" aria-label="Puzzle coulissant"></div>';
+    var gridEl = w.querySelector('#tp-grid'), count = w.querySelector('#tp-count');
+    function nb(z){
+      var r = Math.floor(z / 3), c = z % 3, o = [];
+      if(r > 0) o.push(z - 3); if(r < 2) o.push(z + 3); if(c > 0) o.push(z - 1); if(c < 2) o.push(z + 1);
+      return o;
+    }
+    function shuffle(){
+      do{
+        tiles = [1,2,3,4,5,6,7,8,0]; var z = 8, last = -1;
+        for(var k = 0; k < 90; k++){
+          var opts = nb(z).filter(function(x){ return x !== last; });
+          var m = opts[Math.floor(Math.random() * opts.length)];
+          tiles[z] = tiles[m]; tiles[m] = 0; last = z; z = m;
+        }
+      } while(tiles.join() === GOAL);
+      moves = 0; draw();
+    }
+    function draw(){
+      gridEl.innerHTML = '';
+      tiles.forEach(function(t, i){
+        var b = document.createElement('button'); b.type = 'button';
+        if(t === 0){ b.className = 'tp-tile tp-empty'; b.disabled = true; b.setAttribute('aria-label', 'Case vide'); }
+        else {
+          b.className = 'tp-tile' + (t === i + 1 ? ' ok' : '');
+          b.textContent = t; b.setAttribute('aria-label', 'Pièce ' + t);
+          b.addEventListener('click', function(){ slide(i); });
+        }
+        gridEl.appendChild(b);
+      });
+      count.textContent = moves + ' coup' + (moves > 1 ? 's' : '');
+    }
+    function slide(i){
+      if(solved) return;
+      var z = tiles.indexOf(0);
+      if(nb(z).indexOf(i) === -1) return;
+      tiles[z] = tiles[i]; tiles[i] = 0; moves++; draw();
+      if(tiles.join() === GOAL) win();
+    }
+    E.reset.onclick = function(){ if(!solved) shuffle(); };
+    shuffle();
+  }
+
+  /* ---------- le coffre ouvert : 7 étoiles puis la lettre ---------- */
+  function unlock(){
+    S.open = true; S.t = 4; save();
+    showOpen();
+  }
+  function showOpen(){
+    E.locked.hidden = true; E.open.hidden = false;
+    drawSky();
+    var hd = $('vault-open-heading');
+    if(hd){ try{ hd.focus({ preventScroll: true }); }catch(e){} }
+  }
+  function drawSky(){
+    E.stars.innerHTML = '';
+    REASONS.forEach(function(r, i){
+      var pos = STAR_POS[i % STAR_POS.length], seen = S.seen.indexOf(i) !== -1;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'vault-star' + (seen ? ' is-seen' : '');
+      b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%';
+      b.setAttribute('aria-label', 'Raison ' + (i + 1) + ' sur ' + REASONS.length + (seen ? ' (déjà lue)' : ''));
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg><span>' + (i + 1) + '</span>';
+      b.addEventListener('click', function(){ reason(i, b); });
+      E.stars.appendChild(b);
+    });
+    drawLines(); progress();
+  }
+  function drawLines(){
+    var NS = 'http://www.w3.org/2000/svg';
+    E.lines.innerHTML = '';
+    for(var k = 0; k < REASONS.length - 1; k++){
+      var a = STAR_POS[k], b = STAR_POS[k + 1], l = document.createElementNS(NS, 'line');
+      l.setAttribute('x1', a[0] * 10); l.setAttribute('y1', a[1] * 5.2);
+      l.setAttribute('x2', b[0] * 10); l.setAttribute('y2', b[1] * 5.2);
+      l.setAttribute('class', (S.seen.indexOf(k) !== -1 && S.seen.indexOf(k + 1) !== -1) ? 'lit' : '');
+      E.lines.appendChild(l);
+    }
+  }
+  function progress(){
+    var done = S.seen.length, total = REASONS.length;
+    if(done >= total){ E.lede.textContent = 'Toutes les étoiles sont allumées. Il reste une dernière chose…'; E.letterBtn.hidden = false; }
+    else { E.lede.textContent = 'Touche chaque étoile pour lire une raison (' + done + '/' + total + ').'; E.letterBtn.hidden = true; }
+  }
+  function reason(i, btn){
+    var r = REASONS[i];
+    E.rCount.textContent = 'Raison ' + (i + 1) + ' sur ' + REASONS.length;
+    E.rTitle.textContent = r.title; E.rText.textContent = r.text;
+    E.reason.classList.remove('show'); void E.reason.offsetWidth; E.reason.classList.add('show');
+    [].forEach.call(E.stars.querySelectorAll('.vault-star'), function(s){ s.classList.remove('is-current'); });
+    btn.classList.add('is-current', 'is-seen');
+    if(S.seen.indexOf(i) === -1){
+      S.seen.push(i); save(); drawLines(); progress();
+      var rc = btn.getBoundingClientRect(); pop(rc.left + rc.width / 2, rc.top + rc.height / 2, 16);
+    }
+  }
+  function openLetter(){
+    $('vault-letter-greeting').textContent = GREETING;
+    var body = $('vault-letter-body'); body.innerHTML = '';
+    LETTER.forEach(function(p){ var el = document.createElement('p'); el.textContent = p; body.appendChild(el); });
+    $('vault-letter-sign').textContent = SIGNATURE;
+    E.letter.hidden = false; void E.letter.offsetWidth; E.letter.classList.add('is-open');
+    var cl = E.letter.querySelector('.vault-letter-close'); if(cl){ try{ cl.focus({ preventScroll: true }); }catch(e){} }
+    later(popCenter, reduce ? 10 : 500);
+  }
+  function closeLetter(){
+    E.letter.classList.remove('is-open');
+    setTimeout(function(){ E.letter.hidden = true; }, reduce ? 10 : 300);
+  }
+  E.letterBtn.addEventListener('click', openLetter);
+  [].forEach.call(E.letter.querySelectorAll('[data-letter-close]'), function(el){
+    var c = el.cloneNode(true); el.parentNode.replaceChild(c, el); c.addEventListener('click', closeLetter);
+  });
+  E.letter.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ e.stopPropagation(); closeLetter(); } });
+
+  /* ---------- démarrage ---------- */
+  if(S.open){ showOpen(); }
+  else if(S.t >= 4){ unlock(); }
+  else { E.locked.hidden = false; E.open.hidden = true; start(cur); }
+
+  }catch(err){
+    /* dernier filet : on affiche au moins un message clair plutôt qu'un coffre vide */
+    try{
+      var b = document.getElementById('trial-board');
+      if(b){ b.innerHTML = '<p class="trial-msg is-bad">Le coffre n’a pas pu se charger. Recharge la page (Ctrl+Maj+R, ou ferme puis rouvre le lien).</p>'; }
+    }catch(e2){}
+    if(window.console){ console.error('Coffre :', err); }
+  }
+})();
+
+</script>
 
 </body>
 </html>

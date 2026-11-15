@@ -143,7 +143,6 @@
      NAVIGATION ENTRE ÉCRANS
      ========================================================= */
   var screens = {
-    map: document.getElementById('screen-map'),
     home: document.getElementById('screen-home'),
     calendar: document.getElementById('screen-calendar'),
     day: document.getElementById('screen-day'),
@@ -174,8 +173,6 @@
 
     applyTheme(name);
     updateNavCurrent(name);
-    if(name === 'map'){ window.setTimeout(drawMapLines, 30); }
-    if(name === 'secret'){ if(trialEls.steps && !vaultOpened){ startTrial(trialCur); } }
     if(name === 'sky'){ startSkyLoop(); } else { stopSkyLoop(); }
 
     window.scrollTo(0,0);
@@ -218,8 +215,7 @@
     if(hash === 'window'){ showScreen('window'); return; }
     if(hash === 'sky'){ closeConstellation(); showScreen('sky'); return; }
     if(hash === 'secret'){ showScreen('secret'); return; }
-    if(hash === 'map'){ showScreen('map'); return; }
-    showScreen('home');   /* arrivée directe sur la page de Sarah */
+        showScreen('home');   /* arrivée directe sur la page de Sarah */
   }
 
   navLinks.forEach(function(btn){
@@ -1132,9 +1128,9 @@
      plus "nuit" à mesure qu'on va vers la carte, le calendrier, la fenêtre
      et le secret. Le bouton force un des deux (et se souvient du choix).
      ========================================================= */
-  var NIGHT_SCREENS = { map:1, calendar:1, day:1, window:1, sky:1, secret:1 };
+  var NIGHT_SCREENS = { calendar:1, day:1, window:1, sky:1, secret:1 };
   var themeToggle = document.getElementById('theme-toggle');
-  var currentScreenName = 'map';
+  var currentScreenName = 'home';
   function lsGet(k){ try{ return window.localStorage.getItem('sarah:' + k); }catch(e){ return null; } }
   function lsSet(k, v){ try{ if(v === null){ window.localStorage.removeItem('sarah:' + k); } else { window.localStorage.setItem('sarah:' + k, v); } }catch(e){} }
   function themeOverride(){ return lsGet('theme'); }
@@ -1165,7 +1161,7 @@
   var mapStage = document.getElementById('map-stage');
   var mapLines = document.getElementById('map-lines');
   function drawMapLines(){
-    if(!mapStage || !mapLines || !screens.map.classList.contains('active')) return;
+    if(!mapStage || !mapLines || true) return;
     var box = mapStage.getBoundingClientRect();
     var orbs = mapStage.querySelectorAll('.planet .orb');
     var pts = [];
@@ -1224,47 +1220,93 @@
      PATCH NOTE : s'ouvre une fois par version, rouvrable depuis la carte
      (change PATCH_VERSION à chaque nouvelle mise à jour pour la réafficher)
      ========================================================= */
-  var PATCH_VERSION = '2026-11-15';
-  var patchEl = document.getElementById('patch');
+  var PATCH_VERSION = '2026-11-15-b';
+  var patchEl = document.getElementById('news');
   var patchOpenBtn = document.getElementById('patch-open');
-  var patchPrevFocus = null;
-  function openPatch(){
+  var nwSlides = patchEl ? [].slice.call(patchEl.querySelectorAll('.nw-slide')) : [];
+  var nwIdx = 0, nwMax = 0, nwTimer = null, nwForced = false, nwPrevFocus = null, nwSeen = [];
+  var NW_READ_MS = 3500;   /* temps minimum par page à la première lecture */
+  var nwNext = document.getElementById('nw-next'), nwPrev = document.getElementById('nw-prev');
+  var nwX = document.getElementById('nw-x'), nwHint = document.getElementById('nw-hint');
+  var nwDots = document.getElementById('nw-dots'), nwCount = document.getElementById('nw-count');
+  var nwLabel = document.getElementById('nw-next-label');
+  function nwShow(i){
+    nwIdx = i; nwMax = Math.max(nwMax, i);
+    nwSlides.forEach(function(sl, k){ sl.classList.toggle('is-on', k === i); sl.hidden = k !== i; });
+    nwCount.textContent = (i + 1) + ' / ' + nwSlides.length;
+    nwDots.innerHTML = '';
+    nwSlides.forEach(function(_, k){ var d = document.createElement('i'); d.className = k === i ? 'on' : (k < nwMax ? 'done' : ''); nwDots.appendChild(d); });
+    nwPrev.hidden = i === 0;
+    var last = i === nwSlides.length - 1;
+    nwLabel.textContent = last ? "J'ai tout lu" : 'Suivant';
+    var sc = patchEl.querySelector('.nw-slides'); if(sc) sc.scrollTop = 0;
+    window.clearTimeout(nwTimer);
+    nwNext.classList.remove('is-wait'); nwNext.style.removeProperty('--nw-ms');
+    if(nwForced && !nwSeen[i]){
+      var ms = reduceMotion ? 1500 : NW_READ_MS;
+      nwNext.disabled = true; nwNext.classList.add('is-wait');
+      void nwNext.offsetWidth;
+      nwNext.style.setProperty('--nw-ms', ms + 'ms');
+      nwHint.textContent = 'Lis la page : le bouton se débloque dans quelques secondes.';
+      nwTimer = window.setTimeout(function(){
+        nwSeen[i] = true; nwNext.disabled = false; nwNext.classList.remove('is-wait');
+        nwHint.textContent = last ? 'Tu peux entrer.' : 'Tu peux passer à la suite.';
+        try{ nwNext.focus({ preventScroll: true }); }catch(e){}
+      }, ms);
+    } else {
+      nwSeen[i] = true; nwNext.disabled = false;
+      nwHint.textContent = '';
+    }
+  }
+  function openPatch(forced){
     if(!patchEl) return;
-    patchPrevFocus = document.activeElement;
+    nwForced = forced === true;
+    nwSeen = []; nwMax = 0;
+    nwPrevFocus = document.activeElement;
     patchEl.hidden = false;
     void patchEl.offsetWidth;
     patchEl.classList.add('is-open');
     document.body.classList.add('patch-lock');
-    var body = patchEl.querySelector('.patch-body'); if(body){ body.scrollTop = 0; }
-    window.setTimeout(function(){ var x = patchEl.querySelector('.patch-close'); if(x){ x.focus(); } }, 60);
+    nwX.hidden = nwForced;     /* pas de croix à la première lecture : il faut lire jusqu'au bout */
+    nwShow(0);
+    if(!nwForced){ try{ nwNext.focus({ preventScroll: true }); }catch(e){} }
   }
   function closePatch(){
     if(!patchEl || patchEl.hidden) return;
     lsSet('patch', PATCH_VERSION);
     patchEl.classList.remove('is-open');
     document.body.classList.remove('patch-lock');
+    window.clearTimeout(nwTimer);
     window.setTimeout(function(){ patchEl.hidden = true; }, reduceMotion ? 10 : 320);
-    if(patchPrevFocus && patchPrevFocus.focus){ try{ patchPrevFocus.focus(); }catch(e){} }
+    if(nwPrevFocus && nwPrevFocus.focus){ try{ nwPrevFocus.focus(); }catch(e){} }
+  }
+  function nwAdvance(){
+    if(nwNext.disabled) return;
+    if(nwIdx < nwSlides.length - 1){ nwShow(nwIdx + 1); } else { closePatch(); }
   }
   function showPatchIfNew(){
     var hsh = window.location.hash.replace('#', '');
     if(lsGet('patch') === PATCH_VERSION && !/[?&]reset\b/.test(window.location.search)) return;
-    if(hsh !== '' && hsh !== 'map' && hsh !== 'home') return;
-    openPatch();
+    if(hsh !== '' && hsh !== 'home') return;
+    openPatch(true);
   }
   if(patchEl){
-    patchEl.querySelectorAll('[data-patch-close]').forEach(function(el){ el.addEventListener('click', closePatch); });
+    nwNext.addEventListener('click', nwAdvance);
+    nwPrev.addEventListener('click', function(){ if(nwIdx > 0) nwShow(nwIdx - 1); });
+    nwX.addEventListener('click', closePatch);
     patchEl.addEventListener('keydown', function(e){
-      if(e.key === 'Escape'){ e.stopPropagation(); closePatch(); return; }
+      if(e.key === 'Escape'){ e.stopPropagation(); if(!nwForced) closePatch(); return; }
+      if(e.key === 'ArrowRight'){ nwAdvance(); }
+      if(e.key === 'ArrowLeft' && nwIdx > 0){ nwShow(nwIdx - 1); }
       if(e.key !== 'Tab') return;
-      var f = patchEl.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
-      if(!f.length) return;
+      var f = [].slice.call(patchEl.querySelectorAll('button')).filter(function(b){ return !b.hidden && !b.disabled; });
+      if(!f.length){ e.preventDefault(); return; }
       var first = f[0], last = f[f.length - 1];
       if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
       else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
     });
   }
-  if(patchOpenBtn){ patchOpenBtn.addEventListener('click', openPatch); }
+  if(patchOpenBtn){ patchOpenBtn.addEventListener('click', function(){ openPatch(false); }); }
 
   /* =========================================================
      Plus d'écran d'intro : arrivée directe sur la page de Sarah.
@@ -1400,424 +1442,11 @@
     }catch(e){}
   }
 
-  /* =========================================================
-     LE COFFRE (section Secret)
-     Il ne s'ouvre qu'après avoir passé les 4 épreuves.
-     ========================================================= */
-
-  /* ÉDITABLE : les 7 raisons (une par étoile) */
-  var VAULT_REASONS = [
-    { title: "Ta façon d'écouter", text: "Tu écoutes pour comprendre, pas pour répondre. Peu de gens savent faire ça, et toi tu le fais sans même y penser." },
-    { title: "Ton rire", text: "Il est contagieux. Il y a des jours où il suffit que je l'entende pour que tout aille mieux." },
-    { title: "Ta loyauté", text: "Quand tu es là, tu es là pour de bon, dans les bons moments comme dans les moins bons." },
-    { title: "Ta sensibilité", text: "Elle te fait parfois douter, mais c'est aussi ce qui te rend si humaine et si attentionnée." },
-    { title: "Tes folies", text: "Les idées improbables, les vocaux de vingt minutes, les fous rires à des heures impossibles. Merci d'être aussi dingue que moi." },
-    { title: "Ta force", text: "Tu avances même quand c'est dur, et tu ne le montres pas toujours. Moi, je le vois, et je suis fier de toi." },
-    { title: "Ta présence", text: "Juste le fait que tu existes et que tu sois dans ma vie. Le reste n'est que du bonus." }
-  ];
-  /* ÉDITABLE : la lettre finale */
-  var VAULT_GREETING = "Chère Sarah,";
-  var VAULT_LETTER = [
-    "Si tu lis ces lignes, c'est que tu as exploré tout l'univers jusqu'au bout. Bravo, et surtout merci d'avoir pris le temps.",
-    "Ce site, je l'ai construit pour te dire, autrement qu'avec un simple message, à quel point tu comptes pour moi. Chaque étoile, chaque lettre, chaque petite surprise est là pour une seule raison : te faire sourire.",
-    "Quoi qu'il arrive, je serai toujours dans ton équipe. Ne l'oublie jamais."
-  ];
-  var VAULT_SIGNATURE = "Avec tout mon cœur,";
-
-  var vaultEls = {
-    locked: document.getElementById('vault-locked'),
-    open: document.getElementById('vault-open'),
-    sky: document.getElementById('vault-stars'),
-    lines: document.getElementById('vault-sky-lines'),
-    reason: document.getElementById('vault-reason'),
-    reasonCount: document.getElementById('vault-reason-count'),
-    reasonTitle: document.getElementById('vault-reason-title'),
-    reasonText: document.getElementById('vault-reason-text'),
-    lede: document.getElementById('vault-open-lede'),
-    letterBtn: document.getElementById('vault-letter-btn'),
-    letter: document.getElementById('vault-letter')
-  };
-  var vaultOpened = saveGet('vault') === '1';
-  var vaultSeen = []; try{ vaultSeen = JSON.parse(saveGet('vault-seen') || '[]'); }catch(e){ vaultSeen = []; }
-  /* positions des 7 étoiles (en % de la scène) : une petite constellation en forme de sourire */
-  var VAULT_STAR_POS = [ [10,30], [24,62], [40,80], [58,86], [74,70], [88,44], [50,24] ];
-
-  function sanctuaryFoundCount(){
-    try{
-      var d = JSON.parse(window.localStorage.getItem('sarah:sanctuary') || 'null');
-      return d && d.found ? d.found.length : 0;
-    }catch(e){ return 0; }
-  }
-  function unlockVault(){
-    vaultOpened = true;
-    saveSet('vault', '1');
-    saveSet('trials', '4'); trialDone = 4;
-    window.setTimeout(showVaultOpen, reduceMotion ? 50 : 1300);
-  }
-
-  function renderVaultSky(){
-    vaultEls.sky.innerHTML = '';
-    VAULT_REASONS.forEach(function(r, i){
-      var pos = VAULT_STAR_POS[i % VAULT_STAR_POS.length];
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'vault-star' + (vaultSeen.indexOf(i) !== -1 ? ' is-seen' : '');
-      b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%';
-      b.setAttribute('aria-label', 'Raison ' + (i + 1) + ' sur ' + VAULT_REASONS.length + (vaultSeen.indexOf(i) !== -1 ? ' (déjà lue)' : ''));
-      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg><span>' + (i + 1) + '</span>';
-      b.addEventListener('click', function(){ showReason(i, b); });
-      vaultEls.sky.appendChild(b);
-    });
-    drawVaultLines();
-    updateVaultProgress();
-  }
-  function drawVaultLines(){
-    var NS = 'http://www.w3.org/2000/svg';
-    vaultEls.lines.innerHTML = '';
-    for(var k = 0; k < VAULT_REASONS.length - 1; k++){
-      var a = VAULT_STAR_POS[k], b = VAULT_STAR_POS[k + 1];
-      var p = document.createElementNS(NS, 'line');
-      p.setAttribute('x1', a[0] * 10); p.setAttribute('y1', a[1] * 5.2);
-      p.setAttribute('x2', b[0] * 10); p.setAttribute('y2', b[1] * 5.2);
-      p.setAttribute('class', (vaultSeen.indexOf(k) !== -1 && vaultSeen.indexOf(k + 1) !== -1) ? 'lit' : '');
-      vaultEls.lines.appendChild(p);
-    }
-  }
-  function updateVaultProgress(){
-    var total = VAULT_REASONS.length;
-    var done = vaultSeen.length;
-    if(done >= total){
-      vaultEls.lede.textContent = "Toutes les étoiles sont allumées. Il reste une dernière chose…";
-      vaultEls.letterBtn.hidden = false;
-    } else {
-      vaultEls.lede.textContent = "Touche chaque étoile pour lire une raison (" + done + "/" + total + ").";
-      vaultEls.letterBtn.hidden = true;
-    }
-  }
-  function showReason(i, btn){
-    var r = VAULT_REASONS[i];
-    vaultEls.reasonCount.textContent = 'Raison ' + (i + 1) + ' sur ' + VAULT_REASONS.length;
-    vaultEls.reasonTitle.textContent = r.title;
-    vaultEls.reasonText.textContent = r.text;
-    vaultEls.reason.classList.remove('show'); void vaultEls.reason.offsetWidth; vaultEls.reason.classList.add('show');
-    vaultEls.sky.querySelectorAll('.vault-star').forEach(function(s){ s.classList.remove('is-current'); });
-    btn.classList.add('is-current', 'is-seen');
-    if(vaultSeen.indexOf(i) === -1){
-      vaultSeen.push(i);
-      saveSet('vault-seen', JSON.stringify(vaultSeen));
-      drawVaultLines();
-      updateVaultProgress();
-      if(!reduceMotion){
-        var rc = btn.getBoundingClientRect();
-        burst(rc.left + rc.width / 2, rc.top + rc.height / 2);
-      }
-    }
-  }
-  function showVaultOpen(){
-    vaultEls.locked.hidden = true;
-    vaultEls.open.hidden = false;
-    renderVaultSky();
-    if(screens.secret.classList.contains('active')){
-      var hd = document.getElementById('vault-open-heading'); if(hd){ hd.focus(); }
-    }
-  }
-  function openLetter2(){
-    var g = document.getElementById('vault-letter-greeting');
-    var body = document.getElementById('vault-letter-body');
-    var sign = document.getElementById('vault-letter-sign');
-    g.textContent = VAULT_GREETING;
-    body.innerHTML = '';
-    VAULT_LETTER.forEach(function(p){ var el = document.createElement('p'); el.textContent = p; body.appendChild(el); });
-    sign.textContent = VAULT_SIGNATURE;
-    vaultEls.letter.hidden = false;
-    void vaultEls.letter.offsetWidth;
-    vaultEls.letter.classList.add('is-open');
-    var cl = vaultEls.letter.querySelector('.vault-letter-close'); if(cl){ cl.focus(); }
-    if(!reduceMotion){ window.setTimeout(burstFromCenterScreen, 500); }
-  }
-  function closeLetter2(){
-    vaultEls.letter.classList.remove('is-open');
-    window.setTimeout(function(){ vaultEls.letter.hidden = true; }, reduceMotion ? 10 : 300);
-  }
-  /* =========================================================
-     LES 4 ÉPREUVES (gardent le coffre)
-     1 le message codé · 2 la constellation à rejouer
-     3 les étoiles à éteindre · 4 le puzzle du ciel
-     ========================================================= */
-  var TRIAL_RIDDLE = "JE BRILLE SANS FLAMME ET LA NUIT JE TE GUIDE. QUI SUIS-JE ?"; /* ÉDITABLE (majuscules, sans accents) */
-  var TRIAL_KEY = "CIEL";                     /* clé du chiffre de Vigenère (ÉDITABLE) */
-  var TRIAL_ANSWERS = ['etoile', 'une etoile', 'une etoile filante'];
-  var TRIAL_DEFS = [
-    { name: 'Le message codé', kind: 'Décryptage', text: "Le message est chiffré avec une clé secrète : chaque lettre est décalée selon une lettre du mot-clé, qui se répète. Indice : la clé est l’endroit où vivent les étoiles (4 lettres). Trouve-la pour lire l’énigme, puis réponds." },
-    { name: 'La constellation', kind: 'Mémoire', text: "Les étoiles s’allument dans un certain ordre. Rejoue la suite sans te tromper : elle s’allonge à chaque tour (7 étoiles)." },
-    { name: 'Extinction', kind: 'Logique', text: "Toucher une étoile change aussi ses quatre voisines. Éteins-les toutes." },
-    { name: 'Le puzzle du ciel', kind: 'Puzzle', text: "Les morceaux du ciel sont mélangés. Fais glisser les pièces pour les remettre de 1 à 8, la case vide en bas à droite." }
-  ];
-  var trialEls = {
-    steps: document.getElementById('trial-steps'),
-    title: document.getElementById('trial-title'),
-    text: document.getElementById('trial-text'),
-    board: document.getElementById('trial-board'),
-    msg: document.getElementById('trial-msg'),
-    reset: document.getElementById('trial-reset'),
-    next: document.getElementById('trial-next')
-  };
-  var trialDone = parseInt(saveGet('trials') || '0', 10) || 0;
-  if(vaultOpened) trialDone = 4;
-  var trialCur = Math.min(trialDone, 3);
-  var trialSolved = false;
-  var trialToken = 0;
-  var trialTimers = [];
-
-  function trialLater(fn, ms){ var t = window.setTimeout(fn, ms); trialTimers.push(t); return t; }
-  function trialClear(){ trialToken++; trialTimers.forEach(clearTimeout); trialTimers = []; }
-  function caesar(s, k){
-    return s.replace(/[A-Z]/g, function(c){ return String.fromCharCode((c.charCodeAt(0) - 65 + k + 26 * 4) % 26 + 65); });
-  }
-  function plain(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); }
-
-  function renderTrialSteps(){
-    trialEls.steps.innerHTML = '';
-    TRIAL_DEFS.forEach(function(d, i){
-      var li = document.createElement('li');
-      var b = document.createElement('button');
-      b.type = 'button';
-      var state = i < trialDone ? 'done' : (i === trialCur ? 'cur' : 'lock');
-      b.className = 'trial-step is-' + state + (i === trialCur ? ' is-active' : '');
-      b.disabled = i > trialDone;
-      b.setAttribute('aria-label', 'Épreuve ' + (i + 1) + ' : ' + d.name + (i < trialDone ? ' (réussie)' : (i > trialDone ? ' (verrouillée)' : '')));
-      if(i === trialCur) b.setAttribute('aria-current', 'step');
-      b.innerHTML = '<span class="ts-n">' + (i < trialDone ? '✓' : (i > trialDone ? '🔒' : (i + 1))) + '</span><span class="ts-name">' + d.name + '</span><span class="ts-kind">' + d.kind + '</span>';
-      b.addEventListener('click', function(){ startTrial(i); });
-      li.appendChild(b);
-      trialEls.steps.appendChild(li);
-    });
-  }
-  function trialSay(msg, kind){
-    trialEls.msg.textContent = msg || '';
-    trialEls.msg.className = 'trial-msg' + (kind ? ' is-' + kind : '');
-  }
-  function startTrial(i){
-    trialClear();
-    trialCur = i; trialSolved = false;
-    trialEls.next.hidden = true;
-    trialEls.title.textContent = TRIAL_DEFS[i].name;
-    document.getElementById('trial-num').textContent = i + 1;
-    document.getElementById('trial-kind').textContent = 'Épreuve ' + (i + 1) + ' sur 4 · ' + TRIAL_DEFS[i].kind;
-    trialEls.text.textContent = TRIAL_DEFS[i].text;
-    trialEls.board.innerHTML = '';
-    trialEls.board.className = 'trial-board tb-' + (i + 1);
-    trialEls.reset.onclick = function(){ if(!trialSolved) startTrial(trialCur); };
-    trialSay('');
-    renderTrialSteps();
-    [trialCipher, trialSimon, trialLights, trialSlide][i]();
-  }
-  function trialWin(){
-    if(trialSolved) return;
-    trialSolved = true;
-    trialClear();
-    trialDone = Math.max(trialDone, trialCur + 1);
-    saveSet('trials', String(trialDone));
-    renderTrialSteps();
-    if(!reduceMotion){ burstFromCenterScreen(); }
-    if(trialCur < 3){
-      trialSay('Réussi ! L’épreuve suivante est ouverte.', 'ok');
-      trialEls.next.hidden = false;
-      trialEls.next.focus();
-    } else {
-      trialSay('Les quatre épreuves sont passées. Le coffre s’ouvre…', 'ok');
-      trialLater(unlockVault, reduceMotion ? 50 : 1200);
-    }
-  }
-
-  /* 1 · message codé (Vigenère, clé à deviner) */
-  function vigenere(text, key, dir){
-    var j = 0;
-    return text.replace(/[A-Z]/g, function(c){
-      var k = key.charCodeAt(j % key.length) - 65; j++;
-      return String.fromCharCode((c.charCodeAt(0) - 65 + dir * k + 26) % 26 + 65);
-    });
-  }
-  function trialCipher(){
-    var enc = vigenere(TRIAL_RIDDLE, TRIAL_KEY, 1);
-    var wrap = trialEls.board;
-    wrap.innerHTML =
-      '<p class="tc-cipher" aria-label="Message codé">' + enc + '</p>' +
-      '<form class="tc-form" id="tc-key" autocomplete="off"><label for="tc-keyin">Clé</label><input id="tc-keyin" type="text" maxlength="' + TRIAL_KEY.length + '" placeholder="' + TRIAL_KEY.replace(/./g, '_') + '" aria-label="Clé de ' + TRIAL_KEY.length + ' lettres"></form>' +
-      '<p class="tc-plain" id="tc-plain" aria-live="off"></p>' +
-      '<form class="tc-form" id="tc-form" autocomplete="off"><input id="tc-ans" type="text" placeholder="Réponse à l’énigme" aria-label="Ta réponse à l’énigme"><button type="submit" class="trial-btn">Valider</button></form>';
-    var kin = wrap.querySelector('#tc-keyin'), pl = wrap.querySelector('#tc-plain');
-    function upd(){
-      var k = kin.value.toUpperCase().replace(/[^A-Z]/g, '');
-      pl.textContent = k.length === TRIAL_KEY.length ? vigenere(enc, k, -1) : 'Entre les ' + TRIAL_KEY.length + ' lettres de la clé pour déchiffrer.';
-      pl.classList.toggle('is-ready', k.length === TRIAL_KEY.length);
-    }
-    kin.addEventListener('input', upd); wrap.querySelector('#tc-key').addEventListener('submit', function(e){ e.preventDefault(); });
-    upd();
-    wrap.querySelector('#tc-form').addEventListener('submit', function(e){
-      e.preventDefault();
-      var a = plain(wrap.querySelector('#tc-ans').value);
-      if(a && TRIAL_ANSWERS.indexOf(a) !== -1){ trialWin(); }
-      else { trialSay(kin.value.toUpperCase() === TRIAL_KEY ? 'Le message est lisible, mais ce n’est pas la bonne réponse.' : 'Pas encore. Il faut d’abord trouver la bonne clé.', 'bad'); }
-    });
-  }
-
-  /* 2 · constellation à rejouer */
-  function trialSimon(){
-    var COLORS = ['#ff8a3d', '#ff4fa3', '#c7f13b', '#58c8ff', '#b79bff'];
-    var LEN = 7;
-    var seq = [], pos = 0, busy = true, myToken = trialToken;
-    var wrap = trialEls.board;
-    wrap.innerHTML = '<div class="ts-info" id="ts-info" aria-live="polite"></div><div class="ts-pads" id="ts-pads"></div><button type="button" class="trial-btn" id="ts-go">Lancer</button>';
-    var info = wrap.querySelector('#ts-info'), padsEl = wrap.querySelector('#ts-pads'), go = wrap.querySelector('#ts-go');
-    var pads = COLORS.map(function(c, i){
-      var b = document.createElement('button');
-      b.type = 'button'; b.className = 'ts-pad'; b.style.setProperty('--pc', c);
-      b.setAttribute('aria-label', 'Étoile ' + (i + 1));
-      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
-      b.addEventListener('click', function(){ press(i); });
-      padsEl.appendChild(b);
-      return b;
-    });
-    function flash(i, ms){ pads[i].classList.add('lit'); trialLater(function(){ pads[i].classList.remove('lit'); }, ms); }
-    function play(n){
-      busy = true; pos = 0; info.textContent = 'Regarde bien… (' + n + '/' + LEN + ')';
-      var t = reduceMotion ? 700 : 600;
-      for(var k = 0; k < n; k++){ (function(k){ trialLater(function(){ flash(seq[k], t * 0.6); }, 700 + k * t); })(k); }
-      trialLater(function(){ busy = false; info.textContent = 'À toi ! (0/' + n + ')'; }, 700 + n * t);
-    }
-    function press(i){
-      if(busy || trialSolved) return;
-      flash(i, 220);
-      var n = seqLen;
-      if(i !== seq[pos]){
-        busy = true; trialSay('Raté, la constellation se rallume depuis le début.', 'bad');
-        seqLen = 1; seq = []; for(var k = 0; k < LEN; k++){ seq.push(Math.floor(Math.random() * COLORS.length)); }
-        trialLater(function(){ trialSay(''); play(1); }, 1100);
-        return;
-      }
-      pos++;
-      info.textContent = 'À toi ! (' + pos + '/' + n + ')';
-      if(pos === n){
-        if(n === LEN){ info.textContent = 'Parfait !'; trialWin(); }
-        else { busy = true; seqLen++; trialSay(''); trialLater(function(){ play(seqLen); }, 800); }
-      }
-    }
-    var seqLen = 1;
-    go.addEventListener('click', function(){
-      seq = []; for(var k = 0; k < LEN; k++){ seq.push(Math.floor(Math.random() * COLORS.length)); }
-      seqLen = 1; trialSay(''); go.textContent = 'Recommencer'; trialClear(); play(1);
-    });
-    info.textContent = 'Appuie sur Lancer pour voir la première étoile.';
-  }
-
-  /* 3 · extinction (lights out 5×5, solvable par construction) */
-  function trialLights(){
-    var N = 5, grid = [], moves = 0;
-    var wrap = trialEls.board;
-    wrap.innerHTML = '<p class="tl-count" id="tl-count" aria-live="polite"></p><div class="tl-grid" id="tl-grid" role="group" aria-label="Grille d’étoiles"></div>';
-    var gridEl = wrap.querySelector('#tl-grid'), count = wrap.querySelector('#tl-count');
-    function toggle(i){
-      var r = Math.floor(i / N), c = i % N;
-      [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){
-        var rr = r + d[0], cc = c + d[1];
-        if(rr >= 0 && rr < N && cc >= 0 && cc < N){ grid[rr * N + cc] = !grid[rr * N + cc]; }
-      });
-    }
-    function fresh(){
-      grid = []; for(var i = 0; i < N * N; i++) grid.push(false);
-      [2, 6, 8, 10, 14, 17, 21, 23].forEach(toggle);
-      moves = 0; draw();
-    }
-    function draw(){
-      var cells = gridEl.children;
-      for(var i = 0; i < N * N; i++){ cells[i].classList.toggle('on', grid[i]); cells[i].setAttribute('aria-pressed', grid[i] ? 'true' : 'false'); }
-      var left = grid.filter(Boolean).length;
-      count.textContent = left + ' étoile' + (left > 1 ? 's' : '') + ' allumée' + (left > 1 ? 's' : '') + ' · ' + moves + ' coup' + (moves > 1 ? 's' : '');
-    }
-    for(var i = 0; i < N * N; i++){
-      (function(i){
-        var b = document.createElement('button');
-        b.type = 'button'; b.className = 'tl-cell';
-        b.setAttribute('aria-label', 'Étoile ligne ' + (Math.floor(i / N) + 1) + ', colonne ' + (i % N + 1));
-        b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
-        b.addEventListener('click', function(){
-          if(trialSolved) return;
-          toggle(i); moves++; draw();
-          if(!grid.some(Boolean)){ trialWin(); }
-        });
-        gridEl.appendChild(b);
-      })(i);
-    }
-    trialEls.reset.onclick = function(){ if(!trialSolved) fresh(); };
-    fresh();
-  }
-
-  /* 4 · puzzle coulissant 3×3 */
-  function trialSlide(){
-    var tiles = [1,2,3,4,5,6,7,8,0], moves = 0;
-    var wrap = trialEls.board;
-    wrap.innerHTML = '<p class="tl-count" id="tp-count" aria-live="polite"></p><div class="tp-grid" id="tp-grid" role="group" aria-label="Puzzle coulissant"></div>';
-    var gridEl = wrap.querySelector('#tp-grid'), count = wrap.querySelector('#tp-count');
-    function neighbors(z){
-      var r = Math.floor(z / 3), c = z % 3, out = [];
-      if(r > 0) out.push(z - 3); if(r < 2) out.push(z + 3); if(c > 0) out.push(z - 1); if(c < 2) out.push(z + 1);
-      return out;
-    }
-    function shuffle(){
-      tiles = [1,2,3,4,5,6,7,8,0]; var z = 8, last = -1;
-      for(var k = 0; k < 90; k++){
-        var opts = neighbors(z).filter(function(x){ return x !== last; });
-        var n = opts[Math.floor(Math.random() * opts.length)];
-        tiles[z] = tiles[n]; tiles[n] = 0; last = z; z = n;
-      }
-      if(tiles.join() === '1,2,3,4,5,6,7,8,0'){ shuffle(); return; }
-      moves = 0; draw();
-    }
-    function draw(){
-      gridEl.innerHTML = '';
-      tiles.forEach(function(t, i){
-        var b = document.createElement('button');
-        b.type = 'button';
-        if(t === 0){ b.className = 'tp-tile tp-empty'; b.disabled = true; b.setAttribute('aria-label', 'Case vide'); }
-        else {
-          b.className = 'tp-tile' + (t === i + 1 ? ' ok' : '');
-          b.textContent = t;
-          b.setAttribute('aria-label', 'Pièce ' + t);
-          b.addEventListener('click', function(){ slide(i); });
-        }
-        gridEl.appendChild(b);
-      });
-      count.textContent = moves + ' coup' + (moves > 1 ? 's' : '');
-    }
-    function slide(i){
-      if(trialSolved) return;
-      var z = tiles.indexOf(0);
-      if(neighbors(z).indexOf(i) === -1) return;
-      tiles[z] = tiles[i]; tiles[i] = 0; moves++; draw();
-      if(tiles.join() === '1,2,3,4,5,6,7,8,0'){ trialWin(); }
-    }
-    trialEls.reset.onclick = function(){ if(!trialSolved) shuffle(); };
-    shuffle();
-  }
-
-  function initVault(){
-    if(!vaultEls.locked) return;
-    renderTrialSteps();
-    if(trialDone >= 4 && !vaultOpened){ unlockVault(); }
-    else if(!vaultOpened){ startTrial(trialCur); }
-    trialEls.next.addEventListener('click', function(){ startTrial(Math.min(trialCur + 1, 3)); });
-    vaultEls.letterBtn.addEventListener('click', openLetter2);
-    vaultEls.letter.querySelectorAll('[data-letter-close]').forEach(function(el){ el.addEventListener('click', closeLetter2); });
-    vaultEls.letter.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ e.stopPropagation(); closeLetter2(); } });
-    if(vaultOpened){ showVaultOpen(); }
-  }
 
   /* =========================================================
      DÉMARRAGE
      ========================================================= */
   renderCalendar();
   renderLetters();
-  initVault();
   route();
 })();
