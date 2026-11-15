@@ -84,8 +84,8 @@
   /* Les calendriers disponibles : on peut passer de l'un à l'autre avec les onglets. */
   var SEPT_TEXTS = DAY_TEXTS;
   var CALENDARS = [
-    { id: 'sept', label: 'Septembre · octobre', heading: 'Septembre · octobre', start: new Date(2026, 8, 10), texts: SEPT_TEXTS, prefix: 'jour-',  hash: 'calendar',     storeKey: 'sarah-cal-opened' },
-    { id: 'nov',  label: 'Novembre',            heading: 'Novembre',            start: new Date(2026, 10, 1), texts: NOV_TEXTS,  prefix: 'nov-',   hash: 'calendar-nov', storeKey: 'sarah-cal-opened-nov' }
+    { id: 'sept', label: 'Septembre · octobre', heading: 'Septembre · octobre', start: new Date(2026, 8, 10), texts: SEPT_TEXTS, prefix: 'jour-',  hash: 'calendar-sept',     storeKey: 'sarah-cal-opened' },
+    { id: 'nov',  label: 'Novembre',            heading: 'Novembre',            start: new Date(2026, 10, 1), texts: NOV_TEXTS,  prefix: 'nov-',   hash: 'calendar', storeKey: 'sarah-cal-opened-nov' }
   ];
   var activeCal = CALENDARS[0];
   function setCalendar(i){
@@ -173,6 +173,7 @@
     });
 
     applyTheme(name);
+    updateNavCurrent(name);
     if(name === 'map'){ window.setTimeout(drawMapLines, 30); }
     if(name === 'secret'){ if(trialEls.steps && !vaultOpened){ startTrial(trialCur); } }
     if(name === 'sky'){ startSkyLoop(); } else { stopSkyLoop(); }
@@ -211,55 +212,91 @@
       window.location.hash = 'sky';
       return;
     }
-    if(hash === 'calendar' || hash === 'calendar-nov'){ setCalendar(hash === 'calendar-nov' ? 1 : 0); renderCalendar(); showScreen('calendar'); return; }
+    /* « Calendrier » ouvre directement novembre ; l'ancien mois reste dispo via l'onglet (#calendar-sept) */
+    if(hash === 'calendar' || hash === 'calendar-nov' || hash === 'calendar-sept'){ setCalendar(hash === 'calendar-sept' ? 0 : 1); renderCalendar(); showScreen('calendar'); return; }
     if(hash === 'letters'){ renderLetters(); showScreen('letters'); return; }
     if(hash === 'window'){ showScreen('window'); return; }
     if(hash === 'sky'){ closeConstellation(); showScreen('sky'); return; }
     if(hash === 'secret'){ showScreen('secret'); return; }
-    if(hash === 'home'){ showScreen('home'); return; }
-    showScreen('map');
+    if(hash === 'map'){ showScreen('map'); return; }
+    showScreen('home');   /* arrivée directe sur la page de Sarah */
   }
 
   navLinks.forEach(function(btn){
     btn.addEventListener('click', function(){
       var target = btn.getAttribute('data-nav');
-      window.location.hash = target === 'map' ? '' : target;
-      closeOrbit();
+      var nh = target === 'home' ? '' : target;
+      if(window.location.hash.replace('#','') === nh){ route(); }   /* déjà sur ce hash : on réaffiche */
+      else { window.location.hash = nh; }
+      closeNav();
     });
   });
 
   window.addEventListener('hashchange', route);
 
   /* =========================================================
-     LE CADRAN D'ÉTOILES (navigation)
+     NAVIGATION « DOCK CÉLESTE »
+     - pastille flottante : se masque en descendant, revient en remontant
+     - « Explorer » ouvre le sommaire plein écran (focus géré, Échap ferme)
+     - la section en cours s'affiche dans la pastille
      ========================================================= */
-  var orbitContainer = document.getElementById('nav-orbit');
-  var orbitHub = document.getElementById('orbit-hub');
-  var orbitNodes = document.querySelectorAll('.orbit-node');
+  var dockEl = document.getElementById('dock');
+  var dockMenu = document.getElementById('dock-menu');
+  var dockHere = document.getElementById('dock-here');
+  var sommaire = document.getElementById('sommaire');
+  var NAV_LABELS = { map:'La carte', home:'Accueil', calendar:'Calendrier', day:'Calendrier', letters:'Lettres', letter:'Lettres', window:'La chambre', sky:'Le ciel', secret:'Le Coffre' };
+  var navCloseTimer = null;
 
-  function openOrbit(){
-    orbitContainer.classList.add('open');
-    orbitHub.setAttribute('aria-expanded','true');
-    orbitHub.setAttribute('aria-label','Fermer la navigation');
-    orbitNodes.forEach(function(n){ n.removeAttribute('tabindex'); });
+  function navIsOpen(){ return !!sommaire && sommaire.classList.contains('is-open'); }
+  function openNav(){
+    if(!sommaire) return;
+    window.clearTimeout(navCloseTimer);
+    sommaire.hidden = false;
+    void sommaire.offsetWidth;                       /* relance la transition */
+    sommaire.classList.add('is-open');
+    document.body.classList.add('nav-open');
+    dockMenu.setAttribute('aria-expanded','true');
+    var first = sommaire.querySelector('.som-link'); if(first){ window.setTimeout(function(){ first.focus({preventScroll:true}); }, 60); }
   }
-  function closeOrbit(){
-    orbitContainer.classList.remove('open');
-    orbitHub.setAttribute('aria-expanded','false');
-    orbitHub.setAttribute('aria-label','Ouvrir la navigation');
-    orbitNodes.forEach(function(n){ n.setAttribute('tabindex','-1'); });
+  function closeNav(){
+    if(!sommaire || !navIsOpen()) return;
+    sommaire.classList.remove('is-open');
+    document.body.classList.remove('nav-open');
+    dockMenu.setAttribute('aria-expanded','false');
+    navCloseTimer = window.setTimeout(function(){ sommaire.hidden = true; }, reduceMotion ? 0 : 450);
   }
-  orbitHub.addEventListener('click', function(){
-    if(orbitContainer.classList.contains('open')){ closeOrbit(); } else { openOrbit(); }
-  });
-  document.addEventListener('click', function(e){
-    if(!orbitContainer.classList.contains('open')) return;
-    if(!orbitContainer.contains(e.target)){ closeOrbit(); }
-  });
+  function updateNavCurrent(name){
+    if(dockHere){ dockHere.textContent = NAV_LABELS[name] || 'Accueil'; }
+    var parent = name === 'day' ? 'calendar' : name === 'letter' ? 'letters' : name === 'sky' ? 'window' : name;
+    document.querySelectorAll('.som-link[data-nav]').forEach(function(el){
+      el.setAttribute('aria-current', el.getAttribute('data-nav') === parent ? 'true' : 'false');
+    });
+  }
+  if(dockMenu){
+    dockMenu.addEventListener('click', function(){ if(navIsOpen()){ closeNav(); } else { openNav(); } });
+    sommaire.addEventListener('click', function(e){ if(e.target.closest('[data-nav-close]') || e.target.closest('a.som-link')){ closeNav(); } });
+    /* piège à focus simple dans le sommaire */
+    sommaire.addEventListener('keydown', function(e){
+      if(e.key !== 'Tab') return;
+      var f = [].slice.call(sommaire.querySelectorAll('.som-link')).concat([dockMenu]);
+      var i = f.indexOf(document.activeElement);
+      if(e.shiftKey && (i <= 0)){ e.preventDefault(); f[f.length - 1].focus(); }
+      else if(!e.shiftKey && i === f.length - 1){ e.preventDefault(); f[0].focus(); }
+    });
+    /* projecteur doux qui suit la souris sur le sommaire */
+    sommaire.addEventListener('pointermove', function(e){ sommaire.style.setProperty('--mx', e.clientX + 'px'); sommaire.style.setProperty('--my', e.clientY + 'px'); });
+    /* pastille : masquée en descendant, visible en remontant */
+    var lastY = window.scrollY;
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY, away = y > lastY && y > 120 && !navIsOpen();
+      dockEl.classList.toggle('is-away', away); dockEl.classList.toggle('is-solid', y > 24);
+      lastY = y;
+    }, { passive:true });
+  }
 
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Escape') return;
-    if(orbitContainer.classList.contains('open')){ closeOrbit(); orbitHub.focus(); return; }
+    if(navIsOpen()){ closeNav(); dockMenu.focus(); return; }
     if(screens.day.classList.contains('active')){ window.location.hash = activeCal.hash; }
     else if(screens.calendar.classList.contains('active')){ window.location.hash = ''; }
     else if(screens.letter.classList.contains('active')){ window.location.hash = 'letters'; }
@@ -287,72 +324,57 @@
       t.classList.toggle('is-active', on);
       t.setAttribute('aria-selected', on ? 'true' : 'false');
     });
-    var COLS = 5, ROW_H = 116, TOP = 56;
-    var rows = Math.ceil(DAYS_IN_CAL / COLS);
-    var H = TOP * 2 + (rows - 1) * ROW_H;
-    var pts = [];
-    for(var i = 0; i < DAYS_IN_CAL; i++){
-      var r = Math.floor(i / COLS), c = i % COLS;
-      if(r % 2 === 1){ c = COLS - 1 - c; }
-      pts.push({ x: 10 + c * 20 + Math.sin(i * 1.7) * 2.2, y: TOP + r * ROW_H + Math.sin(i * 1.3) * 16 });
-    }
+    /* ---- nouveau visuel : un vrai calendrier (semaine du lundi au dimanche) ----
+       Chaque jour est une petite carte : à ouvrir, aujourd'hui, déjà ouvert ou pas encore.
+       Les textes et la logique de déverrouillage (dateForDay / isUnlocked) sont inchangés. */
+    var offset = (dateForDay(1).getDay() + 6) % 7;
+    var WK = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
     calGrid.innerHTML = '';
-    calGrid.style.height = H + 'px';
-
-    var NS = 'http://www.w3.org/2000/svg';
-    var svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('class', 'cal-path-lines');
-    svg.setAttribute('viewBox', '0 0 100 ' + H);
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.setAttribute('aria-hidden', 'true');
-    for(var k = 0; k < pts.length - 1; k++){
-      var p0 = pts[k], p1 = pts[k + 1];
-      var path = document.createElementNS(NS, 'path');
-      var midY = (p0.y + p1.y) / 2;
-      var horizontal = Math.floor(k / COLS) === Math.floor((k + 1) / COLS);
-      var dstr = horizontal
-        ? 'M' + p0.x + ' ' + p0.y + ' C ' + ((p0.x + p1.x) / 2) + ' ' + (p0.y - 10) + ', ' + ((p0.x + p1.x) / 2) + ' ' + (p1.y + 10) + ', ' + p1.x + ' ' + p1.y
-        : 'M' + p0.x + ' ' + p0.y + ' C ' + (p0.x + (p0.x > 50 ? 9 : -9)) + ' ' + (p0.y + 40) + ', ' + (p1.x + (p1.x > 50 ? 9 : -9)) + ' ' + (p1.y - 40) + ', ' + p1.x + ' ' + p1.y;
-      path.setAttribute('d', dstr);
-      path.setAttribute('class', isUnlocked(k + 2) ? 'lit' : '');
-      svg.appendChild(path);
-    }
-    calGrid.appendChild(svg);
-
+    calGrid.style.height = '';
+    calGrid.className = 'cal-board';
+    var wk = document.createElement('div'); wk.className = 'cal-wk'; wk.setAttribute('aria-hidden', 'true');
+    WK.forEach(function(w){ var sp = document.createElement('span'); sp.textContent = w; wk.appendChild(sp); });
+    calGrid.appendChild(wk);
+    var board = document.createElement('div'); board.className = 'cal-days'; calGrid.appendChild(board);
+    for(var e = 0; e < offset; e++){ var gap = document.createElement('span'); gap.className = 'cal-gap'; gap.setAttribute('aria-hidden', 'true'); board.appendChild(gap); }
+    var openedCount = 0;
     for(var n = 0; n < DAYS_IN_CAL; n++){
-      (function(d, pt){
+      (function(d){
         var unlocked = isUnlocked(d);
-        var wasOpened = opened.indexOf(d) !== -1;
+        var wasOpened = opened.indexOf(d) !== -1 && unlocked;
+        if(wasOpened){ openedCount++; }
+        var dt = dateForDay(d);
         var box = document.createElement('button');
         box.type = 'button';
-        box.className = 'day-star' + (unlocked ? '' : ' is-locked') + (isToday(d) ? ' is-today' : '') + (wasOpened && unlocked ? ' is-opened' : '');
-        box.style.left = pt.x + '%';
-        box.style.top = pt.y + 'px';
-
-        box.innerHTML = '<svg class="ds-shape" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>' +
-          '<span class="ds-num">' + d + '</span>' +
-          (unlocked ? '' : '<svg class="ds-lock" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-lock"/></svg>');
+        box.className = 'cal-day' + (unlocked ? '' : ' is-locked') + (isToday(d) ? ' is-today' : '') + (wasOpened ? ' is-opened' : '') + (unlocked && !wasOpened ? ' is-new' : '');
+        box.style.setProperty('--i', n);
+        var cap = dt.toLocaleDateString('fr-FR', { day:'numeric', month:'short' });
+        box.innerHTML = '<span class="cd-num">' + d + '</span>' +
+          '<span class="cd-cap">' + cap + '</span>' +
+          '<span class="cd-state" aria-hidden="true">' +
+            (!unlocked ? '<svg viewBox="0 0 24 24"><use href="#icon-lock"/></svg>' : wasOpened ? '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '<svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg>') +
+          '</span>' + (isToday(d) ? '<span class="cd-today">aujourd\'hui</span>' : '');
         box.setAttribute('aria-label', unlocked
           ? 'Jour ' + d + (wasOpened ? ' — déjà ouvert' : ' — à ouvrir')
           : 'Jour ' + d + ' — verrouillé jusqu\'au ' + frDate(d));
-
         box.addEventListener('click', function(){
           if(!unlocked){
-            if(!reduceMotion){
-              box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
-            }
+            if(!reduceMotion){ box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake'); }
             return;
           }
-          if(reduceMotion){
-            window.location.hash = activeCal.prefix + d;
-            return;
-          }
+          if(reduceMotion){ window.location.hash = activeCal.prefix + d; return; }
           box.classList.add('popping');
           window.setTimeout(function(){ window.location.hash = activeCal.prefix + d; }, 320);
         });
-
-        calGrid.appendChild(box);
-      })(n + 1, pts[n]);
+        board.appendChild(box);
+      })(n + 1);
+    }
+    /* progression : cases déjà ouvertes sur celles disponibles */
+    var prog = document.getElementById('cal-prog');
+    if(prog){
+      var avail = 0; for(var q = 1; q <= DAYS_IN_CAL; q++){ if(isUnlocked(q)){ avail++; } }
+      prog.querySelector('i').style.width = (DAYS_IN_CAL ? openedCount / DAYS_IN_CAL * 100 : 0) + '%';
+      prog.querySelector('span').textContent = openedCount + ' / ' + DAYS_IN_CAL + ' jours ouverts';
     }
 
     if(todayMid.getTime() < dateForDay(1).getTime()){
@@ -435,42 +457,75 @@
     }catch(e){}
   }
 
+  /* ---- BUREAU D'ÉCRIVAIN : chaque lettre est une enveloppe posée sur le bureau ----
+     Les textes (LETTERS) et la sauvegarde (sarah-letters-opened-v2, par mot-clé) sont inchangés. */
+  var lettersFilter = 'all';
+  var lettersCount = document.getElementById('letters-count');
+  function applyLettersFilter(){
+    var cards = lettersGrid.querySelectorAll('.env');
+    cards.forEach(function(c){
+      var read = c.classList.contains('is-opened');
+      c.hidden = (lettersFilter === 'new' && read) || (lettersFilter === 'read' && !read);
+    });
+    document.querySelectorAll('.desk-chip').forEach(function(b){
+      var on = b.getAttribute('data-filter') === lettersFilter;
+      b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    var empty = lettersGrid.querySelector('.desk-empty');
+    var visible = lettersGrid.querySelectorAll('.env:not([hidden])').length;
+    if(!visible && !empty){
+      empty = document.createElement('p'); empty.className = 'desk-empty';
+      empty.textContent = lettersFilter === 'new' ? 'Tu as tout ouvert, bravo.' : 'Aucune lettre ouverte pour l\'instant.';
+      lettersGrid.appendChild(empty);
+    } else if(visible && empty){ empty.remove(); }
+  }
   function renderLetters(){
     var openedLetters = getOpenedLetters();
     lettersGrid.innerHTML = '';
+    var readCount = 0;
     LETTERS.forEach(function(item, i){
       var card = document.createElement('button');
       card.type = 'button';
       var wasRead = openedLetters.indexOf(item.word) !== -1;
-      card.className = 'letter-card' + (wasRead ? ' is-opened' : '');
+      if(wasRead){ readCount++; }
+      card.className = 'env' + (wasRead ? ' is-opened' : '');
+      card.style.setProperty('--i', i);
+      card.style.setProperty('--tilt', (((i * 37) % 7) - 3) * 0.55 + 'deg');
       card.setAttribute('aria-label', item.trigger + (wasRead ? ' — déjà ouverte' : ''));
-
-      var flap = document.createElement('span');
-      flap.className = 'envelope-flap';
-      flap.setAttribute('aria-hidden','true');
-      card.appendChild(flap);
-
-      var seal = document.createElement('span');
-      seal.className = 'envelope-seal';
-      seal.setAttribute('aria-hidden','true');
-      seal.innerHTML = '<svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg>';
-      card.appendChild(seal);
-
-      var text = document.createElement('span');
-      text.className = 'envelope-text';
-      text.textContent = item.trigger;
-      card.appendChild(text);
-
+      /* « À ouvrir quand... ils te manquent » -> petit début + suite en grand */
+      var parts = item.trigger.split(/\.\.\.|…/);
+      var lead = parts.length > 1 ? parts[0].trim() + '…' : '';
+      var rest = parts.length > 1 ? parts.slice(1).join(' ').trim() : item.trigger;
+      card.innerHTML =
+        '<span class="env-back" aria-hidden="true"></span>' +
+        '<span class="env-sheet" aria-hidden="true"></span>' +
+        '<span class="env-front" aria-hidden="true"></span>' +
+        '<span class="env-flap" aria-hidden="true"></span>' +
+        '<span class="env-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>' +
+        '<span class="env-label"><small></small><b></b></span>' +
+        '<span class="env-read" aria-hidden="true">lue</span>';
+      card.querySelector('small').textContent = lead;
+      card.querySelector('b').textContent = rest;
       card.addEventListener('click', function(){
-        if(reduceMotion){
-          window.location.hash = 'lettre-' + (i + 1);
-          return;
-        }
+        if(reduceMotion){ window.location.hash = 'lettre-' + (i + 1); return; }
         card.classList.add('popping');
-        window.setTimeout(function(){ window.location.hash = 'lettre-' + (i + 1); }, 320);
+        window.setTimeout(function(){ window.location.hash = 'lettre-' + (i + 1); }, 420);
       });
-
       lettersGrid.appendChild(card);
+    });
+    if(lettersCount){ lettersCount.textContent = readCount + ' / ' + LETTERS.length + ' lettres ouvertes'; }
+    applyLettersFilter();
+  }
+  document.querySelectorAll('.desk-chip').forEach(function(b){
+    b.addEventListener('click', function(){ lettersFilter = b.getAttribute('data-filter'); applyLettersFilter(); });
+  });
+  var lettersRandom = document.getElementById('letters-random');
+  if(lettersRandom){
+    lettersRandom.addEventListener('click', function(){
+      var op = getOpenedLetters(), pool = [];
+      LETTERS.forEach(function(it, i){ if(op.indexOf(it.word) === -1){ pool.push(i); } });
+      if(!pool.length){ LETTERS.forEach(function(it, i){ pool.push(i); }); }
+      window.location.hash = 'lettre-' + (pool[Math.floor(Math.random() * pool.length)] + 1);
     });
   }
 
@@ -1212,52 +1267,10 @@
   if(patchOpenBtn){ patchOpenBtn.addEventListener('click', openPatch); }
 
   /* =========================================================
-     ÉCRAN D'INTRO "Pour Sarah" (première visite seulement)
+     Plus d'écran d'intro : arrivée directe sur la page de Sarah.
+     Le patch note ne s'ouvre qu'une fois par version.
      ========================================================= */
-  var introEl = document.getElementById('intro');
-  if(introEl){
-    var introHash = window.location.hash.replace('#', '');
-    var introSeen = lsGet('intro') === '1' && !/[?&]reset\b/.test(window.location.search);
-    if(!introSeen && (introHash === '' || introHash === 'map')){
-      introEl.hidden = false;
-      document.body.classList.add('intro-open');
-      var ic = document.getElementById('intro-stars');
-      var ictx = ic.getContext('2d');
-      var istars = [];
-      var iw = 0, ih = 0, iraf = null;
-      var sizeIntro = function(){
-        iw = ic.width = window.innerWidth; ih = ic.height = window.innerHeight;
-        istars = [];
-        for(var i = 0; i < 130; i++){ istars.push({ x: Math.random() * iw, y: Math.random() * ih, r: Math.random() * 1.5 + 0.3, ph: Math.random() * 6.28, sp: 0.4 + Math.random() }); }
-      };
-      sizeIntro();
-      var drawIntro = function(t){
-        ictx.clearRect(0, 0, iw, ih);
-        ictx.fillStyle = '#F5F0FF';
-        for(var i = 0; i < istars.length; i++){
-          var st = istars[i];
-          ictx.globalAlpha = reduceMotion ? 0.7 : 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(st.ph + t * 0.001 * st.sp));
-          ictx.beginPath(); ictx.arc(st.x, st.y, st.r, 0, 6.283); ictx.fill();
-        }
-        if(!reduceMotion){ iraf = requestAnimationFrame(drawIntro); }
-      };
-      iraf = requestAnimationFrame(drawIntro);
-      var introBtn = document.getElementById('intro-btn');
-      window.setTimeout(function(){ introBtn.focus(); }, 60);
-      introBtn.addEventListener('click', function(){
-        lsSet('intro', '1');
-        introEl.classList.add('leaving');
-        document.body.classList.remove('intro-open');
-        window.setTimeout(function(){
-          introEl.hidden = true;
-          if(iraf){ cancelAnimationFrame(iraf); }
-          showPatchIfNew();
-        }, reduceMotion ? 10 : 900);
-      });
-    } else {
-      window.setTimeout(showPatchIfNew, 500);
-    }
-  }
+  window.setTimeout(showPatchIfNew, 700);
 
   /* =========================================================
      CHAMP D'ÉTOILES SCINTILLANTES

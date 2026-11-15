@@ -32,80 +32,54 @@
 </div>
 <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-<div class="nav-orbit" id="nav-orbit">
-  <div class="orbit-backdrop" aria-hidden="true"></div>
-  <svg class="orbit-lines" viewBox="0 0 160 440" aria-hidden="true">
-    <line x1="27" y1="27" x2="138" y2="26"></line>
-    <line x1="27" y1="27" x2="120" y2="84"></line>
-    <line x1="27" y1="27" x2="96" y2="140"></line>
-    <line x1="27" y1="27" x2="66" y2="192"></line>
-    <line x1="27" y1="27" x2="30" y2="238"></line>
-    <line x1="27" y1="27" x2="30" y2="298"></line>
-    <line x1="27" y1="27" x2="30" y2="356"></line>
-    <line x1="27" y1="27" x2="30" y2="414"></line>
-  </svg>
-  <button class="orbit-hub" id="orbit-hub" type="button" aria-expanded="false" aria-controls="orbit-menu" aria-label="Ouvrir la navigation">
-    <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-  </button>
-  <nav class="orbit-menu" id="orbit-menu" aria-label="Navigation principale">
-    <button class="orbit-node nav-link" type="button" data-nav="map" style="--nx:118px; --ny:6px; --nd:0.05s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">La carte</span>
+<!-- ================= NAVIGATION « DOCK CÉLESTE » =================
+     Une pastille flottante (marque · section en cours · menu · thème).
+     Un clic sur « Explorer » déploie un sommaire plein écran, éditorial.
+     Les boutons gardent l'attribut data-nav : le routage par hash du JS est inchangé. -->
+<header class="dock" id="dock">
+  <div class="dock-pill">
+    <button class="dock-brand nav-link" type="button" data-nav="home" aria-label="Retour à l'accueil">
+      <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg><span>Sarah</span>
     </button>
-    <button class="orbit-node nav-link" type="button" data-nav="calendar" style="--nx:100px; --ny:64px; --nd:0.1s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Calendrier</span>
+    <span class="dock-sep" aria-hidden="true"></span>
+    <span class="dock-here" id="dock-here" aria-live="polite">Accueil</span>
+    <button class="dock-menu" id="dock-menu" type="button" aria-expanded="false" aria-controls="sommaire">
+      <span class="dock-menu-label">Explorer</span>
+      <span class="dock-burger" aria-hidden="true"><i></i><i></i></span>
     </button>
-    <button class="orbit-node nav-link" type="button" data-nav="letters" style="--nx:76px; --ny:120px; --nd:0.15s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Lettres</span>
-    </button>
-    <button class="orbit-node nav-link" type="button" data-nav="window" style="--nx:46px; --ny:172px; --nd:0.2s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Ciel</span>
-    </button>
-    <button class="orbit-node nav-link" type="button" data-nav="secret" style="--nx:10px; --ny:218px; --nd:0.25s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Secret</span>
-    </button>
-    <!-- lien externe : ouvre le jeu Clicker dans le même onglet, volontairement
-         en dehors du routage par hash (pas de data-nav) -->
-    <a class="orbit-node orbit-node-external" href="clicker.html" style="--nx:10px; --ny:278px; --nd:0.3s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Clicker</span>
-    </a>
-    <!-- lien externe : ouvre le sanctuaire "L'Échappée" dans le même onglet
-         (elle a son propre bouton "Quitter" pour revenir ici), volontairement
-         en dehors du routage par hash (pas de data-nav) -->
-    <a class="orbit-node orbit-node-sanctuary" href="sanctuary.html" style="--nx:10px; --ny:336px; --nd:0.35s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
-      <span class="node-label">Échappée</span>
-    </a>
-    <!-- lien externe : ouvre la salle de ciné dans le même onglet
-         (elle a son propre lien de retour pour revenir ici), volontairement
-         en dehors du routage par hash (pas de data-nav) -->
-    <a class="orbit-node orbit-node-cinema" href="cinema.html" style="--nx:10px; --ny:394px; --nd:0.4s" tabindex="-1">
-      <span class="node-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-camera"/></svg></span>
-      <span class="node-label">Ciné</span>
-    </a>
-  </nav>
-</div>
-<p class="wordmark" aria-hidden="true">✦ Univers de Sarah</p>
-
-<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Passer en mode nuit" aria-pressed="false">
+    <button class="theme-toggle nav-theme" id="theme-toggle" type="button" aria-label="Passer en mode nuit" aria-pressed="false">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path class="tt-moon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/><g class="tt-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></g></svg>
 </button>
-
-<!-- ================= INTRO (première visite seulement) ================= -->
-<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
-  <canvas class="intro-stars" id="intro-stars" aria-hidden="true"></canvas>
-  <div class="intro-inner">
-    <svg class="intro-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
-    <h1 class="intro-title" id="intro-title">Pour Sarah</h1>
-    <p class="intro-sub">un petit univers construit rien que pour toi</p>
-    <button class="intro-btn" id="intro-btn" type="button">Entrer</button>
   </div>
+</header>
+
+<div class="sommaire" id="sommaire" role="dialog" aria-modal="true" aria-label="Sommaire du site" hidden>
+  <div class="sommaire-bg" data-nav-close></div>
+  <nav class="sommaire-inner" aria-label="Navigation principale">
+    <div class="som-group">
+      <p class="som-title">Ton coin</p>
+      <button class="som-link nav-link" type="button" data-nav="home" style="--c1:#F0D79A;--c2:#B9823A"><span class="som-orb"></span><span class="som-name">Accueil</span><span class="som-tag">là où tout commence</span></button>
+      <button class="som-link nav-link" type="button" data-nav="map" style="--c1:#E9B4AE;--c2:#A8585A"><span class="som-orb"></span><span class="som-name">La carte</span><span class="som-tag">toutes les planètes d'un coup d'œil</span></button>
+      <button class="som-link nav-link" type="button" data-nav="letters" style="--c1:#F1CFA8;--c2:#B8693F"><span class="som-orb"></span><span class="som-name">Lettres</span><span class="som-tag">à ouvrir selon l'humeur</span></button>
+      <button class="som-link nav-link" type="button" data-nav="calendar" style="--c1:#D6DDAE;--c2:#6F8148"><span class="som-orb"></span><span class="som-name">Calendrier</span><span class="som-tag">un chemin d'étoiles</span></button>
+    </div>
+    <div class="som-group">
+      <p class="som-title">Jouer</p>
+      <a class="som-link" href="clicker.html" style="--c1:#F0D79A;--c2:#B9823A"><span class="som-orb"></span><span class="som-name">Fabrique d'étoiles</span><span class="som-tag">le clicker en orbite</span></a>
+      <a class="som-link" href="cinema.html" style="--c1:#E9B4AE;--c2:#8E4B49"><span class="som-orb"></span><span class="som-name">Salle de ciné</span><span class="som-tag">films, quiz et séances</span></a>
+      <button class="som-link nav-link" type="button" data-nav="window" style="--c1:#CDB8D9;--c2:#7B5A86"><span class="som-orb"></span><span class="som-name">La chambre</span><span class="som-tag">et sa fenêtre sur le ciel</span></button>
+    </div>
+    <div class="som-group">
+      <p class="som-title">Mystères</p>
+      <button class="som-link nav-link" type="button" data-nav="secret" style="--c1:#BFD8C2;--c2:#4F7A5E"><span class="som-orb"></span><span class="som-name">Le Coffre</span><span class="som-tag">quatre épreuves</span></button>
+      <a class="som-link" href="soleil-lune.html" style="--c1:#F6E8C2;--c2:#9A7F9C"><span class="som-orb"></span><span class="som-name">Soleil / Lune</span><span class="som-tag">un coin à part</span></a>
+      <a class="som-link is-mourn" href="sanctuary.html" style="--c1:#B5C3C8;--c2:#4A5A63"><span class="som-orb"></span><span class="som-name">L'Échappée</span><span class="som-tag">une pièce à explorer</span></a>
+    </div>
+  </nav>
 </div>
+
+
+
 
 <!-- ================= PATCH NOTE (à l'ouverture, une fois par version) ================= -->
 <div class="patch" id="patch" role="dialog" aria-modal="true" aria-labelledby="patch-title" hidden>
@@ -451,14 +425,15 @@ Des gros bisous moche 3 ❤️🥰😘</p>
       <h2 tabindex="-1" id="cal-heading">Un mois de toi</h2>
       <span class="lede">une étoile par jour, un peu d'amour à chaque fois</span>
       <div class="cal-tabs" role="tablist" aria-label="Choisir le mois">
-        <button class="cal-tab is-active" type="button" role="tab" data-cal="calendar" aria-selected="true">Septembre · octobre</button>
-        <button class="cal-tab" type="button" role="tab" data-cal="calendar-nov" aria-selected="false">Novembre</button>
+        <button class="cal-tab is-active" type="button" role="tab" data-cal="calendar" aria-selected="true">Novembre</button>
+        <button class="cal-tab" type="button" role="tab" data-cal="calendar-sept" aria-selected="false">Septembre · octobre</button>
       </div>
       <p class="cal-status" id="cal-status">Chargement…</p>
+      <div class="cal-prog" id="cal-prog" aria-hidden="true"><div class="cal-prog-bar"><i></i></div><span></span></div>
     </div>
 
     <div class="cal-grid-wrap">
-      <div class="cal-path" id="cal-grid" aria-label="Chemin d'étoiles : une étoile par jour"></div>
+      <div class="cal-board" id="cal-grid" aria-label="Calendrier : une case par jour"></div>
     </div>
 
     <div class="cal-legend">
@@ -484,24 +459,42 @@ Des gros bisous moche 3 ❤️🥰😘</p>
 
 <!-- ================= ÉCRAN 4 : LETTRES ================= -->
 <div class="screen" id="screen-letters">
-  <div class="cal-screen container">
+  <div class="desk-screen container">
     <div class="cal-header">
       <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
       <h2 tabindex="-1" id="letters-heading">Des lettres pour toi</h2>
       <span class="lede">à ouvrir seulement quand le moment est venu</span>
     </div>
 
-    <!-- ÉDITABLE : les lettres viennent du tableau LETTERS dans le script ci-dessous -->
-    <div class="letters-grid" id="letters-grid"></div>
+    <!-- barre d'outils : filtre, progression, lettre au hasard -->
+    <div class="desk-bar">
+      <div class="desk-filters" role="group" aria-label="Filtrer les lettres">
+        <button class="desk-chip is-active" type="button" data-filter="all" aria-pressed="true">Toutes</button>
+        <button class="desk-chip" type="button" data-filter="new" aria-pressed="false">À ouvrir</button>
+        <button class="desk-chip" type="button" data-filter="read" aria-pressed="false">Déjà ouvertes</button>
+      </div>
+      <p class="desk-count" id="letters-count" aria-live="polite"></p>
+      <button class="desk-random" id="letters-random" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>Une au hasard</button>
+    </div>
+
+    <!-- ÉDITABLE : les lettres viennent du tableau LETTERS dans le script -->
+    <div class="desk" id="letters-desk">
+      <div class="desk-grid" id="letters-grid"></div>
+    </div>
   </div>
 </div>
 
 <!-- ================= ÉCRAN 5 : LETTRE OUVERTE ================= -->
 <div class="screen" id="screen-letter">
-  <div class="day-screen">
-    <p class="day-label" id="letter-trigger">—</p>
-    <h2 class="day-text" id="letter-word" tabindex="-1"></h2>
-    <p class="letter-sub" id="letter-sub"></p>
+  <div class="day-screen letter-page">
+    <article class="paper" aria-labelledby="letter-word">
+      <span class="paper-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <p class="day-label" id="letter-trigger">—</p>
+      <h2 class="day-text" id="letter-word" tabindex="-1"></h2>
+      <span class="paper-rule" aria-hidden="true"></span>
+      <p class="letter-sub" id="letter-sub"></p>
+      <svg class="paper-flourish" viewBox="0 0 120 14" aria-hidden="true"><path d="M2 7h40M78 7h40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M60 1l1.6 4.9L66 7l-4.4 1.1L60 13l-1.6-4.9L54 7l4.4-1.1z" fill="currentColor"/></svg>
+    </article>
     <div class="day-nav">
       <button class="btn-ghost" type="button" id="letter-prev">← lettre précédente</button>
       <button class="btn-ghost" type="button" data-nav="letters">retour aux lettres</button>
