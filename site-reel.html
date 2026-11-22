@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Univers de Sarah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<svg class="visually-hidden" aria-hidden="true">
+  <symbol id="icon-spark" viewBox="0 0 24 24">
+    <path d="M12 0c0 6.6 1.8 9.4 8 12-6.2 2.6-8 5.4-8 12 0-6.6-1.8-9.4-8-12 6.2-2.6 8-5.4 8-12z"/>
+  </symbol>
+  <symbol id="icon-lock" viewBox="0 0 24 24">
+    <path d="M6 10V8a6 6 0 0 1 12 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z"/>
+  </symbol>
+  <symbol id="icon-camera" viewBox="0 0 24 24">
+    <path d="M9 3l-1.5 2H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-3.5L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+  </symbol>
+</svg>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <canvas id="stars-canvas"></canvas>
+</div>
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<!-- ================= NAVIGATION « DOCK CÉLESTE » =================
+     Une pastille flottante (marque · section en cours · menu · thème).
+     Un clic sur « Explorer » déploie un sommaire plein écran, éditorial.
+     Les boutons gardent l'attribut data-nav : le routage par hash du JS est inchangé. -->
+<header class="dock" id="dock">
+  <div class="dock-pill">
+    <button class="dock-brand nav-link" type="button" data-nav="home" aria-label="Retour à l'accueil">
+      <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg><span>Sarah</span>
+    </button>
+    <span class="dock-sep" aria-hidden="true"></span>
+    <span class="dock-here" id="dock-here" aria-live="polite">Accueil</span>
+    <button class="dock-menu" id="dock-menu" type="button" aria-expanded="false" aria-controls="sommaire">
+      <span class="dock-menu-label">Explorer</span>
+      <span class="dock-burger" aria-hidden="true"><i></i><i></i></span>
+    </button>
+    <button class="theme-toggle nav-theme" id="theme-toggle" type="button" aria-label="Passer en mode nuit" aria-pressed="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="tt-moon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/><g class="tt-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></g></svg>
+</button>
+  </div>
+</header>
+
+<div class="sommaire" id="sommaire" role="dialog" aria-modal="true" aria-label="Sommaire du site" hidden>
+  <div class="sommaire-bg" data-nav-close></div>
+  <nav class="sommaire-inner" aria-label="Navigation principale">
+    <div class="som-group">
+      <p class="som-title">Ton coin</p>
+      <button class="som-link nav-link" type="button" data-nav="home" style="--c1:#F0D79A;--c2:#B9823A"><span class="som-orb"></span><span class="som-name">Accueil</span><span class="som-tag">là où tout commence</span></button>
+      <button class="som-link nav-link" type="button" data-nav="letters" style="--c1:#F1CFA8;--c2:#B8693F"><span class="som-orb"></span><span class="som-name">Lettres</span><span class="som-tag">à ouvrir selon l'humeur</span></button>
+      <button class="som-link nav-link" type="button" data-nav="calendar" style="--c1:#D6DDAE;--c2:#6F8148"><span class="som-orb"></span><span class="som-name">Calendrier</span><span class="som-tag">un chemin d'étoiles</span></button>
+    </div>
+    <div class="som-group">
+      <p class="som-title">Jouer</p>
+      <a class="som-link" href="clicker.html" style="--c1:#F0D79A;--c2:#B9823A"><span class="som-orb"></span><span class="som-name">Fabrique d'étoiles</span><span class="som-tag">le clicker en orbite</span></a>
+      <a class="som-link" href="cinema.html" style="--c1:#E9B4AE;--c2:#8E4B49"><span class="som-orb"></span><span class="som-name">Salle de ciné</span><span class="som-tag">films, quiz et séances</span></a>
+      <button class="som-link nav-link" type="button" data-nav="window" style="--c1:#CDB8D9;--c2:#7B5A86"><span class="som-orb"></span><span class="som-name">La chambre</span><span class="som-tag">et sa fenêtre sur le ciel</span></button>
+    </div>
+    <div class="som-group">
+      <p class="som-title">Mystères</p>
+      <button class="som-link nav-link" type="button" data-nav="secret" style="--c1:#BFD8C2;--c2:#4F7A5E"><span class="som-orb"></span><span class="som-name">Le Coffre</span><span class="som-tag">quatre épreuves</span></button>
+      <a class="som-link" href="soleil-lune.html" style="--c1:#F6E8C2;--c2:#9A7F9C"><span class="som-orb"></span><span class="som-name">Soleil / Lune</span><span class="som-tag">un coin à part</span></a>
+      <a class="som-link is-mourn" href="sanctuary.html" style="--c1:#B5C3C8;--c2:#4A5A63"><span class="som-orb"></span><span class="som-name">L'Échappée</span><span class="som-tag">une pièce à explorer</span></a>
+      <button class="patch-open" id="patch-open" type="button">Voir les nouveautés</button>
+    </div>
+  </nav>
+</div>
+
+
+
+
+<!-- ================= NOUVEAUTÉS : page de lecture à l'arrivée (une fois par version) ================= -->
+<div class="nw" id="news" role="dialog" aria-modal="true" aria-labelledby="nw-t0" hidden>
+  <div class="nw-card">
+    <button class="nw-x" id="nw-x" type="button" aria-label="Fermer les nouveautés" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+    <div class="nw-top"><span class="nw-stamp">Nouveau</span><span class="nw-count" id="nw-count" aria-live="polite"></span></div>
+    <div class="nw-slides" id="nw-slides">
+      <section class="nw-slide" data-i="0" aria-labelledby="nw-t0">
+        <p class="nw-sub">Prends une minute pour lire</p>
+        <h2 class="nw-title" id="nw-t0">Tout est nouveau</h2>
+        <p class="nw-intro">Depuis ta dernière visite, j'ai refait une bonne partie du site. Les anciennes annonces ont disparu : <strong>tout ce que tu vas lire maintenant est neuf</strong>. Lis chaque page, je t'ai laissé de quoi découvrir.</p>
+      </section>
+      <section class="nw-slide" data-i="1" aria-labelledby="nw-t1" hidden>
+        <p class="nw-sub">Accueil et menu</p>
+        <h2 class="nw-title" id="nw-t1">Une arrivée plus simple</h2>
+        <ul class="nw-list"><li>Tu arrives <strong>directement sur ta page</strong>, sans écran d'introduction.</li><li>Un <strong>nouveau menu</strong> te permet d'aller partout : lettres, calendrier, jeux, chambre, coffre.</li><li>L'ancienne page « Ton univers » n'existe plus : <strong>le bouton retour te ramène toujours à l'accueil</strong>.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="2" aria-labelledby="nw-t2" hidden>
+        <p class="nw-sub">Un jour après l'autre</p>
+        <h2 class="nw-title" id="nw-t2">Un nouveau calendrier</h2>
+        <ul class="nw-list"><li>Le calendrier a été <strong>entièrement refait</strong>.</li><li>Il s'ouvre <strong>directement sur novembre</strong>.</li><li>Ouvre la case du jour, une surprise t'attend chaque fois.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="3" aria-labelledby="nw-t3" hidden>
+        <p class="nw-sub">À ouvrir une par une</p>
+        <h2 class="nw-title" id="nw-t3">Des lettres redessinées</h2>
+        <ul class="nw-list"><li>Chaque lettre est maintenant une <strong>enveloppe en couleur</strong>, claire et facile à repérer.</li><li>Elles s'ouvrent d'un clic, et celles que tu as déjà lues restent marquées.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="4" aria-labelledby="nw-t4" hidden>
+        <p class="nw-sub">Un vrai jeu de galaxie</p>
+        <h2 class="nw-title" id="nw-t4">La Fabrique d'étoiles, refaite</h2>
+        <ul class="nw-list"><li>Une <strong>galaxie en 3D</strong> : zoome avec la molette, maintiens le clic gauche pour la faire tourner. Elle reste toujours au centre.</li><li>Des <strong>orbiteurs</strong> à acheter, des améliorations, des comètes : <strong>plus une comète est rare, plus elle met de temps à arriver</strong>.</li><li>La <strong>Supernova</strong> te fait renaître : barre de progression, bonus gagné et ce que tu perds, tout est affiché avant de confirmer.</li><li>Nouvelle sauvegarde : la partie repart de zéro.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="5" aria-labelledby="nw-t5" hidden>
+        <p class="nw-sub">Quatre épreuves</p>
+        <h2 class="nw-title" id="nw-t5">Le Coffre, réécrit</h2>
+        <ul class="nw-list"><li>Quatre épreuves différentes : un message à déchiffrer, une constellation à rejouer, des étoiles à éteindre, un puzzle du ciel.</li><li>Il faut les réussir <strong>dans l'ordre</strong> pour ouvrir le coffre.</li><li>Ta progression est gardée sur cet appareil.</li></ul>
+      </section>
+      <section class="nw-slide" data-i="6" aria-labelledby="nw-t6" hidden>
+        <p class="nw-sub">C'est à toi</p>
+        <h2 class="nw-title" id="nw-t6">Voilà, tu as tout lu</h2>
+        <ul class="nw-list"><li>Tu peux <strong>rouvrir cette page</strong> quand tu veux depuis le menu, avec « Voir les nouveautés ».</li><li>Maintenant, va explorer.</li></ul>
+      </section>
+    </div>
+    <div class="nw-dots" id="nw-dots" aria-hidden="true"></div>
+    <div class="nw-foot">
+      <button class="nw-btn nw-prev" id="nw-prev" type="button">Retour</button>
+      <button class="nw-btn nw-next" id="nw-next" type="button"><i class="nw-fill" aria-hidden="true"></i><span id="nw-next-label">Suivant</span></button>
+    </div>
+    <p class="nw-hint" id="nw-hint">Lis la page : le bouton se débloque dans quelques secondes.</p>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 1 : ACCUEIL ================= -->
+<div class="screen" id="screen-home">
+  <main>
+    <section class="hero">
+      <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Une page rien que pour toi</p>
+      <h1 class="hero-title" aria-label="Sarah">
+        <span class="letter" style="animation-delay:.05s">S</span><span class="letter" style="animation-delay:.14s">a</span><span class="letter" style="animation-delay:.23s">r</span><span class="letter" style="animation-delay:.32s">a</span><span class="letter" style="animation-delay:.41s">h</span>
+      </h1>
+      <p class="hero-subtitle">l'étoile la plus brillante que je connaisse</p>
+      <p class="hero-text">Ici, pas de filtre, pas de mise en scène — juste tout ce qu'on pense de toi, réuni dans un petit coin d'univers. Descends, prends ton temps.</p>
+      <div class="hero-actions">
+        <a class="btn-wish" id="wish-btn" href="soleil-lune.html">
+          <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+          Soleil / Lune
+        </a>
+        <span class="scroll-cue">continue de scroller
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        </span>
+      </div>
+    </section>
+
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker">
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>MEILLEURE AMIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>HUMAINE EXCEPTIONNELLE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>LUMIÈRE DE LA GALAXIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>COSMIC QUEEN</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>IRREMPLAÇABLE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>MEILLEURE AMIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>HUMAINE EXCEPTIONNELLE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>LUMIÈRE DE LA GALAXIE</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>COSMIC QUEEN</span>
+        <span><svg class="icon-spark"><use href="#icon-spark"/></svg>IRREMPLAÇABLE</span>
+      </div>
+    </div>
+
+    <section class="block portals" id="portals" aria-labelledby="portals-title">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Quatre portes</p>
+          <h2 id="portals-title">Où veux-tu aller&nbsp;?</h2>
+          <p class="lede">chaque planète a son ambiance</p>
+        </div>
+        <div class="portal-grid">
+          <a class="portal" href="clicker.html" style="--c1:#F0D79A;--c2:#B9823A" data-reveal>
+            <span class="portal-orb" aria-hidden="true"></span><h3>Fabrique d'étoiles</h3>
+            <p>Un clicker où tes planètes tournent autour de l'étoile mère.</p><span class="portal-go">Jouer</span>
+          </a>
+          <a class="portal" href="cinema.html" style="--c1:#E9B4AE;--c2:#8E4B49" data-reveal>
+            <span class="portal-orb" aria-hidden="true"></span><h3>Salle de ciné</h3>
+            <p>Tes films préférés, un quiz et la prochaine séance.</p><span class="portal-go">Entrer</span>
+          </a>
+          <a class="portal" href="soleil-lune.html" style="--c1:#F6E8C2;--c2:#9A7F9C" data-reveal>
+            <span class="portal-orb" aria-hidden="true"></span><h3>Soleil / Lune</h3>
+            <p>Un coin à part, pour ceux qui veillent sur toi.</p><span class="portal-go">Ouvrir</span>
+          </a>
+          <a class="portal is-mourn" href="sanctuary.html" style="--c1:#B5C3C8;--c2:#4A5A63" data-reveal>
+            <span class="portal-orb" aria-hidden="true"></span><h3>L'Échappée</h3>
+            <p>Une pièce calme, en souvenir.</p><span class="portal-go">Entrer doucement</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="messages">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Message depuis ma galaxie</p>
+          <h2>Ce que je pense de toi</h2>
+          <span class="lede">Quatre vérités, écrites depuis mon cœur :</span>
+        </div>
+
+        <!-- ÉDITABLE : remplace les 4 textes ci-dessous par tes vrais messages -->
+        <div class="message-grid">
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°01</span>
+            <p>Il y a des gens qui entrent dans une pièce et tout devient plus léger. C'est toi. Sans même le vouloir, tu rends les journées ordinaires plus douces, et c'est un cadeau dont je ne me lasse pas.</p>
+          </article>
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°02</span>
+            <p>Je t'ai vue encaisser des choses qui auraient fait plier beaucoup de monde, et continuer à sourire, à prendre soin des autres. Cette force tranquille, c'est ce qui m'impressionne le plus chez toi.</p>
+          </article>
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°03</span>
+            <p>Avec toi, je n'ai jamais eu à faire semblant. Tu écoutes sans juger, tu trouves les mots justes même quand moi je les cherche, et tu me fais sentir que mes histoires comptent, même les plus petites.</p>
+          </article>
+          <article class="msg-card" data-reveal>
+            <span class="tag">Preuve n°04</span>
+            <p>Notre amitié, c'est des fous rires pour rien, des vocaux qui n'en finissent plus et des silences qui ne pèsent jamais. Je ne sais pas ce que je ferais sans ça, et je n'ai pas l'intention de le découvrir.</p>
+          </article>
+        </div>
+
+        <p class="signoff">— toujours dans ton équipe.</p>
+      </div>
+    </section>
+
+    <section class="block" id="family">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Depuis leur galaxie à eux</p>
+          <h2>Ta fratrie a aussi des choses à dire</h2>
+          <span class="lede">ils n'ont pas pu s'empêcher de participer.</span>
+        </div>
+      </div>
+
+      <!-- ÉDITABLE : les messages de la fratrie (un <article> par personne) -->
+      <div class="container">
+        <div class="fam-reader" id="fam-reader">
+          <div class="fam-tabs" id="fam-tabs" role="tablist" aria-label="Choisir un message de la fratrie"></div>
+          <div class="fam-stage">
+          <article class="fam-card" role="tabpanel">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
+            <p class="who">Alexis</p>
+            <p>Heyllo ma Sœur d'amour magique a moi que j'aime ! 
+
+Ben voilà, apparemment il y en a un qui souhaitait te faire plaisir alors j'en profite pour te faire rappeler juste par un pur égoïsme d'amour que je suis Fan de toi ! 
+
+On en a traversé des épreuves, depuis qu'on est gamin, les bon et mauvais moment.. mais je suis extrêmement fière de notre parcours car grâce a cela et contre tout. On est plus que jamais proche avec toi Jess et tyty.
+
+Aujourd'hui ont est complice grâce a nos connaissances égale sur toute la cinématographie qu'on nous a inculquer depuis qu'on est pitchou et c'est pas fini ^^
+
+
+On se tape des barres a tout bout de champ et on a actuellement des Xenomorph a buter !!
+
+Loin de moi l'idée de prendre la vedette sur notre chèr et fort sympathique Ice, mais je voulais te faire savoir encore est toujours que tu fais partie des personnes que j'aime par dessus absolument tout au monde ! 
+
+Je t'aime ma soeur, ma Jynx ! 
+Et de la part de Homer Simpson : Ta gueule ! ❤️</p>
+          </article>
+          <article class="fam-card" role="tabpanel">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Frère</span>
+            <p class="who">Tywenn</p>
+            <p>Coucou Sassou 😁 ! Je ne suis pas la meilleur personne pour mettre ce genre de choses par écrit, mais je voulais quand même te laisser quelques mots.
+
+Ce que j’aime chez toi, c’est ta gentillesse et surtout l’humour qu’on peut avoir ensemble et avec notre frère et notre sœur. C’est peut-être des choses simples, mais c’est justement ces petits moments qui comptent beaucoup pour moi.
+
+Je repense notamment de temps en temps à nos parties sur Back 4 Blood. C’est un jeu que j’aime énormément, et le fait d’y avoir joué pour la première fois avec toi en a fait un souvenir que je garde particulièrement. C’était juste des parties de jeu, mais j’ai vraiment passé de très bons moments avec toi.
+
+S’il y a une chose que j’aimerais que tu retiennes, c’est de toujours avoir confiance en toi. N’aie pas peur d’avancer, d’essayer, de te tromper ou de prendre et de reprendre des chemins différents. La vie passe vite, je dis ça alors que j'en est que 19 ans, mais je le vois, alors profite, profite des personnes qui t’entourent et surtout, profite des moments que la vie te donne.
+
+Je ne te le dis peut-être pas souvent, mais tu comptes beaucoup pour moi et je suis content de t’avoir comme sœur ❤️❤️❤️
+
+Des gros bisous moche 3 ❤️🥰😘</p>
+          </article>
+          <article class="fam-card" role="tabpanel">
+            <span class="badge"><svg class="icon-spark"><use href="#icon-spark"/></svg>Sœur</span>
+            <p class="who">Jessica</p>
+            <p>A toi, ma sœur, mais pas seulement, pas juste une sœur mais une âme sœur, une âme jumelle, mon souffle de vie, mon rayon de soleil, ma safe-place, là où naît mon courage, là où se meurent mes doutes, le départ de mes forces, la destination de ma volonté, c'est dans ton existence que j'ai trouvé ma raison d'être, ma détermination à combattre chaque épreuve de la vie, sans toi je serais incomplète, inachevée. Il n’existe aucune définition de l'amour qui puisse poser des mots sur la puissance et la profondeur de celui que je te porte, tant il transcende tout ce qui existe de tangible en notre monde. A toi, ma sœur, je t'aime bien au-delà des mots, bien au-delà des émotions, bien au-delà de chaque réalité qui fût, qui est et qui sera.</p>
+          </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="container">
+        <div class="teaser-grid">
+          <div class="cal-teaser" data-reveal>
+            <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Et ce n'est pas fini</p>
+            <h2>Un mois entier de toi</h2>
+            <p class="sub">septembre, octobre… et novembre en plus</p>
+            <button class="btn-cal" type="button" data-nav="calendar">
+              <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+              Ouvrir le calendrier
+            </button>
+          </div>
+          <div class="cal-teaser letters-teaser" data-reveal>
+            <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
+            <h2>Des lettres pour toi</h2>
+            <p class="sub">à ouvrir seulement quand le moment est venu</p>
+            <button class="btn-cal" type="button" data-nav="letters">
+              <svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>
+              Voir les lettres
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sign-off">
+    <svg class="icon-spark big" aria-hidden="true"><use href="#icon-spark"/></svg>
+    <p class="made">faite avec tout mon cœur, pour toi.</p>
+    <p class="date" id="footer-date">—</p>
+    <button class="btn-replay" id="replay-btn" type="button">revoir la surprise ✦</button>
+  </footer>
+</div>
+
+<!-- ================= ÉCRAN 2 : CALENDRIER ================= -->
+<div class="screen" id="screen-calendar">
+  <div class="cal-screen container">
+    <div class="cal-header">
+      <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Calendrier secret</p>
+      <h2 tabindex="-1" id="cal-heading">Un mois de toi</h2>
+      <span class="lede">une étoile par jour, un peu d'amour à chaque fois</span>
+      <div class="cal-tabs" role="tablist" aria-label="Choisir le mois">
+        <button class="cal-tab is-active" type="button" role="tab" data-cal="calendar" aria-selected="true">Novembre</button>
+        <button class="cal-tab" type="button" role="tab" data-cal="calendar-sept" aria-selected="false">Septembre · octobre</button>
+      </div>
+      <p class="cal-status" id="cal-status">Chargement…</p>
+      <div class="cal-prog" id="cal-prog" aria-hidden="true"><div class="cal-prog-bar"><i></i></div><span></span></div>
+    </div>
+
+    <div class="cal-grid-wrap">
+      <div class="cal-board" id="cal-grid" aria-label="Calendrier : une case par jour"></div>
+    </div>
+
+    <div class="cal-legend">
+      <span><span class="legend-dot today"></span>aujourd'hui</span>
+      <span><span class="legend-dot"></span>à ouvrir</span>
+      <span><span class="legend-dot locked"></span>pas encore</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 3 : CASE OUVERTE ================= -->
+<div class="screen" id="screen-day">
+  <div class="day-screen">
+    <p class="day-label" id="day-label">JOUR —</p>
+    <h2 class="day-text" id="day-text" tabindex="-1"></h2>
+    <div class="day-nav">
+      <button class="btn-ghost" type="button" id="day-prev">← jour précédent</button>
+      <button class="btn-ghost" type="button" data-nav="calendar">retour au calendrier</button>
+      <button class="btn-ghost" type="button" id="day-next">jour suivant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 4 : LETTRES ================= -->
+<div class="screen" id="screen-letters">
+  <div class="desk-screen container">
+    <div class="cal-header">
+      <p class="eyebrow"><svg class="icon-spark"><use href="#icon-spark"/></svg>Pour chaque humeur</p>
+      <h2 tabindex="-1" id="letters-heading">Des lettres pour toi</h2>
+      <span class="lede">à ouvrir seulement quand le moment est venu</span>
+    </div>
+
+    <!-- barre d'outils : filtre, progression, lettre au hasard -->
+    <div class="desk-bar">
+      <div class="desk-filters" role="group" aria-label="Filtrer les lettres">
+        <button class="desk-chip is-active" type="button" data-filter="all" aria-pressed="true">Toutes</button>
+        <button class="desk-chip" type="button" data-filter="new" aria-pressed="false">À ouvrir</button>
+        <button class="desk-chip" type="button" data-filter="read" aria-pressed="false">Déjà ouvertes</button>
+      </div>
+      <p class="desk-count" id="letters-count" aria-live="polite"></p>
+      <button class="desk-random" id="letters-random" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>Une au hasard</button>
+    </div>
+
+    <!-- ÉDITABLE : les lettres viennent du tableau LETTERS dans le script -->
+    <div class="desk" id="letters-desk">
+      <div class="desk-grid" id="letters-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 5 : LETTRE OUVERTE ================= -->
+<div class="screen" id="screen-letter">
+  <div class="day-screen letter-page">
+    <article class="paper" aria-labelledby="letter-word">
+      <span class="paper-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></span>
+      <p class="day-label" id="letter-trigger">—</p>
+      <h2 class="day-text" id="letter-word" tabindex="-1"></h2>
+      <span class="paper-rule" aria-hidden="true"></span>
+      <p class="letter-sub" id="letter-sub"></p>
+      <svg class="paper-flourish" viewBox="0 0 120 14" aria-hidden="true"><path d="M2 7h40M78 7h40" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M60 1l1.6 4.9L66 7l-4.4 1.1L60 13l-1.6-4.9L54 7l4.4-1.1z" fill="currentColor"/></svg>
+    </article>
+    <div class="day-nav">
+      <button class="btn-ghost" type="button" id="letter-prev">← lettre précédente</button>
+      <button class="btn-ghost" type="button" data-nav="letters">retour aux lettres</button>
+      <button class="btn-ghost" type="button" id="letter-next">lettre suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ÉCRAN 6 : FENÊTRE ================= -->
+<div class="screen" id="screen-window">
+  <div class="window-screen" id="room-scene">
+    <!-- Décor : chambre gaming RGB autour de la fenêtre, purement visuel. -->
+    <div class="room-led" aria-hidden="true"></div>
+    <div class="room-ambient" aria-hidden="true"></div>
+    <div class="room-floor" aria-hidden="true"></div>
+    <div class="room-neon" aria-hidden="true">GG</div>
+    <div class="room-hex" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="room-poster" aria-hidden="true"></div>
+    <div class="room-desk" aria-hidden="true">
+      <div class="gm-chair"><i></i></div>
+      <i class="gm-leg l"></i><i class="gm-leg r"></i>
+      <div class="gm-pc"><i class="fan"></i><i class="fan"></i><i class="fan"></i></div>
+      <div class="gm-monitor"><div class="gm-screen"></div><i class="gm-stand"></i></div>
+      <div class="gm-top"></div>
+      <i class="gm-pad"></i><i class="gm-kb"></i><i class="gm-mouse"></i>
+    </div>
+    <div class="room-shelf" aria-hidden="true">
+      <span class="shelf-book book-1"></span>
+      <span class="shelf-book book-2"></span>
+      <span class="shelf-book book-3"></span>
+      <span class="shelf-figure"></span>
+      <span class="shelf-frame"></span>
+    </div>
+
+    <div class="room-wall" aria-hidden="true"></div>
+    <div class="room-rug" aria-hidden="true"></div>
+    <div class="room-caption">
+      <p class="eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Depuis l'intérieur</p>
+      <h2 tabindex="-1" id="window-heading">Regarde par la fenêtre</h2>
+      <p class="lede">le ciel est calme, ce soir. clique sur la vitre pour aller le voir de plus près.</p>
+    </div>
+
+    <div class="window-frame" id="window-frame">
+      <button class="window-glass" id="window-glass" type="button" aria-label="Sortir regarder le ciel">
+        <canvas id="window-stars-canvas"></canvas>
+        <span class="window-hint" aria-hidden="true"><svg class="icon-spark"><use href="#icon-spark"/></svg></span>
+      </button>
+      <div class="window-mullions" aria-hidden="true"></div>
+    </div>
+    <div class="window-sill" aria-hidden="true"></div>
+    <div class="room-curtain l" aria-hidden="true"></div><div class="room-curtain r" aria-hidden="true"></div>
+  </div>
+</div>
+
+<!-- overlay de "traversée" de la fenêtre : effet de vitesse-étoiles plein écran -->
+<div class="warp-overlay" id="warp-overlay" aria-hidden="true">
+  <canvas id="warp-canvas"></canvas>
+</div>
+
+<!-- ================= ÉCRAN 7 : CIEL ================= -->
+<div class="screen" id="screen-sky">
+  <div class="sky-screen">
+    <canvas id="sky-canvas" tabindex="-1"></canvas>
+    <p class="sky-hint" id="sky-hint">bouge la souris pour explorer · clique sur une étoile brillante</p>
+    <p class="sky-progress" id="sky-progress" aria-live="polite"></p>
+    <button class="sky-back" type="button" data-nav="window">← retour à l'intérieur</button>
+    <div class="sky-dim" id="sky-dim" aria-hidden="true"></div>
+
+    <!-- ÉDITABLE : les 5 constellations viennent du tableau CONSTELLATIONS dans le script -->
+    <div class="constellation-card" id="constellation-card" role="dialog" aria-modal="false" aria-labelledby="card-title">
+      <button class="card-close" id="card-close" type="button" aria-label="Fermer">×</button>
+      <span class="card-date" id="card-date">—</span>
+      <h3 id="card-title" tabindex="-1">—</h3>
+      <p id="card-text"></p>
+      <img class="card-img" id="card-img" alt="" hidden>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-secret">
+  <div class="vault" id="vault">
+
+    <!-- ÉTAT 1 : le coffre est fermé → 4 épreuves à passer -->
+    <div class="vault-locked" id="vault-locked">
+      <p class="vault-eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Rien que pour toi</p>
+      <h2 class="vault-title" id="vault-heading" tabindex="-1">Le Coffre</h2>
+      <p class="vault-lede">Quatre épreuves gardent le coffre. Passe-les une par une.</p>
+
+      <ol class="trial-steps" id="trial-steps" aria-label="Les quatre épreuves"></ol>
+      <section class="trial" id="trial">
+        <header class="trial-head">
+          <span class="trial-num" id="trial-num" aria-hidden="true">1</span>
+          <div class="trial-head-text">
+            <p class="trial-kind" id="trial-kind"></p>
+            <h3 class="trial-title" id="trial-title"></h3>
+          </div>
+        </header>
+        <p class="trial-text" id="trial-text"></p>
+        <div class="trial-board" id="trial-board"></div>
+        <p class="trial-msg" id="trial-msg" role="status" aria-live="polite"></p>
+        <div class="trial-actions">
+          <button type="button" class="trial-btn ghost" id="trial-reset">Recommencer</button>
+          <button type="button" class="trial-btn" id="trial-next" hidden>Épreuve suivante</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ÉTAT 2 : le coffre est ouvert → le ciel des raisons, puis la lettre -->
+    <div class="vault-open" id="vault-open" hidden>
+      <p class="vault-eyebrow"><svg class="icon-spark" aria-hidden="true"><use href="#icon-spark"/></svg>Le coffre est ouvert</p>
+      <h2 class="vault-title" id="vault-open-heading" tabindex="-1">Sept raisons de briller</h2>
+      <p class="vault-lede" id="vault-open-lede">Touche chaque étoile pour lire une raison.</p>
+      <div class="vault-sky" id="vault-sky">
+        <svg class="vault-sky-lines" id="vault-sky-lines" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="vault-stars" id="vault-stars"></div>
+      </div>
+      <div class="vault-reason" id="vault-reason" role="status" aria-live="polite">
+        <p class="vault-reason-count" id="vault-reason-count"></p>
+        <h3 id="vault-reason-title"></h3>
+        <p id="vault-reason-text"></p>
+      </div>
+      <button class="vault-letter-btn" id="vault-letter-btn" type="button" hidden>Lire ma lettre</button>
+    </div>
+
+    <!-- la lettre finale -->
+    <div class="vault-letter" id="vault-letter" role="dialog" aria-modal="true" aria-labelledby="vault-letter-greeting" hidden>
+      <div class="vault-letter-backdrop" data-letter-close></div>
+      <article class="vault-letter-paper">
+        <button class="vault-letter-close" type="button" data-letter-close aria-label="Fermer la lettre">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+        <h3 id="vault-letter-greeting"></h3>
+        <div id="vault-letter-body"></div>
+        <p class="vault-letter-sign" id="vault-letter-sign"></p>
+      </article>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+/* =========================================================
+   LE COFFRE : code autonome (ne dépend pas de script.js)
+   Il est volontairement séparé : si autre chose plante sur la
+   page, le coffre et ses 4 épreuves marchent quand même.
+   ========================================================= */
+(function(){
+  'use strict';
+  try{
+
+  /* ---------- ÉDITABLE : textes ---------- */
+  var REASONS = [
+    { title: "Ta façon d'écouter", text: "Tu écoutes pour comprendre, pas pour répondre. Peu de gens savent faire ça, et toi tu le fais sans même y penser." },
+    { title: "Ton rire", text: "Il est contagieux. Il y a des jours où il suffit que je l'entende pour que tout aille mieux." },
+    { title: "Ta loyauté", text: "Quand tu es là, tu es là pour de bon, dans les bons moments comme dans les moins bons." },
+    { title: "Ta sensibilité", text: "Elle te fait parfois douter, mais c'est aussi ce qui te rend si humaine et si attentionnée." },
+    { title: "Tes folies", text: "Les idées improbables, les vocaux de vingt minutes, les fous rires à des heures impossibles. Merci d'être aussi dingue que moi." },
+    { title: "Ta force", text: "Tu avances même quand c'est dur, et tu ne le montres pas toujours. Moi, je le vois, et je suis fier de toi." },
+    { title: "Ta présence", text: "Juste le fait que tu existes et que tu sois dans ma vie. Le reste n'est que du bonus." }
+  ];
+  var GREETING = "Chère Sarah,";
+  var LETTER = [
+    "Si tu lis ces lignes, c'est que tu as exploré tout l'univers jusqu'au bout. Bravo, et surtout merci d'avoir pris le temps.",
+    "Ce site, je l'ai construit pour te dire, autrement qu'avec un simple message, à quel point tu comptes pour moi. Chaque étoile, chaque lettre, chaque petite surprise est là pour une seule raison : te faire sourire.",
+    "Quoi qu'il arrive, je serai toujours dans ton équipe. Ne l'oublie jamais."
+  ];
+  var SIGNATURE = "Avec tout mon cœur,";
+  var RIDDLE = "JE BRILLE SANS FLAMME ET LA NUIT JE TE GUIDE. QUI SUIS-JE ?"; /* majuscules, sans accents */
+  var KEY = "CIEL";                                                          /* clé du chiffre */
+  var ANSWERS = ['etoile', 'une etoile', 'une etoile filante', 'etoiles', 'les etoiles'];
+  var STAR_POS = [ [10,30], [24,62], [40,80], [58,86], [74,70], [88,44], [50,24] ];
+  var DEFS = [
+    { name: 'Le message codé', kind: 'Décryptage', text: "Le message est chiffré avec une clé secrète : chaque lettre est décalée selon une lettre du mot-clé, qui se répète. Indice : la clé est l’endroit où vivent les étoiles (4 lettres). Trouve-la pour lire l’énigme, puis réponds." },
+    { name: 'La constellation', kind: 'Mémoire', text: "Les étoiles s’allument dans un certain ordre. Rejoue la suite sans te tromper : elle s’allonge à chaque tour (7 étoiles)." },
+    { name: 'Extinction', kind: 'Logique', text: "Toucher une étoile change aussi ses quatre voisines. Éteins-les toutes." },
+    { name: 'Le puzzle du ciel', kind: 'Puzzle', text: "Les morceaux du ciel sont mélangés. Fais glisser les pièces pour les remettre de 1 à 8, la case vide en bas à droite." }
+  ];
+
+  /* ---------- éléments ---------- */
+  function $(id){ return document.getElementById(id); }
+  var E = {
+    locked: $('vault-locked'), open: $('vault-open'),
+    steps: $('trial-steps'), num: $('trial-num'), kind: $('trial-kind'), title: $('trial-title'),
+    text: $('trial-text'), board: $('trial-board'), msg: $('trial-msg'),
+    reset: $('trial-reset'), next: $('trial-next'),
+    stars: $('vault-stars'), lines: $('vault-sky-lines'), lede: $('vault-open-lede'),
+    rCount: $('vault-reason-count'), rTitle: $('vault-reason-title'), rText: $('vault-reason-text'), reason: $('vault-reason'),
+    letterBtn: $('vault-letter-btn'), letter: $('vault-letter')
+  };
+  if(!E.locked || !E.steps || !E.board){ return; }
+
+  /* On repart de boutons « propres » (retire d'éventuels anciens écouteurs) */
+  ['reset', 'next', 'letterBtn'].forEach(function(k){
+    var n = E[k]; if(!n) return;
+    var c = n.cloneNode(true); n.parentNode.replaceChild(c, n); E[k] = c;
+  });
+  var reduce = false;
+  try{ reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+  /* ---------- sauvegarde (localStorage, sinon mémoire) ---------- */
+  var KEYNAME = 'sarah:coffre', mem = null;
+  function readRaw(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
+  function load(){
+    var s = null;
+    try{ s = JSON.parse(readRaw(KEYNAME) || 'null'); }catch(e){ s = null; }
+    if(!s || typeof s !== 'object'){
+      /* ancienne version : on récupère la progression si elle existe */
+      s = { t: parseInt(readRaw('sarah:trials') || '0', 10) || 0, open: readRaw('sarah:vault') === '1', seen: [] };
+      try{ s.seen = JSON.parse(readRaw('sarah:vault-seen') || '[]'); }catch(e){ s.seen = []; }
+    }
+    s.t = Math.max(0, Math.min(4, s.t | 0));
+    s.open = !!s.open; if(s.open) s.t = 4;
+    if(!Array.isArray(s.seen)) s.seen = [];
+    return s;
+  }
+  function save(){
+    mem = S;
+    try{ window.localStorage.setItem(KEYNAME, JSON.stringify(S)); }catch(e){}
+  }
+  if(/[?&]reset\b/.test(window.location.search)){
+    try{ window.localStorage.removeItem(KEYNAME); window.localStorage.removeItem('sarah:trials'); window.localStorage.removeItem('sarah:vault'); window.localStorage.removeItem('sarah:vault-seen'); }catch(e){}
+  }
+  var S = load();
+
+  /* ---------- petits utilitaires ---------- */
+  var timers = [], token = 0;
+  function later(fn, ms){ var t = setTimeout(fn, ms); timers.push(t); return t; }
+  function clearAll(){ token++; timers.forEach(clearTimeout); timers = []; }
+  function plain(s){ return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function vig(text, key, dir){
+    var j = 0;
+    return text.replace(/[A-Z]/g, function(c){
+      var k = key.charCodeAt(j % key.length) - 65; j++;
+      return String.fromCharCode((c.charCodeAt(0) - 65 + dir * k + 26) % 26 + 65);
+    });
+  }
+  function say(msg, kind){ E.msg.textContent = msg || ''; E.msg.className = 'trial-msg' + (kind ? ' is-' + kind : ''); }
+  var COLORS = ['#ff8a3d', '#ff4fa3', '#c7f13b', '#58c8ff', '#b79bff', '#F0D79A'];
+  function pop(x, y, n){
+    if(reduce || !document.body.animate) return;
+    for(var i = 0; i < (n || 22); i++){
+      var p = document.createElement('i');
+      p.setAttribute('aria-hidden', 'true');
+      p.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:9999;background:' + COLORS[i % COLORS.length];
+      document.body.appendChild(p);
+      var a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 130;
+      var an = p.animate([
+        { transform: 'translate(0,0) rotate(0)', opacity: 1 },
+        { transform: 'translate(' + Math.cos(a) * d + 'px,' + (Math.sin(a) * d + 70) + 'px) rotate(' + (Math.random() * 540) + 'deg)', opacity: 0 }
+      ], { duration: 900 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.3,1)' });
+      an.onfinish = (function(el){ return function(){ el.remove(); }; })(p);
+    }
+  }
+  function popCenter(){ pop(window.innerWidth / 2, window.innerHeight * 0.42, 40); }
+
+  /* ---------- épreuves : navigation ---------- */
+  var cur = Math.min(S.t, 3), solved = false;
+
+  function renderSteps(){
+    E.steps.innerHTML = '';
+    DEFS.forEach(function(d, i){
+      var li = document.createElement('li'), b = document.createElement('button');
+      var st = i < S.t ? 'done' : (i === cur ? 'cur' : 'lock');
+      b.type = 'button';
+      b.className = 'trial-step is-' + st + (i === cur ? ' is-active' : '');
+      b.disabled = i > S.t;
+      b.setAttribute('aria-label', 'Épreuve ' + (i + 1) + ' : ' + d.name + (i < S.t ? ' (réussie)' : (i > S.t ? ' (verrouillée)' : '')));
+      if(i === cur) b.setAttribute('aria-current', 'step');
+      b.innerHTML = '<span class="ts-n">' + (i < S.t ? '✓' : (i > S.t ? '🔒' : (i + 1))) + '</span><span class="ts-name">' + d.name + '</span><span class="ts-kind">' + d.kind + '</span>';
+      b.addEventListener('click', function(){ start(i); });
+      li.appendChild(b); E.steps.appendChild(li);
+    });
+  }
+  function start(i){
+    clearAll();
+    cur = i; solved = false;
+    E.next.hidden = true;
+    E.title.textContent = DEFS[i].name;
+    E.num.textContent = i + 1;
+    E.kind.textContent = 'Épreuve ' + (i + 1) + ' sur 4 · ' + DEFS[i].kind;
+    E.text.textContent = DEFS[i].text;
+    E.board.innerHTML = '';
+    E.board.className = 'trial-board tb-' + (i + 1);
+    E.reset.onclick = function(){ if(!solved) start(cur); };
+    say('');
+    renderSteps();
+    [gameCipher, gameSimon, gameLights, gameSlide][i]();
+  }
+  function win(){
+    if(solved) return;
+    solved = true; clearAll();
+    S.t = Math.max(S.t, cur + 1); save();
+    renderSteps(); popCenter();
+    if(cur < 3){
+      say('Réussi ! L’épreuve suivante est ouverte.', 'ok');
+      E.next.hidden = false;
+      try{ E.next.focus({ preventScroll: true }); }catch(e){}
+    } else {
+      say('Les quatre épreuves sont passées. Le coffre s’ouvre…', 'ok');
+      later(unlock, reduce ? 50 : 1200);
+    }
+  }
+  E.next.addEventListener('click', function(){ start(Math.min(cur + 1, 3)); });
+
+  /* ---------- 1 · message codé ---------- */
+  function gameCipher(){
+    var enc = vig(RIDDLE, KEY, 1), w = E.board;
+    w.innerHTML =
+      '<p class="tc-cipher" aria-label="Message codé">' + enc + '</p>' +
+      '<form class="tc-form" id="tc-key" autocomplete="off"><label for="tc-keyin">Clé</label><input id="tc-keyin" type="text" maxlength="' + KEY.length + '" placeholder="' + KEY.replace(/./g, '_') + '" aria-label="Clé de ' + KEY.length + ' lettres" autocapitalize="characters" spellcheck="false"></form>' +
+      '<p class="tc-plain" id="tc-plain"></p>' +
+      '<form class="tc-form" id="tc-form" autocomplete="off"><input id="tc-ans" type="text" placeholder="Réponse à l’énigme" aria-label="Ta réponse à l’énigme" spellcheck="false"><button type="submit" class="trial-btn">Valider</button></form>';
+    var kin = w.querySelector('#tc-keyin'), pl = w.querySelector('#tc-plain');
+    function k(){ return kin.value.toUpperCase().replace(/[^A-Z]/g, ''); }
+    function upd(){
+      var v = k(), ok = v.length === KEY.length;
+      pl.textContent = ok ? vig(enc, v, -1) : 'Entre les ' + KEY.length + ' lettres de la clé pour déchiffrer.';
+      pl.classList.toggle('is-ready', ok);
+    }
+    kin.addEventListener('input', upd);
+    w.querySelector('#tc-key').addEventListener('submit', function(e){ e.preventDefault(); });
+    upd();
+    w.querySelector('#tc-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      var a = plain(w.querySelector('#tc-ans').value);
+      if(a && ANSWERS.indexOf(a) !== -1){ win(); }
+      else { say(k() === KEY ? 'Le message est lisible, mais ce n’est pas la bonne réponse.' : 'Pas encore. Il faut d’abord trouver la bonne clé.', 'bad'); }
+    });
+  }
+
+  /* ---------- 2 · constellation à rejouer ---------- */
+  function gameSimon(){
+    var LEN = 7, seq = [], n = 1, pos = 0, busy = true, my = token, w = E.board;
+    w.innerHTML = '<div class="ts-info" id="ts-info" aria-live="polite"></div><div class="ts-pads" id="ts-pads"></div><button type="button" class="trial-btn" id="ts-go">Lancer</button>';
+    var info = w.querySelector('#ts-info'), padsEl = w.querySelector('#ts-pads'), go = w.querySelector('#ts-go');
+    var pads = [0, 1, 2, 3, 4].map(function(i){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'ts-pad'; b.style.setProperty('--pc', COLORS[i]);
+      b.setAttribute('aria-label', 'Étoile ' + (i + 1));
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
+      b.addEventListener('click', function(){ press(i); });
+      padsEl.appendChild(b); return b;
+    });
+    function newSeq(){ seq = []; for(var k = 0; k < LEN; k++) seq.push(Math.floor(Math.random() * 5)); n = 1; }
+    function flash(i, ms){ pads[i].classList.add('lit'); later(function(){ pads[i].classList.remove('lit'); }, ms); }
+    function play(){
+      busy = true; pos = 0; info.textContent = 'Regarde bien… (' + n + '/' + LEN + ')';
+      var t = reduce ? 700 : 600;
+      for(var k = 0; k < n; k++){ (function(k){ later(function(){ flash(seq[k], t * 0.6); }, 700 + k * t); })(k); }
+      later(function(){ busy = false; info.textContent = 'À toi ! (0/' + n + ')'; }, 700 + n * t);
+    }
+    function press(i){
+      if(busy || solved || my !== token) return;
+      flash(i, 220);
+      if(i !== seq[pos]){
+        busy = true; say('Raté, la constellation se rallume depuis le début.', 'bad');
+        newSeq(); later(function(){ say(''); play(); }, 1100); return;
+      }
+      pos++; info.textContent = 'À toi ! (' + pos + '/' + n + ')';
+      if(pos === n){
+        if(n === LEN){ info.textContent = 'Parfait !'; win(); }
+        else { busy = true; n++; say(''); later(play, 800); }
+      }
+    }
+    go.addEventListener('click', function(){ clearAll(); my = token; newSeq(); say(''); go.textContent = 'Recommencer'; play(); });
+    info.textContent = 'Appuie sur Lancer pour voir la première étoile.';
+  }
+
+  /* ---------- 3 · extinction (5×5, toujours résoluble) ---------- */
+  function gameLights(){
+    var N = 5, grid = [], moves = 0, w = E.board;
+    w.innerHTML = '<p class="tl-count" id="tl-count" aria-live="polite"></p><div class="tl-grid" id="tl-grid" role="group" aria-label="Grille d’étoiles"></div>';
+    var gridEl = w.querySelector('#tl-grid'), count = w.querySelector('#tl-count');
+    function toggle(i){
+      var r = Math.floor(i / N), c = i % N;
+      [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){
+        var rr = r + d[0], cc = c + d[1];
+        if(rr >= 0 && rr < N && cc >= 0 && cc < N) grid[rr * N + cc] = !grid[rr * N + cc];
+      });
+    }
+    function draw(){
+      var cells = gridEl.children;
+      for(var i = 0; i < N * N; i++){ cells[i].classList.toggle('on', grid[i]); cells[i].setAttribute('aria-pressed', grid[i] ? 'true' : 'false'); }
+      var left = grid.filter(Boolean).length;
+      count.textContent = left + ' étoile' + (left > 1 ? 's' : '') + ' allumée' + (left > 1 ? 's' : '') + ' · ' + moves + ' coup' + (moves > 1 ? 's' : '');
+    }
+    function fresh(){
+      var tries = 0;
+      do{
+        grid = []; for(var i = 0; i < N * N; i++) grid.push(false);
+        var picks = 6 + Math.floor(Math.random() * 4);
+        for(var p = 0; p < picks; p++) toggle(Math.floor(Math.random() * N * N));
+        tries++;
+        if(tries > 20){ grid = []; for(var j = 0; j < N * N; j++) grid.push(false); [2, 6, 8, 10, 14, 17, 21, 23].forEach(toggle); }
+      } while(!grid.some(Boolean));
+      moves = 0; draw();
+    }
+    for(var i = 0; i < N * N; i++){
+      (function(i){
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'tl-cell';
+        b.setAttribute('aria-label', 'Étoile ligne ' + (Math.floor(i / N) + 1) + ', colonne ' + (i % N + 1));
+        b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg>';
+        b.addEventListener('click', function(){
+          if(solved) return;
+          toggle(i); moves++; draw();
+          if(!grid.some(Boolean)) win();
+        });
+        gridEl.appendChild(b);
+      })(i);
+    }
+    E.reset.onclick = function(){ if(!solved) fresh(); };
+    fresh();
+  }
+
+  /* ---------- 4 · puzzle coulissant 3×3 ---------- */
+  function gameSlide(){
+    var tiles = [], moves = 0, w = E.board, GOAL = '1,2,3,4,5,6,7,8,0';
+    w.innerHTML = '<p class="tl-count" id="tp-count" aria-live="polite"></p><div class="tp-grid" id="tp-grid" role="group" aria-label="Puzzle coulissant"></div>';
+    var gridEl = w.querySelector('#tp-grid'), count = w.querySelector('#tp-count');
+    function nb(z){
+      var r = Math.floor(z / 3), c = z % 3, o = [];
+      if(r > 0) o.push(z - 3); if(r < 2) o.push(z + 3); if(c > 0) o.push(z - 1); if(c < 2) o.push(z + 1);
+      return o;
+    }
+    function shuffle(){
+      do{
+        tiles = [1,2,3,4,5,6,7,8,0]; var z = 8, last = -1;
+        for(var k = 0; k < 90; k++){
+          var opts = nb(z).filter(function(x){ return x !== last; });
+          var m = opts[Math.floor(Math.random() * opts.length)];
+          tiles[z] = tiles[m]; tiles[m] = 0; last = z; z = m;
+        }
+      } while(tiles.join() === GOAL);
+      moves = 0; draw();
+    }
+    function draw(){
+      gridEl.innerHTML = '';
+      tiles.forEach(function(t, i){
+        var b = document.createElement('button'); b.type = 'button';
+        if(t === 0){ b.className = 'tp-tile tp-empty'; b.disabled = true; b.setAttribute('aria-label', 'Case vide'); }
+        else {
+          b.className = 'tp-tile' + (t === i + 1 ? ' ok' : '');
+          b.textContent = t; b.setAttribute('aria-label', 'Pièce ' + t);
+          b.addEventListener('click', function(){ slide(i); });
+        }
+        gridEl.appendChild(b);
+      });
+      count.textContent = moves + ' coup' + (moves > 1 ? 's' : '');
+    }
+    function slide(i){
+      if(solved) return;
+      var z = tiles.indexOf(0);
+      if(nb(z).indexOf(i) === -1) return;
+      tiles[z] = tiles[i]; tiles[i] = 0; moves++; draw();
+      if(tiles.join() === GOAL) win();
+    }
+    E.reset.onclick = function(){ if(!solved) shuffle(); };
+    shuffle();
+  }
+
+  /* ---------- le coffre ouvert : 7 étoiles puis la lettre ---------- */
+  function unlock(){
+    S.open = true; S.t = 4; save();
+    showOpen();
+  }
+  function showOpen(){
+    E.locked.hidden = true; E.open.hidden = false;
+    drawSky();
+    var hd = $('vault-open-heading');
+    if(hd){ try{ hd.focus({ preventScroll: true }); }catch(e){} }
+  }
+  function drawSky(){
+    E.stars.innerHTML = '';
+    REASONS.forEach(function(r, i){
+      var pos = STAR_POS[i % STAR_POS.length], seen = S.seen.indexOf(i) !== -1;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'vault-star' + (seen ? ' is-seen' : '');
+      b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%';
+      b.setAttribute('aria-label', 'Raison ' + (i + 1) + ' sur ' + REASONS.length + (seen ? ' (déjà lue)' : ''));
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-spark"/></svg><span>' + (i + 1) + '</span>';
+      b.addEventListener('click', function(){ reason(i, b); });
+      E.stars.appendChild(b);
+    });
+    drawLines(); progress();
+  }
+  function drawLines(){
+    var NS = 'http://www.w3.org/2000/svg';
+    E.lines.innerHTML = '';
+    for(var k = 0; k < REASONS.length - 1; k++){
+      var a = STAR_POS[k], b = STAR_POS[k + 1], l = document.createElementNS(NS, 'line');
+      l.setAttribute('x1', a[0] * 10); l.setAttribute('y1', a[1] * 5.2);
+      l.setAttribute('x2', b[0] * 10); l.setAttribute('y2', b[1] * 5.2);
+      l.setAttribute('class', (S.seen.indexOf(k) !== -1 && S.seen.indexOf(k + 1) !== -1) ? 'lit' : '');
+      E.lines.appendChild(l);
+    }
+  }
+  function progress(){
+    var done = S.seen.length, total = REASONS.length;
+    if(done >= total){ E.lede.textContent = 'Toutes les étoiles sont allumées. Il reste une dernière chose…'; E.letterBtn.hidden = false; }
+    else { E.lede.textContent = 'Touche chaque étoile pour lire une raison (' + done + '/' + total + ').'; E.letterBtn.hidden = true; }
+  }
+  function reason(i, btn){
+    var r = REASONS[i];
+    E.rCount.textContent = 'Raison ' + (i + 1) + ' sur ' + REASONS.length;
+    E.rTitle.textContent = r.title; E.rText.textContent = r.text;
+    E.reason.classList.remove('show'); void E.reason.offsetWidth; E.reason.classList.add('show');
+    [].forEach.call(E.stars.querySelectorAll('.vault-star'), function(s){ s.classList.remove('is-current'); });
+    btn.classList.add('is-current', 'is-seen');
+    if(S.seen.indexOf(i) === -1){
+      S.seen.push(i); save(); drawLines(); progress();
+      var rc = btn.getBoundingClientRect(); pop(rc.left + rc.width / 2, rc.top + rc.height / 2, 16);
+    }
+  }
+  function openLetter(){
+    $('vault-letter-greeting').textContent = GREETING;
+    var body = $('vault-letter-body'); body.innerHTML = '';
+    LETTER.forEach(function(p){ var el = document.createElement('p'); el.textContent = p; body.appendChild(el); });
+    $('vault-letter-sign').textContent = SIGNATURE;
+    E.letter.hidden = false; void E.letter.offsetWidth; E.letter.classList.add('is-open');
+    var cl = E.letter.querySelector('.vault-letter-close'); if(cl){ try{ cl.focus({ preventScroll: true }); }catch(e){} }
+    later(popCenter, reduce ? 10 : 500);
+  }
+  function closeLetter(){
+    E.letter.classList.remove('is-open');
+    setTimeout(function(){ E.letter.hidden = true; }, reduce ? 10 : 300);
+  }
+  E.letterBtn.addEventListener('click', openLetter);
+  [].forEach.call(E.letter.querySelectorAll('[data-letter-close]'), function(el){
+    var c = el.cloneNode(true); el.parentNode.replaceChild(c, el); c.addEventListener('click', closeLetter);
+  });
+  E.letter.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ e.stopPropagation(); closeLetter(); } });
+
+  /* ---------- démarrage ---------- */
+  if(S.open){ showOpen(); }
+  else if(S.t >= 4){ unlock(); }
+  else { E.locked.hidden = false; E.open.hidden = true; start(cur); }
+
+  }catch(err){
+    /* dernier filet : on affiche au moins un message clair plutôt qu'un coffre vide */
+    try{
+      var b = document.getElementById('trial-board');
+      if(b){ b.innerHTML = '<p class="trial-msg is-bad">Le coffre n’a pas pu se charger. Recharge la page (Ctrl+Maj+R, ou ferme puis rouvre le lien).</p>'; }
+    }catch(e2){}
+    if(window.console){ console.error('Coffre :', err); }
+  }
+})();
+
+</script>
+
+</body>
+</html>
